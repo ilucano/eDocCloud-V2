@@ -55,7 +55,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'ilucano_edoccloude',
+			'database'  => 'ilucano_edoccloud',
 			'username'  => 'shaman', //user must have create, drop, alter, delete table privileges for db structure changes
 			'password'  => 'pampita1280',
 			'charset'   => 'utf8',
