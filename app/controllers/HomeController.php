@@ -20,6 +20,12 @@ class HomeController extends BaseController {
 		return View::make('hello');
 	}
 	
+	
+	public function showIndex()
+	{
+		return View::make('home.index');
+	}
+	
 	/**
 	 * Login Form
 	 *
@@ -60,13 +66,11 @@ class HomeController extends BaseController {
 			'username'     => Input::get('username'),
 			'password'  => Input::get('password')
 		);
-	
-		// attempt to do the login
+	 
 		if (Auth::attempt($userdata)) {
 			// validation successful!
-			// return Redirect::to('secure');
+			return Redirect::to('home');
 			// for now we'll just echo success (even though echoing in a controller is bad)
-			echo 'SUCCESS!';
 	
 		} else {        
  
@@ -78,5 +82,13 @@ class HomeController extends BaseController {
 		}
  
 	}
+	
+	
+	public function doLogout()
+	{
+		Auth::logout(); // log the user out of our application
+		return Redirect::to('login'); // redirect the user to the login screen
+	}
+
 
 }

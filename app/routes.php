@@ -17,8 +17,13 @@
 //});
 
 Route::get('/', array('before' => 'auth',
-  'uses' => 'HomeController@showLogin',
-  'as' => 'home.login'
+  'uses' => 'HomeController@showIndex',
+  'as' => 'home.index'
+));
+
+Route::get('/home/', array('before' => 'auth',
+  'uses' => 'HomeController@showIndex',
+  'as' => 'home.index'
 ));
 
 // route to show the login form
@@ -26,3 +31,6 @@ Route::get('login', array('uses' => 'HomeController@showLogin'));
 
 // route to process the form
 Route::post('login', array('uses' => 'HomeController@doLogin'));
+
+// route to show the login form
+Route::get('logout', array('uses' => 'HomeController@doLogout'));
