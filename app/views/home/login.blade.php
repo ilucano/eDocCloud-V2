@@ -13,6 +13,11 @@
 		<h3 class="panel-title">eDocCloud - Please Login</h3>
 	  </div>
 	  <div class="panel-body">
+        
+		<!-- will be used to show any messages -->
+		@if (Session::has('error'))
+			<div class="alert alert-danger">{{ Session::get('error') }}</div>
+		@endif
 
 		{{ Form::open(array('url' => 'login')) }}
 

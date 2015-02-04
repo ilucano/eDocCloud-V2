@@ -75,8 +75,10 @@ class HomeController extends BaseController {
 			echo 'SUCCESS!';
 	
 		} else {        
-	
-			// validation not successful, send back to form 
+ 
+			// redirect
+            Session::flash('error', 'Invalid Username or Password');
+			
 			return Redirect::to('login');
 	
 		}
