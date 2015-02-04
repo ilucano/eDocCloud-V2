@@ -10,7 +10,7 @@
 	  
 
 	  <div class="panel-heading">
-		<h3 class="panel-title">eDocCloud - Please Login</h3>
+		<h3 class="panel-title">Welcome to eDocCloud</h3>
 	  </div>
 	  <div class="panel-body">
         
@@ -44,4 +44,4 @@
   </div>
 </div>
 
-        
+@stop 
