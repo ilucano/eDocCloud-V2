@@ -56,7 +56,7 @@
 	  or in transit to/from this system, may constitute a violation of laws.
 	</div>
 	
-	<div class="text-center">
+	<div class="text-center copyright-footer">
 	  &copy; ImagingXperts <?php echo date("Y"); ?>
 	</div>
   </div>

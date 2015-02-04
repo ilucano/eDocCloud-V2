@@ -10,13 +10,16 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+//
+//Route::get('/', function()
+//{
+//	return View::make('hello');
+//});
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
-
-
+Route::get('/', array('before' => 'auth',
+  'uses' => 'HomeController@showLogin',
+  'as' => 'home.login'
+));
 
 // route to show the login form
 Route::get('login', array('uses' => 'HomeController@showLogin'));

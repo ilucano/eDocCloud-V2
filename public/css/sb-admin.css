@@ -230,3 +230,7 @@ ul.alert-dropdown {
 #page-wrapper.background-empty {
     background: none;
 }
+
+#page-wrapper.background-empty .copyright-footer {
+    color: #eee;
+}
