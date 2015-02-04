@@ -477,15 +477,15 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+	{{ HTML::script('js/jquery.js') }}
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+	{{ HTML::script('js/bootstrap.min.js') }}
 
     <!-- Morris Charts JavaScript -->
-    <script src="js/plugins/morris/raphael.min.js"></script>
-    <script src="js/plugins/morris/morris.min.js"></script>
-    <script src="js/plugins/morris/morris-data.js"></script>
+	{{ HTML::script('js/plugins/morris/raphael.min.js') }}
+	{{ HTML::script('js/plugins/morris/morris.min.js') }}
+	{{ HTML::script('js/plugins/morris/morris-data.js') }}
 
 </body>
 
