@@ -79,5 +79,14 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->email;
 	}
+	
+	/**
+	 *  Get the users data of logged in session
+	 */
+    public function getUserData()
+	{
+		return User::where('username','=',$this->username)->first();
+	 
+	}
 
 }

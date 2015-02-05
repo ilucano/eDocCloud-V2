@@ -9,22 +9,38 @@ class PickupController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
-		// get pickup 
-        //$pickups = Pickup::all();
 		
-		//print_r($pickups);
+		$orderDropdown = array();
 		
-		//$barcode = Barcode::all();
 		
-		echo "<pre>";
+		//echo Auth::user();
+		$orderLists = Object::where('fk_status', '<>', 5)
+						  ->where('fk_obj_type', '=', 1)
+						  ->get();
 		
-		echo Auth::user();
-		//print_r($barcode);
+         
+		foreach($orderLists as $orderList)
+		{
+			$companyName = Company::where('row_id', '=', $orderList->fk_company)->first()->company_name;
+			
+			$orderList->company_name = $companyName;
+			
+			$niceLabel = $orderList->row_id . '- ' . $orderList->f_name . ' ' . $orderList->company_name;
+			$orderDropdown[$orderList->row_id] =  $niceLabel;
+							 
+		}
+		
+		
+    
+		 // load the view and pass the nerds
+        return View::make('pickup.index')
+               ->with('orderLists', $orderDropdown);
+			
+	 
 		
 	}
 
-
+    
 	/**
 	 * Show the form for creating a new resource.
 	 *
