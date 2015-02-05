@@ -16,6 +16,8 @@
 //	return View::make('hello');
 //});
 
+
+
 Route::get('/', array('before' => 'auth',
   'uses' => 'HomeController@showIndex',
   'as' => 'home.index'
@@ -34,3 +36,20 @@ Route::post('login', array('uses' => 'HomeController@doLogin'));
 
 // route to show the login form
 Route::get('logout', array('uses' => 'HomeController@doLogout'));
+
+Route::group(array('before'=>'auth'), function() {
+	
+	Route::get('/', array(
+						  'uses' => 'HomeController@showIndex',
+						  'as' => 'home.index'
+	));
+	
+	Route::get('/home/', array(
+								'uses' => 'HomeController@showIndex',
+								'as' => 'home.index'
+	));
+	
+    Route::resource('pickup', 'PickupController');
+});
+
+
