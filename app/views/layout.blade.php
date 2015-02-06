@@ -136,7 +136,7 @@
 						
 				    <ul class="dropdown-menu">
                         <li>
-                            <a href="{{ URL::to('pickup') }}"><i class="fa fa-fw"></i> Pickup</a>
+                            <a href="{{ URL::to('pickup') }}"> Pickup</a>
                         </li>
                     </ul>
 						
