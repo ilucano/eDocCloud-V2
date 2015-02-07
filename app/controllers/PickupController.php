@@ -79,9 +79,14 @@ class PickupController extends \BaseController {
 			
 		}
 		
-	
+	    //prepare capture data for PDF mailing later
+		$mailJobData = array();
+
 	    $orderId = Input::get('object_id');
-		 
+		
+		$mailJobData['order_id'] = $orderId;
+		
+		
 		//get fk_company from order (objects table)
 		$object = Object::where('row_id', '=', $orderId)->first();
 		
@@ -97,25 +102,126 @@ class PickupController extends \BaseController {
 		
 		$fkCompany = $object->fk_company;
 
+		 
 		$barcodeChecked = Input::get('barcode');
 		
+		$mailJobData['barcodes'] = $barcodeChecked;
 		
 		if(is_array($barcodeChecked))
 		{
 			
 			foreach($barcodeChecked as $barcode)
-			{
-			    echo "haha";
+			{ 
+			    $arrayBoxInfo = array();
+				
 			    $boxId = $this->createNewObject($barcode, $fkCompany, $orderId);
-                echo $boxId;
+				
+			
+				
+                if($boxId)
+				{
+					$arrayBoxInfo['box_id'] = $boxId;
+					$arrayBoxInfo['box_name'] = substr($barcode,0,6).substr($barcode,9);
+					
+					$mailJobData['boxes'][] = $arrayBoxInfo;
+					
+					$pickupId = $this->createNewPickup(Auth::user()->getUserData()->row_id, $fkCompany, $orderId, $barcode, $boxId);
+					
+					if($pickupId)
+					{
+					    $mailJobData['pickups'][] = $pickupId;
+						
+						$workflowId = $this->createNewWorkflow($barcode, Auth::user()->getUserData()->row_id);
+						
+						$mailJobData['workflows'][] = $workflowId;
+						
+						//delete the barcode
+						
+						Barcode::where('barcode', '=', $barcode)->delete();
+						
+					}
+				}
 				
 			}
 				
 		}
+		
+		
+		        
+		$company = Company::where('row_id', '=', $fkCompany)->first();
+		
+		$mailJobData['company_email'] = $company->company_email;
+		$mailJobData['company_name'] = $company->company_name;
+		$mailJobData['company_address1'] = $company->company_address1;
+		$mailJobData['company_address2'] = $company->company_address2;
+		$mailJobData['company_zip'] = $company->company_zip;
+		
+		
+		//setup new job queue instead of email pdf immediately
+		$jobQueue = new Jobqueue;
+		$jobQueue->job_type = 'mail_pickup_pdf';
+		$jobQueue->job_data = json_encode($mailJobData);
+		$jobQueue->save();
+		
+	    
+		Session::flash('message', 'Pickup(s) successfully created');
+			
+		return Redirect::to('pickup');
+		
+		
 
 	}
-
     
+	/**
+	 * Create new workflow record into workflow table
+	 *
+	 * @return integer $row_id Newly insert record id
+	 * 
+	 */
+	private function createNewWorkflow($barcode, $user_id)
+	{
+		if($barcode == '') {
+			return false;
+		}
+	
+        $workflow = new Workflow;
+		$workflow->wf_id = $barcode;
+		$workflow->fk_status = 3;
+		$workflow->modify = date("Y-m-d H:i:s");
+		$workflow->created = date("Y-m-d H:i:s");
+		$workflow->modify_by = $user_id;
+		$workflow->created_by = $user_id;
+		
+		$workflow->save();
+		
+		return $workflow->id;
+	
+		
+	}
+    
+	/**
+	 * Create a new record into pickup table
+	 *
+	 * return integer $row_id Newly inserted record id
+	 * 
+	 */
+	private function createNewPickup($fk_user, $fk_company, $order_id, $barcode, $box_id)
+	{
+		
+		$pickup = new Pickup;
+		$pickup->fk_user = $fk_user;
+		$pickup->fk_company = $fk_company;
+		$pickup->fk_order = $order_id;
+		$pickup->fk_barcode = $barcode;
+		$pickup->fk_box = $box_id;
+		$pickup->timestamp = date("Y-m-d H:i:s");
+		$pickup->save();
+		
+		return $pickup->id;
+	
+	}
+	
+	
 	 /**
 	 *  Insert into object table with parameters
 	 *
