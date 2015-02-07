@@ -33,7 +33,7 @@ class PickupController extends \BaseController {
 		
         $barcodeLists = Barcode::whereIn('fk_user', array('0', Auth::user()->getUserData()->row_id))->orderBy('barcode', 'asc')->get();
 	 
-		 // load the view and pass the nerds
+		 // load the view and pass the data
         return View::make('pickup.index')
                ->with('orderLists', $orderDropdown)
 			   ->with('barcodeLists', $barcodeLists);

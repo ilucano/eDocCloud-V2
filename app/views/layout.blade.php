@@ -22,6 +22,9 @@
 
     <!-- Custom Fonts -->
 	{{ HTML::style('font-awesome/css/font-awesome.min.css') }}
+	
+	<!-- jQuery Data Table CSS -->
+	{{ HTML::style('css/plugins/datatable.css') }}
    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -138,6 +141,9 @@
                         <li>
                             <a href="{{ URL::to('pickup') }}"> Pickup</a>
                         </li>
+						<li>
+                            <a href="{{ URL::to('prepare') }}"> Preparation</a>
+                        </li>
                     </ul>
 						
 				 </li>
@@ -224,11 +230,11 @@
     <!-- Bootstrap Core JavaScript -->
 	{{ HTML::script('js/bootstrap.min.js') }}
 
-    <!-- Morris Charts JavaScript -->
-	{{ HTML::script('js/plugins/morris/raphael.min.js') }}
-	{{ HTML::script('js/plugins/morris/morris.min.js') }}
-	{{ HTML::script('js/plugins/morris/morris-data.js') }}
 
+	<!-- jQuery Data Table -->
+	{{ HTML::script('js/plugins/datatable/jquery.dataTables.min.js') }}
+    
+	@yield('loadjs') 
 </body>
 
 </html>

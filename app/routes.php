@@ -18,16 +18,6 @@
 
 
 
-Route::get('/', array('before' => 'auth',
-  'uses' => 'HomeController@showIndex',
-  'as' => 'home.index'
-));
-
-Route::get('/home/', array('before' => 'auth',
-  'uses' => 'HomeController@showIndex',
-  'as' => 'home.index'
-));
-
 // route to show the login form
 Route::get('login', array('uses' => 'HomeController@showLogin'));
 
@@ -50,6 +40,11 @@ Route::group(array('before'=>'auth'), function() {
 	));
 	
     Route::resource('pickup', 'PickupController');
+	
+	Route::resource('prepare', 'PrepareController');
+	
+	Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
+
 });
 
 
