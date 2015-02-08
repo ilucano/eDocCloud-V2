@@ -150,6 +150,9 @@
 						<li>
                             <a href="{{ URL::to('qa') }}"> QA</a>
                         </li>
+						<li>
+                            <a href="{{ URL::to('ocr') }}"> OCR</a>
+                        </li>
                     </ul>
 						
 				 </li>

@@ -53,7 +53,10 @@ Route::group(array('before'=>'auth'), function() {
 	
 	Route::post('qa/status', array('uses' => 'QAController@doUpdateStatus'));
 	
-
+	Route::resource('ocr', 'OCRController');
+	
+	Route::post('ocr/status', array('uses' => 'OCRController@doUpdateStatus'));
+	
 });
 
 
