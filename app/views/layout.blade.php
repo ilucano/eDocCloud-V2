@@ -146,6 +146,24 @@
 						
 				 </li>
 					
+				
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i> Site Admin<b class="caret"></b></a>
+						
+				    <ul class="dropdown-menu">
+					
+                        <li>
+                            <a href="{{ URL::to('company') }}"> Companies</a>
+                        </li>
+							
+						<li>
+                            <a href="{{ URL::to('group') }}"> Groups</a>
+                        </li>
+						 
+                    </ul>
+						
+				 </li>
+					
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
                     <ul class="dropdown-menu">

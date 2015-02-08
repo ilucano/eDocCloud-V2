@@ -39,6 +39,7 @@ Route::group(array('before'=>'auth'), function() {
 								'as' => 'home.index'
 	));
 	
+	/* begin super admin section */
     Route::resource('pickup', 'PickupController');
 	
 	Route::resource('prepare', 'PrepareController');
@@ -66,6 +67,11 @@ Route::group(array('before'=>'auth'), function() {
 								'uses' => 'ReportsController@showGroupByStatus',
 								'as' => 'reports.groupbystatus'
 	));
+	
+	Route::resource('company', 'CompanyController');
+	
+	/* end super admin section */
+	
 });
 
 
