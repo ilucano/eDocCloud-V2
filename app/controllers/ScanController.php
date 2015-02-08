@@ -31,8 +31,16 @@ class ScanController extends \BaseController {
 			
 			$workflow->boxid = $_object->row_id;
 			$workflow->company_name = Company::where('row_id', '=', $_object->fk_company)->firstOrFail()->company_name;
-            $workflow->attach = Attach::where('fk_obj_id', '=' , $workflow->boxid)->select('row_id', 'attach_name')->firstOrFail();
-
+            
+			try {
+			   $workflow->attach = Attach::where('fk_obj_id', '=' , $workflow->boxid)->select('row_id', 'attach_name')->firstOrFail();
+			}
+			catch (Exception $e)
+			{
+			   $workflow->attach = null;
+			}
+			
+			
 		}
 		
 		

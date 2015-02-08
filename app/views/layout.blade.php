@@ -144,9 +144,11 @@
 						<li>
                             <a href="{{ URL::to('prepare') }}"> Preparation</a>
                         </li>
-						
 						<li>
                             <a href="{{ URL::to('scan') }}"> Scan</a>
+                        </li>
+						<li>
+                            <a href="{{ URL::to('qa') }}"> QA</a>
                         </li>
                     </ul>
 						

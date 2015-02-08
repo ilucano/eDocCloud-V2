@@ -1,6 +1,6 @@
 <?php
 
-class PrepareController extends \BaseController {
+class QAController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -10,11 +10,11 @@ class PrepareController extends \BaseController {
 	public function index()
 	{
 		//
-		$workflows = Workflow::where('fk_status', '=', 4)
+		$workflows = Workflow::where('fk_status', '=', 8)
 		                       ->orWhere(
 										 function ($query)
 										 {
-											$query->where('fk_status', '=', 5)
+											$query->where('fk_status', '=', 9)
 											      ->where('created_by', '=', Auth::user()->getUserData()->row_id);
 											
 										 }
@@ -31,8 +31,9 @@ class PrepareController extends \BaseController {
 			
 			$workflow->boxid = $_object->row_id;
 			$workflow->company_name = Company::where('row_id', '=', $_object->fk_company)->firstOrFail()->company_name;
-            
+			
 			try {
+			   
 			   $workflow->attach = Attach::where('fk_obj_id', '=' , $workflow->boxid)->select('row_id', 'attach_name')->firstOrFail();
 			}
 			catch (Exception $e)
@@ -44,7 +45,7 @@ class PrepareController extends \BaseController {
 		
 		
 		// load the view and pass the data
-        return View::make('prepare.index')
+        return View::make('qa.index')
                ->with('workflows', $workflows);
 	}
 
@@ -139,7 +140,7 @@ class PrepareController extends \BaseController {
 
 		if ($validator->fails()) {
 			
-			return Redirect::to('prepare')
+			return Redirect::to('qa')
 				->withErrors($validator);
 			
 		}
@@ -187,13 +188,13 @@ class PrepareController extends \BaseController {
 			$workflow->save();
 					 
 			Session::flash('message', 'Workflow successfully updated');
-			return Redirect::to('prepare');
+			return Redirect::to('qa');
 					 
 		}
 		catch(Exception $e)
 		{
 			Session::flash('error', $e->getMessage() );
-			return Redirect::to('prepare');
+			return Redirect::to('qa');
 			
 		}
 		

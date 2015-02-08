@@ -42,7 +42,11 @@
 						<td>{{ substr($workflow->wf_id, 6) }}</td>
 						<td>{{ $workflow->company_name }}</td>
 						<td>{{ $workflow->status }}</td>			
-						<td><a class="btn btn-link" href="{{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a></td>
+						<td>
+						@if($workflow->attach)
+							<a class="btn btn-link" href="{{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a>
+						@endif
+						</td>
 						<td>{{ Form::open(array('url' => 'prepare/status')) }}
 							{{ Form::hidden('wfid',  $workflow->row_id) }}
 							@if($workflow->fk_status == '4')

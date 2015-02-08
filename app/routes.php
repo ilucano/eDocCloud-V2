@@ -48,6 +48,11 @@ Route::group(array('before'=>'auth'), function() {
 	Route::resource('scan', 'ScanController');
 	
 	Route::post('scan/status', array('uses' => 'ScanController@doUpdateStatus'));
+	
+	Route::resource('qa', 'QAController');
+	
+	Route::post('qa/status', array('uses' => 'QAController@doUpdateStatus'));
+	
 
 });
 

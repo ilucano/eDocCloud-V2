@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<h2 class="page-header">Workflow 
-			<small>Scan</small>
+			<small>QA</small>
 			</h2>
 		</div>
 	</div>
@@ -41,20 +41,20 @@
 					<tr>			
 						<td>{{ substr($workflow->wf_id, 6) }}</td>
 						<td>{{ $workflow->company_name }}</td>
-						<td>{{ $workflow->status }}</td>			
+						<td>{{ $workflow->status }}</td>
 						<td>
 						@if($workflow->attach)
 							<a class="btn btn-link" href="{{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a>
 						@endif
 						</td>
-						<td>{{ Form::open(array('url' => 'scan/status')) }}
+						<td>{{ Form::open(array('url' => 'qa/status')) }}
 							{{ Form::hidden('wfid',  $workflow->row_id) }}
-							@if($workflow->fk_status == '6')
-								{{ Form::hidden('status', '6') }}
-								{{ Form::submit('Start Scan', array('class' => 'btn btn-primary btn-sm')) }} 
+							@if($workflow->fk_status == '8')
+								{{ Form::hidden('status', '8') }}
+								{{ Form::submit('Start QA', array('class' => 'btn btn-primary btn-sm')) }} 
 						    @else
-								{{ Form::hidden('status', '7') }}
-							    {{ Form::submit('End Scan', array('class' => 'btn btn-danger btn-sm')) }}
+								{{ Form::hidden('status', '9') }}
+							    {{ Form::submit('End QA', array('class' => 'btn btn-danger btn-sm')) }}
 							@endif
 							{{ Form::close() }}
 					    </td>
@@ -80,7 +80,7 @@
 		
 			$('#preparations').DataTable(
 				{
-				   "aaSorting": [[ 2, "desc" ], [ 0 , "asc" ]],
+				   "aaSorting": [[ 2, "asc" ], [ 0 , "asc" ]],
 				}
 			);
 		 } );
