@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<h2 class="page-header">Workflow 
-			<small>Preparation</small>
+			<small>Scan</small>
 			</h2>
 		</div>
 	</div>
@@ -43,14 +43,14 @@
 						<td>{{ $workflow->company_name }}</td>
 						<td>{{ $workflow->status }}</td>			
 						<td><a class="btn btn-link" href="{{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a></td>
-						<td>{{ Form::open(array('url' => 'prepare/status')) }}
+						<td>{{ Form::open(array('url' => 'scan/status')) }}
 							{{ Form::hidden('wfid',  $workflow->row_id) }}
-							@if($workflow->fk_status == '4')
-								{{ Form::hidden('status', '4') }}
-								{{ Form::submit('Start Prepare', array('class' => 'btn btn-primary btn-sm')) }} 
+							@if($workflow->fk_status == '6')
+								{{ Form::hidden('status', '6') }}
+								{{ Form::submit('Start Scan', array('class' => 'btn btn-primary btn-sm')) }} 
 						    @else
-								{{ Form::hidden('status', '5') }}
-							    {{ Form::submit('End Prepare', array('class' => 'btn btn-danger btn-sm')) }}
+								{{ Form::hidden('status', '7') }}
+							    {{ Form::submit('End Scan', array('class' => 'btn btn-danger btn-sm')) }}
 							@endif
 							{{ Form::close() }}
 					    </td>

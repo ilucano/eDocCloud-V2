@@ -44,6 +44,10 @@ Route::group(array('before'=>'auth'), function() {
 	Route::resource('prepare', 'PrepareController');
 	
 	Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
+	
+	Route::resource('scan', 'ScanController');
+	
+	Route::post('scan/status', array('uses' => 'ScanController@doUpdateStatus'));
 
 });
 
