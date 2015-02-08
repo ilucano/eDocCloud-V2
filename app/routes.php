@@ -57,6 +57,11 @@ Route::group(array('before'=>'auth'), function() {
 	
 	Route::post('ocr/status', array('uses' => 'OCRController@doUpdateStatus'));
 	
+	Route::get('reports/allboxes', array(
+								'uses' => 'ReportsController@showAllBoxes',
+								'as' => 'reports.allboxes'
+	));
+	
 });
 
 

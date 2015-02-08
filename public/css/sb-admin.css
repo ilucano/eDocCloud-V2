@@ -234,3 +234,12 @@ ul.alert-dropdown {
 #page-wrapper.background-empty .copyright-footer {
     color: #eee;
 }
+
+
+/* data table bootstrap fixes */
+.dataTables_wrapper .dataTables_paginate .paginate_button
+{
+    padding: 0px 0px !important;
+    margin-left: 0px !important;
+    display: inline !important;
+}
