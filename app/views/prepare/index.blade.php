@@ -39,12 +39,12 @@
 					@foreach($workflows as $workflow)
 					
 					<tr>			
-						<td>{{ $workflow->row_id }} {{ substr($workflow->wf_id, 6) }}</td>
+						<td>{{ substr($workflow->wf_id, 6) }}</td>
 						<td>{{ $workflow->company_name }}</td>
 						<td>{{ $workflow->status }}</td>			
 						<td><a class="btn btn-link" href="{{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a></td>
 						<td>{{ Form::open(array('url' => 'prepare/status')) }}
-							{{ Form::hidden('wf_id',  $workflow->row_id) }}
+							{{ Form::hidden('wfid',  $workflow->row_id) }}
 							@if($workflow->fk_status == '4')
 								{{ Form::hidden('status', '4') }}
 								{{ Form::submit('Start Preparation', array('class' => 'btn btn-primary btn-sm')) }} 

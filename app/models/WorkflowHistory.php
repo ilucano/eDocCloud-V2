@@ -1,11 +1,12 @@
 <?php
 
-class Pickup extends Eloquent {
+class WorkflowHistory extends Eloquent {
 
-	protected $table = 'pickup';
+	protected $table = 'wf_history';
 
     public $timestamps = false;
-    
+	
 	public $primaryKey  = 'row_id';
 	
+
 }

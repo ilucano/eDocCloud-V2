@@ -6,5 +6,5 @@ class Company extends Eloquent {
 
     public $timestamps = false;
  
-
+    public $primaryKey  = 'row_id';
 }

@@ -123,7 +123,7 @@ class PrepareController extends \BaseController {
 		print_r(Input::get());
 		
 		$rules = array(
-			'wf_id' => 'required',  
+			'wfid' => 'required',  
 			'status' => 'required'
 		);
 		
@@ -134,6 +134,59 @@ class PrepareController extends \BaseController {
 			
 			return Redirect::to('prepare')
 				->withErrors($validator);
+			
+		}
+		
+		$wfid = Input::get('wfid');
+
+		$status = Input::get('status');
+		
+		$newStatus = $status + 1;
+
+		try {
+			$workflow = Workflow::where('row_id', '=', $wfid)->first();
+		}
+		catch(Exception $e) {
+			// redirect with error
+            Session::flash('error', 'Cannot find workflow with ID:  '. $wfid );
+			return Redirect::to('prepare');
+		}
+		
+		//insert to wf history
+		$workflowHistory = new WorkflowHistory;
+		
+		$workflowHistory->wf_id = $workflow->wf_id;
+		$workflowHistory->fk_status = $workflow->fk_status;
+		$workflowHistory->created = $workflow->created;
+		$workflowHistory->modify = $workflow->modify;
+		$workflowHistory->created_by = $workflow->created_by;
+		$workflowHistory->modify_by = $workflow->modify_by;
+						
+		$workflowHistory->save();
+		
+		
+		//Auth::user()->getUserData()->row_id
+		//update workflow
+		try {
+			
+			$workflow = Workflow::where('row_id', '=', $wfid)->first();
+			
+			$workflow->fk_status = $newStatus;
+			$workflow->created = date("Y-m-d H:i:s");
+			$workflow->modify = date("Y-m-d H:i:s");
+			$workflow->created_by = Auth::user()->getUserData()->row_id;
+			$workflow->modify_by = Auth::user()->getUserData()->row_id;
+					 
+			$workflow->save();
+					 
+			Session::flash('message', 'Workflow successfully updated');
+			return Redirect::to('prepare');
+					 
+		}
+		catch(Exception $e)
+		{
+			Session::flash('error', $e->getMessage() );
+			return Redirect::to('prepare');
 			
 		}
 		
