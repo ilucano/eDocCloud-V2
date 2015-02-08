@@ -139,7 +139,7 @@
                             <a href="{{ URL::to('reports/allboxes') }}"> All Boxes</a>
                         </li>
 						<li>
-                            <a href="{{ URL::to('reports/bystatus') }}"> Group By Status</a>
+                            <a href="{{ URL::to('reports/groupbystatus') }}"> Group By Status</a>
                         </li>
 						 
                     </ul>

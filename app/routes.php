@@ -62,6 +62,10 @@ Route::group(array('before'=>'auth'), function() {
 								'as' => 'reports.allboxes'
 	));
 	
+	Route::get('reports/groupbystatus', array(
+								'uses' => 'ReportsController@showGroupByStatus',
+								'as' => 'reports.groupbystatus'
+	));
 });
 
 

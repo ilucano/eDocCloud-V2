@@ -10,42 +10,7 @@ class ReportsController extends \BaseController {
 	public function index()
 	{
 		//
-		$workflows = Workflow::where('fk_status', '=', 4)
-		                       ->orWhere(
-										 function ($query)
-										 {
-											$query->where('fk_status', '=', 5)
-											      ->where('created_by', '=', Auth::user()->getUserData()->row_id);
-											
-										 }
-								)->get();
-							   
-		
-		
-		foreach($workflows as $workflow)
-		{
-			//get status
-			$workflow->status = WorkflowStatus::where('row_id', '=', $workflow->fk_status)->firstOrFail()->status;
-			$_pickup = Pickup::where('fk_barcode', '=', $workflow->wf_id)->firstOrFail();
-			$_object = Object::where('row_id', '=', $_pickup->fk_box)->firstOrFail();
-			
-			$workflow->boxid = $_object->row_id;
-			$workflow->company_name = Company::where('row_id', '=', $_object->fk_company)->firstOrFail()->company_name;
-            
-			try {
-			   $workflow->attach = Attach::where('fk_obj_id', '=' , $workflow->boxid)->select('row_id', 'attach_name')->firstOrFail();
-			}
-			catch (Exception $e)
-			{
-			   $workflow->attach = null;
-			}
-			
-		}
-		
-		
-		// load the view and pass the data
-        return View::make('prepare.index')
-               ->with('workflows', $workflows);
+		echo "nothing yet";
 	}
     
 	
@@ -99,6 +64,73 @@ class ReportsController extends \BaseController {
       return View::make('reports.allboxes')
 				   ->with('workflows', $workflows);
 	 
+   }
+   
+   
+   /**
+    * Display aggerate reports of boxes group by
+    * status and company
+    * 
+    *
+    */
+   
+   public function showGroupByStatus()
+   {
+	  
+	  $results = DB::table('workflow')
+						   ->join('wf_status', 'workflow.fk_status', '=', 'wf_status.row_id')
+						   ->join('pickup', 'workflow.wf_id', '=', 'pickup.fk_barcode')
+						   ->join('objects', 'pickup.fk_box', '=', 'objects.row_id')
+						   ->join('objects as t5', 'objects.fk_parent', '=', 't5.row_id')
+						   ->where('objects.fk_obj_type', '=', 2)
+						   ->select(DB::raw('workflow.*, (objects.fk_company) as fk_company, (wf_status.status) as status, (COUNT(status)) as qty, (SUM(objects.qty)) as suma, (AVG(t5.ppc)) as precio'))
+						   ->groupBy('wf_status.status', 'objects.fk_company')
+						   ->orderBy('workflow.fk_status', 'asc')
+						   ->get();
+							  
+
+	  foreach($results as $result)
+	  {
+		//get company name and etc
+		try {
+			$result->company_name = Company::where('row_id', '=', $result->fk_company)->firstOrFail()->company_name;
+		}
+		catch(Exception $e) {
+			$result->company_name = '';
+		}
+		
+		if($result->suma > 0)
+		{
+			$result->amount = $result->suma  * $result->precio;
+	
+		}
+		else
+		{
+		
+			try {
+				
+				$object = DB::table('objects')->select(DB::raw('count(*) as object_count, SUM(qty) as object_sum'))
+											  ->where('fk_obj_type', '=', 2)
+											  ->where('fk_status', '=', 5)
+											  ->where('fk_company', '=', $result->fk_company)
+											  ->first();
+		 							  
+				$result->amount = ((($object->object_sum / $object->object_count ) * $result->precio) * $result->qty);
+				                 						 
+			}
+			catch(Exception $e)
+			{   
+			    print_r($e->getMessage());
+			}
+		
+		}
+
+	  }
+	  
+	   // load the view and pass the data
+      return View::make('reports.groupbystatus')
+				   ->with('results', $results);
+
    }
 
 	/**
@@ -170,87 +202,6 @@ class ReportsController extends \BaseController {
 		//
 	}
 	
-	
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function doUpdateStatus()
-	{
-		print_r(Input::get());
-		
-		$rules = array(
-			'wfid' => 'required',  
-			'status' => 'required'
-		);
-		
-		// run the validation rules 
-		$validator = Validator::make(Input::all(), $rules);
-
-		if ($validator->fails()) {
-			
-			return Redirect::to('prepare')
-				->withErrors($validator);
-			
-		}
-		
-		$wfid = Input::get('wfid');
-
-		$status = Input::get('status');
-		
-		$newStatus = $status + 1;
-
-		try {
-			$workflow = Workflow::where('row_id', '=', $wfid)->first();
-		}
-		catch(Exception $e) {
-			// redirect with error
-            Session::flash('error', 'Cannot find workflow with ID:  '. $wfid );
-			return Redirect::to('prepare');
-		}
-		
-		//insert to wf history
-		$workflowHistory = new WorkflowHistory;
-		
-		$workflowHistory->wf_id = $workflow->wf_id;
-		$workflowHistory->fk_status = $workflow->fk_status;
-		$workflowHistory->created = $workflow->created;
-		$workflowHistory->modify = $workflow->modify;
-		$workflowHistory->created_by = $workflow->created_by;
-		$workflowHistory->modify_by = $workflow->modify_by;
-						
-		$workflowHistory->save();
-		
-		
-		//Auth::user()->getUserData()->row_id
-		//update workflow
-		try {
-			
-			$workflow = Workflow::where('row_id', '=', $wfid)->first();
-			
-			$workflow->fk_status = $newStatus;
-			$workflow->created = date("Y-m-d H:i:s");
-			$workflow->modify = date("Y-m-d H:i:s");
-			$workflow->created_by = Auth::user()->getUserData()->row_id;
-			$workflow->modify_by = Auth::user()->getUserData()->row_id;
-					 
-			$workflow->save();
-					 
-			Session::flash('message', 'Workflow successfully updated');
-			return Redirect::to('prepare');
-					 
-		}
-		catch(Exception $e)
-		{
-			Session::flash('error', $e->getMessage() );
-			return Redirect::to('prepare');
-			
-		}
-		
-		
-	}
 
 
 
