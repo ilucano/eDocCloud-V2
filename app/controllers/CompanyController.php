@@ -24,7 +24,6 @@ class CompanyController extends \BaseController {
 			catch(Exception $e)
 			{
 			   
-			   print_r($e->getMessage());
 			   $company->admin_name = '';
 			   $company->admin_username = '';
 			}
@@ -45,6 +44,9 @@ class CompanyController extends \BaseController {
 	public function create()
 	{
 		//
+		// load the view and pass the data
+        return View::make('company.create');
+	
 	}
 
 
@@ -56,6 +58,42 @@ class CompanyController extends \BaseController {
 	public function store()
 	{
 		//
+		$rules = array(
+            'company_name'       => 'required',
+            'company_email'      => 'email',
+			'fk_terms' => 'integer',
+			'creditlimit' => 'integer',
+			'company_zip' => 'max:5',
+			
+        );
+        $validator = Validator::make(Input::all(), $rules);
+		
+		if ($validator->fails()) {
+            return Redirect::to('company/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+		
+		$company = new Company;
+		
+		$company->company_name       = Input::get('company_name');
+		$company->company_address1      = Input::get('company_address1');
+		$company->company_address2      = Input::get('company_address2');
+		$company->company_zip      = Input::get('company_zip');
+		$company->fk_admin      = 0; //new company
+		$company->company_phone      = Input::get('company_phone');
+		$company->company_fax      = Input::get('company_fax');
+		$company->company_email      = Input::get('company_email');
+		$company->fk_terms      = Input::get('fk_terms');
+		$company->creditlimit      = Input::get('creditlimit');
+		$company->save();
+
+		// redirect
+		Session::flash('message', $company->company_name . ' successfuly created');
+ 
+		return Redirect::to('company');
+
+		
 	}
 
 
@@ -67,7 +105,23 @@ class CompanyController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$company = Company::find($id);
+		
+        try {
+			$user = User::where('row_id', '=', $company->fk_admin)->first();
+			$company->admin_name = $user->first_name. ' ' . $user->last_name;
+			$company->admin_username = $user->username;
+		}
+		catch(Exception $e)
+		{
+		   
+		   $company->admin_name = '';
+		   $company->admin_username = '';
+		}
+		// load the view and pass the data
+        return View::make('company.show')
+               ->with('company', $company);
+		
 	}
 
 
@@ -80,6 +134,42 @@ class CompanyController extends \BaseController {
 	public function edit($id)
 	{
 		//
+		
+		$company = Company::find($id);
+		
+		
+		
+		$companyUsers = null;
+		
+        try {
+			$companyUsers = User::where('fk_empresa', '=', $company->row_id)
+			                      ->where('status', '=', 'X')->get();
+		}
+		catch(Exception $e)
+		{
+		   
+			$companyUsers = null;
+		}
+		
+		$companyUsersDropdown = array();
+	
+		
+		if($companyUsers)
+		{
+			foreach($companyUsers as $user)
+			{
+				$companyUsersDropdown[$user->row_id] = $user->first_name . ' ' . $user->last_name . ' (' .$user->username. ')';
+				
+			}
+		}
+
+		// load the view and pass the data
+        return View::make('company.edit')
+               ->with('company', $company)
+			   ->with('companyUsersDropdown', $companyUsersDropdown);
+			   
+		
+		
 	}
 
 
@@ -92,6 +182,42 @@ class CompanyController extends \BaseController {
 	public function update($id)
 	{
 		//
+		
+		 $rules = array(
+            'company_name'       => 'required',
+            'company_email'      => 'email',
+            'fk_admin' => 'integer',
+			'fk_terms' => 'integer',
+			'creditlimit' => 'integer',
+			'company_zip' => 'max:5',
+			
+        );
+        $validator = Validator::make(Input::all(), $rules);
+		
+		if ($validator->fails()) {
+            return Redirect::to('company/' . $id . '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        }
+		
+		 // store
+		$company = Company::find($id);
+		$company->company_name       = Input::get('company_name');
+		$company->company_address1      = Input::get('company_address1');
+		$company->company_address2      = Input::get('company_address2');
+		$company->company_zip      = Input::get('company_zip');
+		$company->fk_admin      = Input::get('fk_admin');
+		$company->company_phone      = Input::get('company_phone');
+		$company->company_fax      = Input::get('company_fax');
+		$company->company_email      = Input::get('company_email');
+		$company->fk_terms      = Input::get('fk_terms');
+		$company->creditlimit      = Input::get('creditlimit');
+		$company->save();
+
+		// redirect
+		Session::flash('message', 'Company info updated');
+		return Redirect::to('company/'. $id .'/edit');
+		
 	}
 
 
@@ -107,86 +233,6 @@ class CompanyController extends \BaseController {
 	}
 	
 	
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function doUpdateStatus()
-	{
-		print_r(Input::get());
-		
-		$rules = array(
-			'wfid' => 'required',  
-			'status' => 'required'
-		);
-		
-		// run the validation rules 
-		$validator = Validator::make(Input::all(), $rules);
-
-		if ($validator->fails()) {
-			
-			return Redirect::to('qa')
-				->withErrors($validator);
-			
-		}
-		
-		$wfid = Input::get('wfid');
-
-		$status = Input::get('status');
-		
-		$newStatus = $status + 1;
-
-		try {
-			$workflow = Workflow::where('row_id', '=', $wfid)->first();
-		}
-		catch(Exception $e) {
-			// redirect with error
-            Session::flash('error', 'Cannot find workflow with ID:  '. $wfid );
-			return Redirect::to('prepare');
-		}
-		
-		//insert to wf history
-		$workflowHistory = new WorkflowHistory;
-		
-		$workflowHistory->wf_id = $workflow->wf_id;
-		$workflowHistory->fk_status = $workflow->fk_status;
-		$workflowHistory->created = $workflow->created;
-		$workflowHistory->modify = $workflow->modify;
-		$workflowHistory->created_by = $workflow->created_by;
-		$workflowHistory->modify_by = $workflow->modify_by;
-						
-		$workflowHistory->save();
-		
-		
-		//Auth::user()->getUserData()->row_id
-		//update workflow
-		try {
-			
-			$workflow = Workflow::where('row_id', '=', $wfid)->first();
-			
-			$workflow->fk_status = $newStatus;
-			$workflow->created = date("Y-m-d H:i:s");
-			$workflow->modify = date("Y-m-d H:i:s");
-			$workflow->created_by = Auth::user()->getUserData()->row_id;
-			$workflow->modify_by = Auth::user()->getUserData()->row_id;
-					 
-			$workflow->save();
-					 
-			Session::flash('message', 'Workflow successfully updated');
-			return Redirect::to('qa');
-					 
-		}
-		catch(Exception $e)
-		{
-			Session::flash('error', $e->getMessage() );
-			return Redirect::to('qa');
-			
-		}
-		
-		
-	}
 
 
 
