@@ -142,7 +142,7 @@
 			<div class="col-lg-8">
 					<div class="form-group pull-left">
 					
-					<a class="btn btn-info" href="{{ URL::to('company/'. $company->row_id ) }}"> Cancel</a>
+					<a class="btn btn-sm btn-info" href="{{ URL::to('company/'. $company->row_id ) }}"> Cancel</a>
 					</div>
 						
 					<div class="form-group pull-right">

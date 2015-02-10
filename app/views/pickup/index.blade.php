@@ -62,7 +62,7 @@
 			 
 			</div>
 				
-			{{ Form::submit('Create Pickup', array('class'=>'btn btn-info')) }}
+			{{ Form::submit('Create Pickup', array('class'=>'btn btn-sm btn-info')) }}
 			
 		</div>
 	</div>

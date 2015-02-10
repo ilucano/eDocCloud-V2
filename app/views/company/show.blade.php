@@ -104,10 +104,10 @@
 			<div class="col-lg-8">
 				<div class="form-group pull-left">
 				
-				<a class="btn btn-info" href="{{ URL::to('company') }}"><i class="fa fa-angle-double-left fa-lg"></i> Back</a>
+				<a class="btn btn-sm btn-info" href="{{ URL::to('company') }}"><i class="fa fa-angle-double-left fa-lg"></i> Back</a>
 				</div>	
 				<div class="form-group pull-right">
-				<a class="btn btn-warning" href="{{ URL::to('company/' . $company->row_id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
+				<a class="btn btn-sm btn-warning" href="{{ URL::to('company/' . $company->row_id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
 				</div>
 			</div>
 

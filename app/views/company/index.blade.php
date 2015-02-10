@@ -6,7 +6,7 @@
 		<div class="col-lg-12">
 			<h2 class="page-header">Site Admin 
 			<small>Company</small>
-			<div class="pull-right"><a class="btn btn-primary" href="{{ URL::to('company/create') }}"><i class="fa fa-plus fa-lg"></i> Add Company</a></div>
+			<div class="pull-right"><a class="btn btn-sm btn-primary" href="{{ URL::to('company/create') }}"><i class="fa fa-plus fa-lg"></i> Add Company</a></div>
 			</h2>
 			
 		    <ol class="breadcrumb">
@@ -33,10 +33,11 @@
 			@endif
 			
 
-			<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped" id="datatables">
 				<thead>
 					<tr>
 						<th><i class="fa fa-home"></i> Company</th>
+						<th> Contact</th>
 						<th><i class="fa fa-user"></i> Administrator</th>
 						<th>Action</th>		
 					</tr>
@@ -46,23 +47,26 @@
 					@foreach($companies as $company)
 					
 					<tr>			
-						<td>
+						<td valign="top">
 							<strong>{{ $company->company_name }}</strong>
 							<address>
 							  {{ $company->company_address1 }}<br/>
 							  {{ $company->company_address2 }} 
 							  {{ $company->company_zip }}<br>
-							  <abbr title="Phone">P:</abbr>  {{ $company->company_phone }}<br>
-							  <abbr title="Fax">F:</abbr>  {{ $company->company_fax }}<br>
-							  <abbr title="Email">E:</abbr> {{ $company->company_email }}
 							</address>
-						
-					   </td>
-						<td>{{ $company->admin_name }} @ {{ $company->admin_username }}</td>				 
+						</td>
+		 
+						<td valign="top">
+							@if($company->company_phone) <abbr title="Phone">P:</abbr>  {{ $company->company_phone }}<br> @endif
+							@if($company->company_fax) <abbr title="Fax">F:</abbr>  {{ $company->company_fax }}<br> @endif
+							@if($company->company_email) <abbr title="Email">E:</abbr> {{ $company->company_email }} @endif
+						</td>	
+					
+						<td valign="top">{{ $company->admin_name }} ({{ $company->admin_username }})</td>				 
 						<td>
 							<div class="pull-right">
-								<a class="btn btn-small btn-success" href="{{ URL::to('company/' . $company->row_id) }}">View</a>
-								<a class="btn btn-small btn-info" href="{{ URL::to('company/' . $company->row_id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
+								<a class="btn btn-sm btn-success" href="{{ URL::to('company/' . $company->row_id) }}">View</a>
+								<a class="btn btn-sm btn-info" href="{{ URL::to('company/' . $company->row_id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
 							</div>
 						</td>
 					 
