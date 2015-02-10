@@ -147,7 +147,7 @@
 						
 					<div class="form-group pull-right">
 							
-					{{ Form::submit('Save', array('class' => 'btn btn-success')) }}
+					{{ Form::submit('Save', array('class' => 'btn btn-sm btn-success')) }}
 					</div>
 			</div>
 

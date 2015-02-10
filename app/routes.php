@@ -70,6 +70,7 @@ Route::group(array('before'=>'auth'), function() {
 	
 	Route::resource('company', 'CompanyController');
 	
+	Route::resource('user', 'UserController');
 	/* end super admin section */
 	
 });

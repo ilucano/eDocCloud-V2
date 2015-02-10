@@ -11,7 +11,7 @@
 				<li>
 					<i class="fa fa-dashboard"></i>  Site Admin 
 				</li>
-				<li class="active">
+				<li>
 					<i class="fa fa-group"></i> <a href="{{ URL::to('company') }}">Manage Company</a>
 				</li>
 					

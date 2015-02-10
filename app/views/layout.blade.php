@@ -157,7 +157,7 @@
                         </li>
 							
 						<li>
-                            <a href="{{ URL::to('group') }}"> Groups</a>
+                            <a href="{{ URL::to('user') }}"> Users</a>
                         </li>
 						 
                     </ul>
