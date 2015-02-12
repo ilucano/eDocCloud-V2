@@ -64,13 +64,14 @@ class HomeController extends BaseController {
 		// create our user data for the authentication
 		$userdata = array(
 			'username'     => Input::get('username'),
-			'password'  => Input::get('password')
+			'password'  => Input::get('password'),
+			'active'	=> 1
 		);
 	 
 		if (Auth::attempt($userdata)) {
 			// validation successful!
 			return Redirect::to('home');
-			// for now we'll just echo success (even though echoing in a controller is bad)
+		 
 	
 		} else {        
  

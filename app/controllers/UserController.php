@@ -167,10 +167,12 @@ class UserController extends \BaseController {
 	{
 		
 		//post step2
-	 
+		
+		Input::merge(array_map('trim', Input::except('password')));
+ 
 		$rules = array(
             'fk_empresa'       => 'required|integer',
-			'username' => 'required|unique:users|min:3',
+			'username' => 'required|unique:users|unique:logins|min:3',
             'password' => 'required|min:5',
 			'first_name' => 'required',
 			'last_name' => 'required',
@@ -185,8 +187,49 @@ class UserController extends \BaseController {
                 ->withErrors($validator)
                 ->withInput();
         }
+ 
+		//create login
+		$login = new Login;
+		$login->username = Input::get('username');
+		$login->password = Hash::make(Input::get('password'));
+		$login->active = (Input::get('status') == 'X') ? 1: 0;
+		$login->save();
 		
+		//create new user profile
+		$user = new User;
+		$user->username = Input::get('username');
+		$user->password = Input::get('password');
+		$user->first_name = Input::get('first_name');
+		$user->last_name = Input::get('last_name');
+		$user->email = Input::get('email');
+		$user->phone = Input::get('phone');
+		$user->fk_empresa = Input::get('fk_empresa');
+		$user->is_admin = Input::get('is_admin');
+		$user->status = Input::get('status');
+		$user->company_admin = Input::get('company_admin');
+		$user->group_id = Input::get('group_id');
+        
+		$user->save();
 		
+ 
+		$mailJobData = array('to' => Input::get('email'),
+							 'username' => Input::get('username'),
+							 'password' => Input::get('password'),
+							 'first_name' => Input::get('first_name'),
+							 'last_name' => Input::get('last_name'),
+							 'fk_empresa' => Input::get('fk_empresa'),
+							);
+
+		//setup new job queue instead of email user immediately
+		$jobQueue = new Jobqueue;
+		$jobQueue->job_type = 'mail_create_user';
+		$jobQueue->job_data = json_encode($mailJobData);
+		$jobQueue->save();
+		
+	    
+		Session::flash('message', 'User successfully created');
+			
+		return Redirect::to('user');
 
 		 
 	}
@@ -346,6 +389,11 @@ class UserController extends \BaseController {
 		$user->last_name 		= Input::get('last_name');
 		$user->email 		= Input::get('email');
 		$user->phone 		= Input::get('phone');
+	  
+	    if(Input::get('password')) {
+			$user->password = Input::get('password');
+		}
+		
 		$user->fk_empresa 		= Input::get('fk_empresa');
 		//$user->is_admin 		= Input::get('fk_empresa'); //to be done
 		$user->status  = Input::get('status');
@@ -353,6 +401,28 @@ class UserController extends \BaseController {
 		$user->company_admin  = Input::get('company_admin');
 		
 		$user->save();
+		
+		
+		try  {
+			$login = Login::where('username', '=', $user->username)->first();
+			
+			if($login) {
+				
+				if(Input::get('password')) {
+					$login->password = Hash::make(Input::get('password'));
+				}
+				
+				$login->active = (Input::get('status') == 'X') ? 1: 0;
+				
+				$login->save();
+				
+			}
+		
+		}
+		catch (Exception $e)
+		{
+			Log::error($exception);
+		}
 
 		// redirect
 		Session::flash('message', 'User updated');
