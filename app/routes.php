@@ -71,6 +71,18 @@ Route::group(array('before'=>'auth'), function() {
 	Route::resource('company', 'CompanyController');
 	
 	Route::resource('user', 'UserController');
+	
+	Route::get('user/create/company/{fk_empresa}', array(
+								'uses' => 'UserController@createStep2',
+								'as' => 'user.create.step2'
+	));
+	
+	Route::post('user/create/company/{fk_empresa}', array(
+								'uses' => 'UserController@storeStep2',
+								'as' => 'user.create.storestep2'
+	));
+	
+	
 	/* end super admin section */
 	
 });

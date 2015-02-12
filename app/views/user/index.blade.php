@@ -6,7 +6,7 @@
 		<div class="col-lg-12">
 			<h2 class="page-header">System Administration
 			<small>Users</small>
-			<div class="pull-right"><a class="btn btn-sm btn-primary" href="{{ URL::to('company/create') }}"><i class="fa fa-user-plus fa-lg"></i> Create</a></div>
+			<div class="pull-right"><a class="btn btn-sm btn-primary" href="{{ URL::to('user/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create</a></div>
 			</h2>
 			
 		    <ol class="breadcrumb">
@@ -16,7 +16,7 @@
 				<li class="active">
 					<i class="fa fa-users"></i> Users
 				</li>
-			</ol
+			</ol>
 			
 		</div>
  
@@ -68,7 +68,7 @@
 							{{ $user->company_name }}
 						</td>
 		 
-						<td>
+						<td style="text-align: center;">
 							@if(strtolower($user->status) == 'x')
 								 <span class="label label-success">Yes</span>
 							@else

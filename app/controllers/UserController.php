@@ -9,9 +9,7 @@ class UserController extends \BaseController {
 	 */
 	public function index()
 	{
-	    
-		
-		
+
 		$users = User::orderBy('username')->get();
 
 		//get company admin and etc
@@ -47,11 +45,89 @@ class UserController extends \BaseController {
 	public function create()
 	{
 		//
+		try {
+			
+			$userCompanies = Company::orderBy('company_name')->get();
+		}                       
+		catch(Exception $e)
+		{
+		   
+			$userCompanies = null;
+		}
+		
+		$userCompaniesDropdown = array();
+	
+		
+		if($userCompanies)
+		{
+			foreach($userCompanies as $company)
+			{
+				$userCompaniesDropdown[$company->row_id] = $company->company_name;
+				
+			}
+		}
 		// load the view and pass the data
-        return View::make('company.create');
+        return View::make('user.create')
+			  ->with('userCompaniesDropdown', $userCompaniesDropdown);
 	
 	}
+  
+  
+    /**
+	 *
+	 *
+	 */
+	
+	public function createStep2($fk_empresa)
+	{
+		
+        $fkEmpresa = $fk_empresa;
+		
+		$companyName = Company::where('row_id', '=', $fkEmpresa)->first()->company_name;
+		
+		
+		$userGroups = null;
 
+		try {
+			
+			$userGroups = Group::where('fk_empresa', '=', $fkEmpresa)->orderBy('nombre')->get();
+		}                       
+		catch(Exception $e)
+		{
+		   
+			$userGroups = null;
+		}
+	 
+		
+		$userGroupsDropdown= array();
+		
+		if($userGroups)
+		{
+			foreach($userGroups as $group)
+			{
+				$userGroupsDropdown[$group->row_id] = $group->nombre;
+				
+			}
+		}
+		
+		
+		
+		$companyAdminDropdown = array('X' => 'Yes', '' => 'No');
+		
+		$activeDropDown = array('X' => 'Yes', '' => 'No');
+		
+		
+		//show step 2
+		return View::make('user.create_step2')
+					->with('fkEmpresa', $fkEmpresa)
+					->with('companyName', $companyName)
+					->with('userGroupsDropdown', $userGroupsDropdown)
+					->with('companyAdminDropdown', $companyAdminDropdown)
+					->with('activeDropDown', $activeDropDown);
+	
+		
+		
+	}
 
 	/**
 	 * Store a newly created resource in storage.
@@ -60,47 +136,62 @@ class UserController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		
+		//post step1
+	 
 		$rules = array(
-            'company_name'       => 'required',
-            'company_email'      => 'email',
-			'fk_terms' => 'integer',
-			'creditlimit' => 'integer',
-			'company_zip' => 'max:5',
-			'group_id' => 'integer'
+				'fk_empresa'       => 'required|integer',
+			);
+		   
+		
+		 $validator = Validator::make(Input::all(), $rules);
+	
+		if ($validator->fails()) {
+			return Redirect::to('user/create')
+				->withErrors($validator)
+				->withInput();
+		}
+		
+		//Redirect to form 2
+		return Redirect::to('user/create/company/'.Input::get('fk_empresa'));
+		 
+	}
+    
+	
+		/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @return Response
+	 */
+	public function storeStep2()
+	{
+		
+		//post step2
+	 
+		$rules = array(
+            'fk_empresa'       => 'required|integer',
+			'username' => 'required|unique:users|min:3',
+            'password' => 'required|min:5',
+			'first_name' => 'required',
+			'last_name' => 'required',
+			'email' => 'email|required'
 			
         );
-		
+		 
         $validator = Validator::make(Input::all(), $rules);
 		
 		if ($validator->fails()) {
-            return Redirect::to('company/create')
+            return Redirect::to('user/create/company/'. Input::get('fk_empresa'))
                 ->withErrors($validator)
                 ->withInput();
         }
 		
-		$company = new Company;
 		
-		$company->company_name       = Input::get('company_name');
-		$company->company_address1      = Input::get('company_address1');
-		$company->company_address2      = Input::get('company_address2');
-		$company->company_zip      = Input::get('company_zip');
-		$company->fk_admin      = 0; //new company
-		$company->company_phone      = Input::get('company_phone');
-		$company->company_fax      = Input::get('company_fax');
-		$company->company_email      = Input::get('company_email');
-		$company->fk_terms      = Input::get('fk_terms');
-		$company->creditlimit      = Input::get('creditlimit');
-		$company->save();
 
-		// redirect
-		Session::flash('message', $company->company_name . ' successfuly created');
- 
-		return Redirect::to('company');
-
-		
+		 
 	}
 
+	
 
 	/**
 	 * Display the specified resource.
@@ -207,7 +298,7 @@ class UserController extends \BaseController {
 		
 		
 		
-		$companyAdminDropdown = array('X' => 'Yes', '' => 'No');
+		$companyAdminDropdown = array('' => 'No', 'X' => 'Yes');
 		
         $activeDropDown = array('X' => 'Yes', '' => 'No');
 		
