@@ -88,3 +88,52 @@ Route::group(array('before'=>'auth'), function() {
 });
 
 
+/** test entrust **/
+Route::get('/start', function()
+{
+    $subscriber = new Role();
+    $subscriber->name = 'Subscriber';
+    $subscriber->save();
+ 
+    $author = new Role();
+    $author->name = 'Author';
+    $author->save();
+ 
+    $read = new Permission();
+    $read->name = 'can_read';
+    $read->display_name = 'Can Read Posts';
+    $read->save();
+ 
+    $edit = new Permission();
+    $edit->name = 'can_edit';
+    $edit->display_name = 'Can Edit Posts';
+    $edit->save();
+ 
+    $subscriber->attachPermission($read);
+    $author->attachPermission($read);
+    $author->attachPermission($edit);
+ 
+    $user1 = Login::find(3);
+    $user2 = Login::find(4);
+ 
+    $user1->attachRole($subscriber);
+    $user2->attachRole($author);
+ 
+    return 'Woohoo!';
+});
+
+
+Route::get('/secret', function()
+{
+
+	
+    
+    $user = Login::find(3);
+	 
+    if ($user->can('can_edit'))
+    {
+        return 'Redheads party the hardest!';
+    }
+ 
+    return 'Many people like to party.';
+});
