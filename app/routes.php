@@ -98,6 +98,7 @@ Route::group(array('before'=>'auth'), function() {
 		function() {
 			
 			Route::resource('user', 'CompanyAdminUserController');
+			Route::resource('filemark', 'CompanyAdminFilemarkController');
 			
 		}
 	);

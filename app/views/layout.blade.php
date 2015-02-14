@@ -62,15 +62,15 @@
 				    <ul class="dropdown-menu">
 					
                         <li>
-                            <a href="{{ URL::to('companyadmin/user') }}"> <i class="fa fa-fw fa-users"></i> My Users</a>
+                            <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-users"></i> My Users</a>
                         </li>
 							
 						<li>
-                            <a href="{{ URL::to('user') }}"> System Users</a>
+                            <a href="{{ URL::to('companyadmin/') }}"> System Users</a>
                         </li>
 							
 						<li>
-                            <a href="{{ URL::to('administrator') }}"> System Admins</a>
+                            <a href="{{ URL::to('companyadmin/filemark') }}"><i class="fa fa-fw fa-tags"></i> My Filemarks</a>
                         </li>
 						 
                     </ul>
