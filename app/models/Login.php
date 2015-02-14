@@ -94,5 +94,51 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 		return User::where('username','=',$this->username)->first();
 	 
 	}
+	
+	/**
+	 * Check if logged in user is admin
+	 *
+	 */
+	public function isAdmin()
+	{
+		
+		if(strtolower($this-getUserData()->is_admin) == 'x')
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
+	/**
+	 * Check if logged in user is company admin
+	 *
+	 */
+	public function isCompanyAdmin()
+	{
+		
+		if(strtolower($this-getUserData()->company_admin) == 'x')
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 *
+	 */
+	public function getCompanyName()
+	{
+		try {
+			$company = Company::where('row_id', '=', $this->getUserData()->fk_empresa)->first();
+			return $company->company_name;
+		}
+		catch(Exception $e) {
+			return 'Company Unknown';
+		}
+	}
+	
 }

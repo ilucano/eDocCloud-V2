@@ -89,9 +89,28 @@ Route::group(array('before'=>'auth'), function() {
 	
 	/* end super admin section */
 	
+	
+	/* begin company admin section */
+	
+		
+	Route::group(
+		array('prefix' => 'companyadmin'), 
+		function() {
+			
+			Route::resource('user', 'CompanyAdminUserController');
+			
+		}
+	);
+	
+
+	/* end super admin section */
+	
+	
 });
 
 
+	
+	
 /** test entrust **/
 Route::get('/start', function()
 {
