@@ -82,6 +82,10 @@ Route::group(array('before'=>'auth'), function() {
 								'as' => 'user.create.storestep2'
 	));
 	
+	Route::resource('administrator', 'AdministratorController');
+	
+	Route::post('administrator/isadmin', array('uses' => 'AdministratorController@doUpdateIsAdmin'));
+	
 	
 	/* end super admin section */
 	

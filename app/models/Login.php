@@ -90,6 +90,7 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 	 */
     public function getUserData()
 	{
+		
 		return User::where('username','=',$this->username)->first();
 	 
 	}

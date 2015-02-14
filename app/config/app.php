@@ -189,5 +189,7 @@ return array(
 		'Entrust'    => 'Zizaco\Entrust\EntrustFacade',
 
 	),
+	
+	'system_admin_company_id' => 1, //only ImagingXperts Users can be superadmin
 
 );

@@ -148,7 +148,7 @@
 					
 				
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i> Site Admin<b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i> System Admin<b class="caret"></b></a>
 						
 				    <ul class="dropdown-menu">
 					
@@ -159,13 +159,17 @@
 						<li>
                             <a href="{{ URL::to('user') }}"> Users</a>
                         </li>
+							
+						<li>
+                            <a href="{{ URL::to('administrator') }}"> System Admins</a>
+                        </li>
 						 
                     </ul>
 						
 				 </li>
 					
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ Auth::user()->getUserData()->first_name }} {{ Auth::user()->getUserData()->last_name }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
