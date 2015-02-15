@@ -66,11 +66,11 @@
 				    <ul class="dropdown-menu">
 					
                         <li>
-                            <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-users"></i> My Users</a>
+                            <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-user"></i> My Users</a>
                         </li>
 							
 						<li>
-                            <a href="{{ URL::to('companyadmin/') }}"> System Users</a>
+                            <a href="{{ URL::to('companyadmin/role') }}"><i class="fa fa-fw fa-users"></i> User Roles</a>
                         </li>
 							
 						<li>
@@ -288,6 +288,11 @@
 	
 	<!-- jQuery Multiselect for bootstrap -->
 	{{ HTML::script('js/plugins/multiselect/bootstrap-multiselect.js') }}
+	
+	<!-- Toggle checkbox for bootstrap -->
+	{{ HTML::script('js/plugins/bootstrap-checkbox/bootstrap-checkbox.js') }}
+	
+	
 	@yield('loadjs') 
 </body>
 

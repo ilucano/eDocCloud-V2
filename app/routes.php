@@ -99,6 +99,7 @@ Route::group(array('before'=>'auth'), function() {
 			
 			Route::resource('user', 'CompanyAdminUserController');
 			Route::resource('filemark', 'CompanyAdminFilemarkController');
+			Route::resource('role', 'CompanyAdminRoleController');
 			
 		}
 	);

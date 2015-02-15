@@ -20,7 +20,14 @@ class PermissionsTableSeeder extends Seeder {
 							'system_admin_reports_groupbystatus' => 'Reports > Group By Status',
 							'system_admin_user' => 'System Admin > Users',
 							'system_admin_company' => 'System Admin > Companies',
-							'system_admin_administrator'   => 'System Admin > Administrators'
+							'system_admin_administrator'   => 'System Admin > Administrators',
+							'admin_user' => 'Company Admin > My Users',
+							'admin_role' => 'Company Admin > User Roles',
+							'admin_filemark' => 'Company Admin > My Filemarks',
+							'user_order' => 'User > Orders',
+							'user_search' => 'User > File Search',
+							'user_file'	=> 'User > File Browser',
+							'user_changepassword' => 'User > Change Password'
 							
 		);
 		

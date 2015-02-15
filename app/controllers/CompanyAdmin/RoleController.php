@@ -1,6 +1,6 @@
 <?php
 
-class CompanyAdminFilemarkController extends \BaseController {
+class CompanyAdminRoleController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -10,39 +10,14 @@ class CompanyAdminFilemarkController extends \BaseController {
 	public function index()
 	{
 		
-		$filemarks = Filemark::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
-								->orWhere('global', '=', 1)
-								->orderBy('global', 'desc')
-								->orderBy('label')->get();
-         
-	
-		//get company user of that company only
-		foreach($filemarks as $filemark) 
-		{
-			//get number of files 
-			try {
-			   
-				$fileCount = FileTable::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
-			                      ->where('file_mark_id', '=', $filemark->id)
-			                      ->count();
-								  
-				$filemark->file_count = $fileCount;
-
-			   
-			}
-			catch(Exception $e)
-			{
-			   
-			   $filemark->file_count = 0;
-			   
-			}
-			
-		}
+		
+		$roles = Role::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
+					   ->orderBy('name')->get();
 		
 
 		// load the view and pass the data
-        return View::make('companyadmin.filemark.index')
-               ->with('filemarks', $filemarks);
+        return View::make('companyadmin.role.index')
+               ->with('roles', $roles);
 	}
 
 
@@ -54,7 +29,10 @@ class CompanyAdminFilemarkController extends \BaseController {
 	public function create()
 	{
 		
-		return View::make('companyadmin.filemark.create');
+		$permissions = Permission::where('name', 'NOT LIKE', 'system_admin%')->orderBy('display_name')->get();
+		
+		return View::make('companyadmin.role.create')
+					->with('permissions', $permissions);
 	
 	}
   
