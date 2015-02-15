@@ -24,8 +24,12 @@
 	{{ HTML::style('font-awesome/css/font-awesome.min.css') }}
 	
 	<!-- jQuery Data Table CSS -->
-	{{  HTML::style('css/plugins/datatable.css') }}
+	{{ HTML::style('css/plugins/datatable.css') }}
     {{ HTML::style('css/plugins/dataTables.bootstrap.css') }}
+	
+		
+	<!-- jQuery Multiselect for bootstrap -->
+	 {{ HTML::style('css/plugins/bootstrap-multiselect.css') }}
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -57,7 +61,7 @@
 			<ul class="nav navbar-left top-nav">
 				
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> {{ Auth::user()->getCompanyName() }}<b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> {{ Auth::user()->getCompanyName() }} <b class="caret"></b></a>
 						
 				    <ul class="dropdown-menu">
 					
@@ -135,7 +139,7 @@
                 </li>
                 
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-edit"></i> Workflow<b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-edit"></i> Workflow <b class="caret"></b></a>
 						
 				    <ul class="dropdown-menu">
                         <li>
@@ -158,7 +162,7 @@
 				 </li>
 					
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o"></i> Reports<b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o"></i> Reports <b class="caret"></b></a>
 						
 				    <ul class="dropdown-menu">
                         <li>
@@ -174,7 +178,7 @@
 					
 				
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i> System Admin<b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i> System Admin <b class="caret"></b></a>
 						
 				    <ul class="dropdown-menu">
 					
@@ -282,6 +286,8 @@
 	{{ HTML::script('js/plugins/datatable/jquery.dataTables.min.js') }}
     {{ HTML::script('js/plugins/datatable/dataTables.bootstrap.js') }}
 	
+	<!-- jQuery Multiselect for bootstrap -->
+	{{ HTML::script('js/plugins/multiselect/bootstrap-multiselect.js') }}
 	@yield('loadjs') 
 </body>
 

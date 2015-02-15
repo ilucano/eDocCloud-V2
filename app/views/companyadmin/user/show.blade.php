@@ -39,11 +39,7 @@
 				<label>Password</label>
 				{{ Form::text('password', '******', array('class'=>'form-control', 'disabled'=>'disabled')) }}
 			</div>
-			
-		
 
-		
-            
 		</div>
 		
 		<div class="col-lg-4">
@@ -84,7 +80,24 @@
 				
 			</div>
 				
-
+            
+			
+			<div class="form-group">
+				<label>Filemarks Allowed</label>
+				 
+				<div class="form-group input-group">
+				<!-- Build your select: -->
+					  <select id="example-getting-started" multiple="multiple" class="form-control">
+						  <option value="cheese">Cheese</option>
+						  <option value="tomatoes" disabled selected>Tomatoes</option>
+						  <option value="mozarella">Mozzarella</option>
+						  <option value="mushrooms" disabled selected>Mushrooms</option>
+						  <option value="pepperoni" disabled selected>Pepperoni</option>
+						  <option value="onions" disabled selected>Onions</option>
+					  </select>
+				</div>
+			</div>
+				
 			<div class="form-group pull-left">
 				
 				<a class="btn btn-sm btn-info" href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-angle-double-left fa-lg"></i> Back</a>
@@ -100,4 +113,16 @@
 	 
 @stop
 
+
+
+@section('loadjs')
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#example-getting-started').multiselect({
+
+			});
+		});
+	</script>
+@stop
 

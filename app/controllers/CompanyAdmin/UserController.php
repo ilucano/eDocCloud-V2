@@ -88,62 +88,6 @@ class CompanyAdminUserController extends \BaseController {
 	}
   
   
-    /**
-	 *
-	 *
-	 */
-	
-	public function createStep2($fk_empresa)
-	{
-		
-        $fkEmpresa = $fk_empresa;
-		
-		$companyName = Company::where('row_id', '=', $fkEmpresa)->first()->company_name;
-		
-		
-		$userGroups = null;
-
-		try {
-			
-			$userGroups = Group::where('fk_empresa', '=', $fkEmpresa)->orderBy('nombre')->get();
-		}                       
-		catch(Exception $e)
-		{
-		   
-			$userGroups = null;
-		}
-	 
-		
-		$userGroupsDropdown= array();
-		
-		if($userGroups)
-		{
-			foreach($userGroups as $group)
-			{
-				$userGroupsDropdown[$group->row_id] = $group->nombre;
-				
-			}
-		}
-		
-		
-		
-		$companyAdminDropdown = array('X' => 'Yes', '' => 'No');
-		
-		$activeDropDown = array('X' => 'Yes', '' => 'No');
-		
-		
-		//show step 2
-		return View::make('user.create_step2')
-					->with('fkEmpresa', $fkEmpresa)
-					->with('companyName', $companyName)
-					->with('userGroupsDropdown', $userGroupsDropdown)
-					->with('companyAdminDropdown', $companyAdminDropdown)
-					->with('activeDropDown', $activeDropDown);
-	
-		
-		
-	}
-
 	/**
 	 * Store a newly created resource in storage.
 	 *
