@@ -49,28 +49,6 @@ class CompanyAdminUserController extends \BaseController {
 	
 		$userGroups = null;
 
-		try {
-			
-			$userGroups = Group::where('fk_empresa', '=', $fkEmpresa)->orderBy('nombre')->get();
-		}                       
-		catch(Exception $e)
-		{
-		   
-			$userGroups = null;
-		}
-	 
-		
-		$userGroupsDropdown= array();
-		
-		if($userGroups)
-		{
-			foreach($userGroups as $group)
-			{
-				$userGroupsDropdown[$group->row_id] = $group->nombre;
-				
-			}
-		}
-		
 		
 		$filemarkDropdown = array();
 		
@@ -93,6 +71,23 @@ class CompanyAdminUserController extends \BaseController {
 		}
 		
 		
+		$roleDropdown = array();
+		
+		try {
+			
+			$companyRoles = Role::where('fk_empresa', '=', $fkEmpresa)->orderBy('name')->get();
+			foreach($companyRoles as $role)
+			{
+				$roleDropdown[$role->id] = $role->name;
+			}
+			
+		}                       
+		catch(Exception $e)
+		{
+		   
+			$userRoles = null;
+		}
+		
 		
 		$companyAdminDropdown = array('X' => 'Yes', '' => 'No');
 		
@@ -102,9 +97,9 @@ class CompanyAdminUserController extends \BaseController {
 		//show step 2
 		return View::make('companyadmin.user.create')
 					->with('fkEmpresa', $fkEmpresa)
-					->with('userGroupsDropdown', $userGroupsDropdown)
 					->with('companyAdminDropdown', $companyAdminDropdown)
 					->with('activeDropDown', $activeDropDown)
+					->with('roleDropdown', $roleDropdown)
 					->with('filemarkDropdown', $filemarkDropdown);
 	
 	}
@@ -119,7 +114,7 @@ class CompanyAdminUserController extends \BaseController {
 	{
 		
 		
-		Input::merge(array_map('trim', Input::except('password','file_permission')));
+		Input::merge(array_map('trim', Input::except('password','file_permission', 'assigned_roles')));
  
 		$rules = array(
 			'username' => 'required|unique:users|unique:logins|min:3',
@@ -144,6 +139,8 @@ class CompanyAdminUserController extends \BaseController {
 		$login->password = Hash::make(Input::get('password'));
 		$login->active = (Input::get('status') == 'X') ? 1: 0;
 		$login->save();
+		
+		$login->attachRoles(Input::get('assigned_roles'));
 		
 		//create new user profile
 		$user = new User;
@@ -195,20 +192,7 @@ class CompanyAdminUserController extends \BaseController {
 	public function show($id)
 	{
 		$user = User::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
-		
-		try {
-			   
-			   $group = Group::where('row_id', '=', $user->group_id)->first();
-			   $user->group_name = $group->nombre;
-			   
-		}
-		catch(Exception $e)
-		{
-		   
-			$user->group_name = '';
-		   
-		}
-		
+ 
 		$filemarkDropdown = array();
 		
 		try {
@@ -229,8 +213,48 @@ class CompanyAdminUserController extends \BaseController {
 			
 		}
 		
+		$roleDropdown = array();
+		
+		try {
+			
+			$companyRoles = Role::where('fk_empresa', '=', $user->fk_empresa)->orderBy('name')->get();
+			foreach($companyRoles as $role)
+			{
+				$roleDropdown[$role->id] = $role->name;
+			}
+			
+		}                       
+		catch(Exception $e)
+		{
+		   
+			$userRoles = null;
+		}
+		
+		 
+		$assignedRoles = array();
+		
+		try {
+
+			$roles = Login::where('username', '=', $user->username)->first()->roles;
+			
+			foreach($roles as $role)
+			{
+				$assignedRoles[] = $role->id;
+			}
+			 
+		}
+		catch(Exception $e)
+		{
+			$assignedRoles = array();
+		}
+	
+	    
+		
+		
         return View::make('companyadmin.user.show')
                ->with('user', $user)
+			   	->with('roleDropdown', $roleDropdown)
+			   ->with('assignedRoles', $assignedRoles)
 			   ->with('filemarkDropdown', $filemarkDropdown);
 		
 	}
@@ -249,32 +273,6 @@ class CompanyAdminUserController extends \BaseController {
 		$user = User::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
 	
 		$userCompanies = null;
-		
-		$userGroups = null;
-		
-		try {
-			
-			$userGroups = Group::where('fk_empresa', '=', $user->fk_empresa)->orderBy('nombre')->get();
-		}                       
-		catch(Exception $e)
-		{
-		   
-			$userGroups = null;
-		}
-	 
-		
-		$userGroupsDropdown= array();
-		
-		if($userGroups)
-		{
-			foreach($userGroups as $group)
-			{
-				$userGroupsDropdown[$group->row_id] = $group->nombre;
-				
-			}
-		}
-		
-		
 		
 		$companyAdminDropdown = array('' => 'No', 'X' => 'Yes');
 		
@@ -300,12 +298,48 @@ class CompanyAdminUserController extends \BaseController {
 			
 		}
 		
+		$roleDropdown = array();
+		
+		try {
+			
+			$companyRoles = Role::where('fk_empresa', '=', $user->fk_empresa)->orderBy('name')->get();
+			foreach($companyRoles as $role)
+			{
+				$roleDropdown[$role->id] = $role->name;
+			}
+			
+		}                       
+		catch(Exception $e)
+		{
+		   
+			$userRoles = null;
+		}
+		
+		 
+		$assignedRoles = array();
+		try {
+
+			$roles = Login::where('username', '=', $user->username)->first()->roles;
+			
+			foreach($roles as $role)
+			{
+				$assignedRoles[] = $role->id;
+			}
+			 
+		}
+		catch(Exception $e)
+		{
+			$assignedRoles = array();
+		}
+	
+	    
 		// load the view and pass the data
         return View::make('companyadmin.user.edit')
                ->with('user', $user)
 			   ->with('companyAdminDropdown', $companyAdminDropdown)
 			   ->with('activeDropDown', $activeDropDown)
-			   ->with('userGroupsDropdown', $userGroupsDropdown)
+			   ->with('roleDropdown', $roleDropdown)
+			   ->with('assignedRoles', $assignedRoles)
 			   ->with('filemarkDropdown', $filemarkDropdown);
 
 	}
@@ -320,7 +354,7 @@ class CompanyAdminUserController extends \BaseController {
 	public function update($id)
 	{
 		//
-		Input::merge(array_map('trim', Input::except('password','file_permission')));
+		Input::merge(array_map('trim', Input::except('password','file_permission', 'assigned_roles')));
 		
 		 $rules = array(
             'password' => 'min:5',
@@ -338,6 +372,7 @@ class CompanyAdminUserController extends \BaseController {
                 ->withInput();
         }
         
+		
 		 // store 
 		$user = User::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
 		
@@ -371,6 +406,12 @@ class CompanyAdminUserController extends \BaseController {
 				$login->active = (Input::get('status') == 'X') ? 1: 0;
 				
 				$login->save();
+				
+				//detach existing roles
+				$oldRoles = $login->roles;
+				$login->detachRoles($oldRoles);
+				$login->attachRoles(Input::get('assigned_roles'));
+				
 				
 			}
 		

@@ -95,7 +95,7 @@
 
 			
 			<div class="form-group">
-				<label>Filemarks Allowed</label>
+				<label>Files Permission</label>
 				 
 				<div class="form-group">
 				
@@ -106,12 +106,13 @@
 				
 					
 			<div class="form-group">
-				<label>User Group</label>
-				 <div class="form-group input-group">
-				 <span class="input-group-addon"><i class="fa fa-users"></i></span>
-				{{ Form::select('group_id', $userGroupsDropdown, Input::old('group_id'), array('class'=>'form-control')) }}
+				<label>User Role</label>
+				 <div class="form-group">
+				 
+				{{ Form::select('assigned_roles[]', $roleDropdown,  Input::old('assigned_roles'), array('class'=>'form-control', 'multiple'=>'multiple', 'id'=>'assigned_roles')) }}
                 </div>
 			</div>
+				
 
 			<div class="form-group">
 				<label>Company Admin</label>
@@ -151,6 +152,12 @@
 
 		$(document).ready(function() {
 			$('#file_permission').multiselect(
+					{
+			
+					});
+					
+			
+			$('#assigned_roles').multiselect(
 					{
 			
 					});

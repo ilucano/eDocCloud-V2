@@ -46,45 +46,48 @@ class CompanyAdminRoleController extends \BaseController {
 	{
 		
 		
-		Input::merge(array_map('trim', Input::except('password')));
+		Input::merge(array_map('trim', Input::except('password','permission_list')));
  
+	
 		$rules = array(
-			'label' => 'required',			
+			'name' => 'required',
+			'permission_list' => 'required'
         );
 		 
-        $validator = Validator::make(Input::all(), $rules);
+		$messages = array(
+			'permission_list.required' => 'Please select at least one permission',
+		);
+		
+        $validator = Validator::make(Input::all(), $rules, $messages);
 		
 		if ($validator->fails()) {
-            return Redirect::to('companyadmin/filemark/create')
+            return Redirect::to('companyadmin/role/create')
                 ->withErrors($validator)
                 ->withInput();
         }
 		
-		//check if exist
-		$markCount = Filemark::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
-							 ->where('label', '=', Input::get('label'))
+		
+		$existCount = Role::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
+							 ->where('name', '=', Input::get('name'))
 							 ->count();
 		
-		if($markCount >= 1)
+		if($existCount >= 1)
 		{
-			Session::flash('error', '<strong>'.Input::get('label') .'</strong> already exists');
-			return Redirect::to('companyadmin/filemark/create');
+			Session::flash('error', '<strong>'.Input::get('name') .'</strong> already exists');
+			return Redirect::to('companyadmin/role/create');
 			exit;
 		}
 		
+		$role = new Role;
+		$role->name = Input::get('name');
+		$role->fk_empresa = Auth::User()->getUserData()->fk_empresa;
+		$role->save();
 		
-		//create login
-		$filemark = new Filemark;
-		$filemark->label = Input::get('label');
-		$filemark->global = 0;
-		$filemark->fk_empresa = Auth::User()->getUserData()->fk_empresa;
-		$filemark->create_date = date("Y-m-d H:i:s");
-		$filemark->save();
-	
+		$role->perms()->sync(Input::get('permission_list'));
 	         
-		Session::flash('message', '<strong>'.Input::get('label') .'</strong> successfully created');
+		Session::flash('message', '<strong>'.Input::get('name') .'</strong> successfully created');
 			
-		return Redirect::to('companyadmin/filemark');
+		return Redirect::to('companyadmin/role');
 	
 		 
 	}
@@ -112,14 +115,26 @@ class CompanyAdminRoleController extends \BaseController {
 	public function edit($id)
 	{
 		//
-	   
-	   	$filemark = Filemark::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
-								->find($id);
-         
-		 
+		$role = Role::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
 	
-        return View::make('companyadmin.filemark.edit')
-               ->with('filemark', $filemark);
+		
+		$arraySelectedPermission = array();
+			
+		$rolePermissions = $role->perms;
+		
+		foreach($rolePermissions as $rolePermission)
+		{
+			$arraySelectedPermission[] = $rolePermission->id;
+		}
+
+		$permissionList = Permission::where('name', 'NOT LIKE', 'system_admin%')->orderBy('display_name')->get();
+		
+		return View::make('companyadmin.role.edit')
+					->with('permissionList', $permissionList)
+					->with('arraySelectedPermission',$arraySelectedPermission)
+					->with('role', $role);
+					
+	 
 
 	}
 
@@ -132,44 +147,50 @@ class CompanyAdminRoleController extends \BaseController {
 	 */
 	public function update($id)
 	{
-	
-		Input::merge(array_map('trim', Input::except('password')));
+		
+		
+		Input::merge(array_map('trim', Input::except('password','permission_list')));
  
+	
 		$rules = array(
-			'label' => 'required',			
+			'name' => 'required',
+			'permission_list' => 'required'
         );
 		 
-        $validator = Validator::make(Input::all(), $rules);
+		$messages = array(
+			'permission_list.required' => 'Please select at least one permission',
+		);
+		
+        $validator = Validator::make(Input::all(), $rules, $messages);
 		
 		if ($validator->fails()) {
-            return Redirect::to('companyadmin/filemark/create')
+            return Redirect::to('companyadmin/role/'.$id. '/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
 		
-		//check if exist of same name 
-		$markCount = Filemark::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
-							 ->where('label', '=', Input::get('label'))
+		
+		$existCount = Role::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
+							 ->where('name', '=', Input::get('name'))
 							 ->where('id', '<>', $id)
 							 ->count();
 		
-		if($markCount >= 1)
+		if($existCount >= 1)
 		{
-			Session::flash('error', '<strong>'.Input::get('label') .'</strong> already exists');
-			return Redirect::to('companyadmin/filemark/'.$id.'/edit');
+			Session::flash('error', '<strong>'.Input::get('name') .'</strong> already exists');
+			return Redirect::to('companyadmin/role/'.$id. '/edit');
 			exit;
 		}
 		
+		$role = Role::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
+		$role->name = Input::get('name');
+		$role->save();
 		
-		//create login
-		$filemark = Filemark::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
-		$filemark->label = Input::get('label');
-		$filemark->save();
-	
+		$role->perms()->sync(Input::get('permission_list'));
 	         
-		Session::flash('message', 'Filemark successfully updated');
+		Session::flash('message', '<strong>'.Input::get('name') .'</strong> successfully updated');
 			
-		return Redirect::to('companyadmin/filemark');
+		return Redirect::to('companyadmin/role');
 	
 		
 	}

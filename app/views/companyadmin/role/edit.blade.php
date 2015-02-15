@@ -6,7 +6,7 @@
 			
 
 			<h2 class="page-header">{{ Auth::User()->getCompanyName() }}
-			<small>Filemark</small>
+			<small>User Roles</small>
 			</h2>
 				
 		    <ol class="breadcrumb">
@@ -15,11 +15,11 @@
 				</li>
 					
 				<li class="active">
-					<i class="fa fa-tags"></i> <a href="{{ URL::to('companyadmin/filemark') }}">Filemarks</a>
+					<i class="fa fa-users"></i> <a href="{{ URL::to('companyadmin/role') }}">User Roles</a>
 				</li>
  
 				<li class="active">
-					<i class="fa fa-tag"></i> {{ $filemark->label }}
+					<i class="fa fa-users"></i> {{ $role->name }}
 				</li>
 			</ol
 		</div>
@@ -35,32 +35,78 @@
 			@endif
 		</div>
 			
-		
-		
-		<div class="col-lg-8">
-            
-			{{ Form::model($filemark, array('route' => array('companyadmin.filemark.update', $filemark->id), 'method' => 'PUT', 'class' => 'form-inline')) }}
+		<div class="clearfix"></div>
 			
-			<div class="form-group input-group @if ($errors->has('label')) has-error @endif">
+			
+		{{ Form::model($role, array('route' => array('companyadmin.role.update', $role->id), 'method' => 'PUT')) }}
 
-				<span class="input-group-addon"><i class="fa fa-tag"></i></span>
-			    
-				{{ Form::text('label', $filemark->label, array('class'=>'form-control', 'placeholder'=>'Enter label')) }}
+				
+			<div class="col-lg-6">
 				
 				
-					
-			</div>
-			{{ Form::submit('Save', array('class' => 'btn btn-sm btn-success')) }}
-			<a class="btn btn-sm btn-info" href="{{ URL::to('companyadmin/filemark') }}"> Back</a>
-					
-			@if ($errors->has('label')) <p class="help-block">{{ $errors->first('label') }}</p> @endif
-			
 			
 				
-			{{ Form::close() }}
+				<div class="form-group @if ($errors->has('name')) has-error @endif">
+					<label>Role Name</label>
+					{{ Form::text('name', $role->name, array('class'=>'form-control','placeholder'=>'e.g. Sales Dept')) }}
+					@if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+				</div>
+					
+			
+			    <div class="form-group @if ($errors->has('permission_list')) has-error @endif">
+					<label>Role Permission</label>
+                        
+						@if ($errors->has('permission_list')) <p class="help-block">{{ $errors->first('permission_list') }}</p> @endif
+							
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="permission-table">
+                                <tbody>
+								    
+									@foreach($permissionList as $permission)
+                                    <tr>
+                                        <td>{{ $permission->display_name }}</td>
+                                        <td>
+										    <?php
+											  $checked = in_array($permission->id, $arraySelectedPermission) ? 1 : 0;
+											?>
+											{{ Form::checkbox('permission_list[]', $permission->id, $checked, ['data-style'=>'btn-group-xs']) }}
+											
+										</td>
+                                        
+                                    </tr>
+									@endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+						
 
-		</div>		
-	
+				 <div class="form-group pull-left">
+					<a class="btn btn-sm btn-info" href="{{ URL::to('companyadmin/role') }}"> Back</a>
+				</div>
+							
+				<div class="form-group pull-right">	
+					{{ Form::submit('Save', array('class' => 'btn btn-sm btn-success')) }}
+				</div>	
+		 
+
+			</div>		
+	    
+		{{ Form::close() }}
 @stop
 
+
+
+
+@section('loadjs')
+	
+	<script type="text/javascript">
+
+		$(function() {
+				$('#permission-table input[type="checkbox"]').checkboxpicker({
+				});
+		});
+
+	</script>
+@stop
 

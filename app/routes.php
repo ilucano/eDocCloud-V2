@@ -86,6 +86,8 @@ Route::group(array('before'=>'auth'), function() {
 	
 	Route::post('administrator/isadmin', array('uses' => 'AdministratorController@doUpdateIsAdmin'));
 	
+	Route::resource('order', 'OrderController');
+	
 	
 	/* end super admin section */
 	

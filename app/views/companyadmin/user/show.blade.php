@@ -39,18 +39,19 @@
 				<label>Password</label>
 				{{ Form::text('password', '******', array('class'=>'form-control', 'disabled'=>'disabled')) }}
 			</div>
-
-		</div>
-		
-		<div class="col-lg-4">
-		
-		   	 <div class="form-group">
+			
+			<div class="form-group">
 				<label>Email</label>
 				 <div class="form-group input-group">
 					<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 					{{ Form::text('email', $user->email, array('class'=>'form-control', 'disabled'=>'disabled')) }}
 				 </div>
 			</div>
+		</div>
+		
+		<div class="col-lg-4">
+		
+		 
 			
 			<div class="form-group">
 				<label>Phone</label>
@@ -61,7 +62,7 @@
 			</div>
 				
 		    <div class="form-group">
-				<label>Filemarks Allowed</label>
+				<label>Files Permission</label>
 				 
 				<div class="form-group">
 				
@@ -70,18 +71,19 @@
 				</div>
 			</div>
 				
+				
 			<div class="form-group">
-				<label>User Group</label>
-					
-				 <div class="form-group input-group">
-					<span class="input-group-addon"><i class="fa fa-user"></i></span>
-					{{ Form::text('group_name',$user->group_name , array('class'=>'form-control', 'disabled'=>'disabled')) }}
-				 </div>
-
+				<label>User Role</label>
+				 <div class="form-group">
+				 
+				{{ Form::select('assigned_roles[]', $roleDropdown, $assignedRoles, array('class'=>'form-control', 'multiple'=>'multiple', 'id'=>'assigned_roles')) }}
+                </div>
 			</div>
+				
+				
 			
 			<div class="form-group">
-				<label>Is Company Admin</label>
+				<label>Company Admin</label>
 				<?php
 					$admin = (strtolower($user->company_admin) == 'x') ? 'Yes' : 'No';
 				?>
@@ -90,6 +92,14 @@
 			</div>
 				
             
+			<div class="form-group">
+				<label>Active</label>
+				<?php
+					$active = (strtolower($user->status) == 'x') ? 'Yes' : 'No';
+				?>
+				{{ Form::text('status', $active, array('class'=>'form-control', 'disabled'=>'disabled')) }}
+			</div>
+				
 			
 			
 				
@@ -118,15 +128,30 @@
 			$('#file_permission').multiselect(
 					{
 						onChange: function(element, checked) {
-						if(checked === true) {
-							$("#file_permission").multiselect('deselect', element.val());
+							if(checked === true) {
+								$("#file_permission").multiselect('deselect', element.val());
+							}
+							else if(checked === false) {
+								$("#file_permission").multiselect('select', element.val());
+							}
 						}
-						else if(checked === false) {
-							$("#file_permission").multiselect('select', element.val());
-						}
-					}
 			
 					});
+					
+			
+			$('#assigned_roles').multiselect(
+					{
+						onChange: function(element, checked) {
+							if(checked === true) {
+								$("#assigned_roles").multiselect('deselect', element.val());
+							}
+							else if(checked === false) {
+								$("#assigned_roles").multiselect('select', element.val());
+							}
+							
+						}
+					});
+					
 		});
 
 	</script>

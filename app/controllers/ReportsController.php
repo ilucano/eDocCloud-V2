@@ -9,8 +9,7 @@ class ReportsController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
-		echo "nothing yet";
+		echo "nothing";
 	}
     
 	
