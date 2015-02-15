@@ -10,42 +10,21 @@ class OrderController extends \BaseController {
 	public function index()
 	{
 		//
-		$workflows = Workflow::where('fk_status', '=', 4)
-		                       ->orWhere(
-										 function ($query)
-										 {
-											$query->where('fk_status', '=', 5)
-											      ->where('created_by', '=', Auth::user()->getUserData()->row_id);
-											
-										 }
-								)->get();
-							   
+		$objects = Object::where('fk_obj_type', '=', 1)->orderBy('fk_status')->get();
 		
+	
 		
-		foreach($workflows as $workflow)
+		foreach($objects as $object)
 		{
-			//get status
-			$workflow->status = WorkflowStatus::where('row_id', '=', $workflow->fk_status)->firstOrFail()->status;
-			$_pickup = Pickup::where('fk_barcode', '=', $workflow->wf_id)->firstOrFail();
-			$_object = Object::where('row_id', '=', $_pickup->fk_box)->firstOrFail();
-			
-			$workflow->boxid = $_object->row_id;
-			$workflow->company_name = Company::where('row_id', '=', $_object->fk_company)->firstOrFail()->company_name;
-            
-			try {
-			   $workflow->attach = Attach::where('fk_obj_id', '=' , $workflow->boxid)->select('row_id', 'attach_name')->firstOrFail();
-			}
-			catch (Exception $e)
-			{
-			   $workflow->attach = null;
-			}
+		    
+			$object->company_name = Company::where('row_id', '=', $object->fk_company)->firstOrFail()->company_name;
+		    $object->status = OrderStatus::find($object->fk_status)->status;
 			
 		}
-		
-		
+
 		// load the view and pass the data
-        return View::make('prepare.index')
-               ->with('workflows', $workflows);
+        return View::make('order.index')
+               ->with('objects', $objects);
 	}
 
 
@@ -92,6 +71,10 @@ class OrderController extends \BaseController {
 	public function edit($id)
 	{
 		//
+		$object = Object::find($id);
+			// load the view and pass the data
+        return View::make('order.edit')
+               ->with('object', $object);
 	}
 
 

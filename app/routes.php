@@ -88,6 +88,7 @@ Route::group(array('before'=>'auth'), function() {
 	
 	Route::resource('order', 'OrderController');
 	
+	Route::post('order/status', array('uses' => 'OrderController@doUpdateStatus'));
 	
 	/* end super admin section */
 	
