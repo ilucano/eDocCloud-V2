@@ -92,22 +92,32 @@
 				
 			
 			<!-- Only ImagingXperts User can be system admin -->
-	
+
 			
 			<div class="form-group">
-				<label>Company Admin</label>
-				 <div class="form-group input-group">
-				 <span class="input-group-addon"><i class="fa fa-user"></i></span>
-				{{ Form::select('company_admin', $companyAdminDropdown, Input::old('company_admin'), array('class'=>'form-control')) }}
-                </div>
+				<label>Filemarks Allowed</label>
+				 
+				<div class="form-group">
+				
+				{{ Form::select('file_permission[]', $filemarkDropdown, Input::old('file_permission'), array('class'=>'form-control', 'multiple'=>'multiple', 'id'=>'file_permission')) }}
+
+				</div>
 			</div>
-			
+				
 					
 			<div class="form-group">
 				<label>User Group</label>
 				 <div class="form-group input-group">
 				 <span class="input-group-addon"><i class="fa fa-users"></i></span>
 				{{ Form::select('group_id', $userGroupsDropdown, Input::old('group_id'), array('class'=>'form-control')) }}
+                </div>
+			</div>
+
+			<div class="form-group">
+				<label>Company Admin</label>
+				 <div class="form-group input-group">
+				 <span class="input-group-addon"><i class="fa fa-user"></i></span>
+				{{ Form::select('company_admin', $companyAdminDropdown, Input::old('company_admin'), array('class'=>'form-control')) }}
                 </div>
 			</div>
 				
@@ -134,4 +144,18 @@
 
 @stop
 
+
+@section('loadjs')
+	
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			$('#file_permission').multiselect(
+					{
+			
+					});
+		});
+
+	</script>
+@stop
 

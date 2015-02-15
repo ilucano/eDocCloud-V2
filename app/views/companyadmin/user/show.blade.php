@@ -60,7 +60,16 @@
 				 </div>
 			</div>
 				
-		
+		    <div class="form-group">
+				<label>Filemarks Allowed</label>
+				 
+				<div class="form-group">
+				
+				{{ Form::select('file_permission', $filemarkDropdown, json_decode($user->file_permission, true), array('class'=>'form-control', 'multiple'=>'multiple', 'id'=>'file_permission')) }}
+
+				</div>
+			</div>
+				
 			<div class="form-group">
 				<label>User Group</label>
 					
@@ -82,21 +91,7 @@
 				
             
 			
-			<div class="form-group">
-				<label>Filemarks Allowed</label>
-				 
-				<div class="form-group input-group">
-				<!-- Build your select: -->
-					  <select id="example-getting-started" multiple="multiple" class="form-control">
-						  <option value="cheese">Cheese</option>
-						  <option value="tomatoes" disabled selected>Tomatoes</option>
-						  <option value="mozarella">Mozzarella</option>
-						  <option value="mushrooms" disabled selected>Mushrooms</option>
-						  <option value="pepperoni" disabled selected>Pepperoni</option>
-						  <option value="onions" disabled selected>Onions</option>
-					  </select>
-				</div>
-			</div>
+			
 				
 			<div class="form-group pull-left">
 				
@@ -118,11 +113,22 @@
 @section('loadjs')
 	
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#example-getting-started').multiselect({
 
-			});
+		$(document).ready(function() {
+			$('#file_permission').multiselect(
+					{
+						onChange: function(element, checked) {
+						if(checked === true) {
+							$("#file_permission").multiselect('deselect', element.val());
+						}
+						else if(checked === false) {
+							$("#file_permission").multiselect('select', element.val());
+						}
+					}
+			
+					});
 		});
+
 	</script>
 @stop
 

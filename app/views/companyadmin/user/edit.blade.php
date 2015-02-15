@@ -99,15 +99,19 @@
 			
 			<!-- Only ImagingXperts User can be system admin -->
 	
+		
 			
 			<div class="form-group">
-				<label>Company Admin</label>
-				 <div class="form-group input-group">
-				 <span class="input-group-addon"><i class="fa fa-user"></i></span>
-				{{ Form::select('company_admin', $companyAdminDropdown, strtoupper($user->company_admin), array('class'=>'form-control')) }}
-                </div>
+				<label>Filemarks Allowed</label>
+				 
+				<div class="form-group">
+				
+				{{ Form::select('file_permission[]', $filemarkDropdown, json_decode($user->file_permission, true), array('class'=>'form-control', 'multiple'=>'multiple', 'id'=>'file_permission')) }}
+
+				</div>
 			</div>
-			
+				
+				
 					
 			<div class="form-group">
 				<label>User Group</label>
@@ -117,6 +121,15 @@
                 </div>
 			</div>
 				
+			<div class="form-group">
+				<label>Company Admin</label>
+				 <div class="form-group input-group">
+				 <span class="input-group-addon"><i class="fa fa-user"></i></span>
+				{{ Form::select('company_admin', $companyAdminDropdown, strtoupper($user->company_admin), array('class'=>'form-control')) }}
+                </div>
+			</div>
+			
+			
 			<div class="form-group">
 				<label>Active</label>
 				 <div class="form-group input-group">
@@ -141,5 +154,25 @@
        {{ Form::close() }}
 
 @stop
+
+
+
+
+
+@section('loadjs')
+	
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			$('#file_permission').multiselect(
+					{
+			
+					});
+		});
+
+	</script>
+@stop
+
+
 
 

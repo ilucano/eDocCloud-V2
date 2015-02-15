@@ -72,6 +72,27 @@ class CompanyAdminUserController extends \BaseController {
 		}
 		
 		
+		$filemarkDropdown = array();
+		
+		try {
+			
+			$filemarks = Filemark::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)
+								->orWhere('global', '=', 1)
+								->orderBy('global', 'desc')
+								->orderBy('label')->get();
+			
+			foreach($filemarks as $filemark)
+			{
+				$filemarkDropdown[$filemark->id] = $filemark->label;
+			}
+		}
+		catch(Exception $e)
+		{
+			$filemarkDropdown = array();
+			
+		}
+		
+		
 		
 		$companyAdminDropdown = array('X' => 'Yes', '' => 'No');
 		
@@ -83,7 +104,8 @@ class CompanyAdminUserController extends \BaseController {
 					->with('fkEmpresa', $fkEmpresa)
 					->with('userGroupsDropdown', $userGroupsDropdown)
 					->with('companyAdminDropdown', $companyAdminDropdown)
-					->with('activeDropDown', $activeDropDown);
+					->with('activeDropDown', $activeDropDown)
+					->with('filemarkDropdown', $filemarkDropdown);
 	
 	}
   
@@ -97,7 +119,7 @@ class CompanyAdminUserController extends \BaseController {
 	{
 		
 		
-		Input::merge(array_map('trim', Input::except('password')));
+		Input::merge(array_map('trim', Input::except('password','file_permission')));
  
 		$rules = array(
 			'username' => 'required|unique:users|unique:logins|min:3',
@@ -135,7 +157,8 @@ class CompanyAdminUserController extends \BaseController {
 		$user->status = Input::get('status');
 		$user->company_admin = Input::get('company_admin');
 		$user->group_id = Input::get('group_id');
-        
+        $user->file_permission = is_array(Input::get('file_permission')) ? json_encode(Input::get('file_permission')) : null;
+		
 		$user->save();
 		
  
@@ -173,7 +196,6 @@ class CompanyAdminUserController extends \BaseController {
 	{
 		$user = User::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
 		
-		
 		try {
 			   
 			   $group = Group::where('row_id', '=', $user->group_id)->first();
@@ -187,8 +209,29 @@ class CompanyAdminUserController extends \BaseController {
 		   
 		}
 		
+		$filemarkDropdown = array();
+		
+		try {
+			
+			$filemarks = Filemark::where('fk_empresa', '=', $user->fk_empresa)
+								->orWhere('global', '=', 1)
+								->orderBy('global', 'desc')
+								->orderBy('label')->get();
+			
+			foreach($filemarks as $filemark)
+			{
+				$filemarkDropdown[$filemark->id] = $filemark->label;
+			}
+		}
+		catch(Exception $e)
+		{
+			$filemarkDropdown = array();
+			
+		}
+		
         return View::make('companyadmin.user.show')
-               ->with('user', $user);
+               ->with('user', $user)
+			   ->with('filemarkDropdown', $filemarkDropdown);
 		
 	}
 
@@ -237,12 +280,33 @@ class CompanyAdminUserController extends \BaseController {
 		
         $activeDropDown = array('X' => 'Yes', '' => 'No');
 		
+		$filemarkDropdown = array();
+		
+		try {
+			
+			$filemarks = Filemark::where('fk_empresa', '=', $user->fk_empresa)
+								->orWhere('global', '=', 1)
+								->orderBy('global', 'desc')
+								->orderBy('label')->get();
+			
+			foreach($filemarks as $filemark)
+			{
+				$filemarkDropdown[$filemark->id] = $filemark->label;
+			}
+		}
+		catch(Exception $e)
+		{
+			$filemarkDropdown = array();
+			
+		}
+		
 		// load the view and pass the data
         return View::make('companyadmin.user.edit')
                ->with('user', $user)
 			   ->with('companyAdminDropdown', $companyAdminDropdown)
 			   ->with('activeDropDown', $activeDropDown)
-			   ->with('userGroupsDropdown', $userGroupsDropdown);
+			   ->with('userGroupsDropdown', $userGroupsDropdown)
+			   ->with('filemarkDropdown', $filemarkDropdown);
 
 	}
 
@@ -256,6 +320,7 @@ class CompanyAdminUserController extends \BaseController {
 	public function update($id)
 	{
 		//
+		Input::merge(array_map('trim', Input::except('password','file_permission')));
 		
 		 $rules = array(
             'password' => 'min:5',
@@ -272,7 +337,7 @@ class CompanyAdminUserController extends \BaseController {
                 ->withErrors($validator)
                 ->withInput();
         }
-
+        
 		 // store 
 		$user = User::where('fk_empresa', '=', Auth::User()->getUserData()->fk_empresa)->find($id);
 		
@@ -280,7 +345,7 @@ class CompanyAdminUserController extends \BaseController {
 		$user->last_name 		= Input::get('last_name');
 		$user->email 		= Input::get('email');
 		$user->phone 		= Input::get('phone');
-	  
+	     
 	    if(Input::get('password')) {
 			$user->password = Input::get('password');
 		}
@@ -288,6 +353,8 @@ class CompanyAdminUserController extends \BaseController {
 		$user->status  = Input::get('status');
 		$user->group_id  = Input::get('group_id');
 		$user->company_admin  = Input::get('company_admin');
+		
+		$user->file_permission = is_array(Input::get('file_permission')) ? json_encode(Input::get('file_permission')) : null;
 		
 		$user->save();
 		
