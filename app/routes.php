@@ -40,7 +40,9 @@ Route::group(array('before'=>'auth'), function() {
 	));
 	
 	/* begin super admin section */
-    Route::resource('pickup', 'PickupController');
+	
+	Route::resource('pickup', 'PickupController');
+	 
 	
 	Route::resource('prepare', 'PrepareController');
 	
@@ -198,18 +200,3 @@ Route::get('/start', function()
     return 'Woohoo!';
 });
 
-
-Route::get('/secret', function()
-{
-
-	
-    
-    $user = Login::find(3);
-	 
-    if ($user->can('can_edit'))
-    {
-        return 'Redheads party the hardest!';
-    }
- 
-    return 'Many people like to party.';
-});

@@ -102,7 +102,7 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 	public function isAdmin()
 	{
 		
-		if(strtolower($this-getUserData()->is_admin) == 'x')
+		if(strtolower($this->getUserData()->is_admin) == 'x')
 		{
 			return true;
 		}
@@ -118,7 +118,7 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 	public function isCompanyAdmin()
 	{
 		
-		if(strtolower($this-getUserData()->company_admin) == 'x')
+		if(strtolower($this->getUserData()->company_admin) == 'x')
 		{
 			return true;
 		}

@@ -61,23 +61,32 @@
 			<ul class="nav navbar-left top-nav">
 				
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> {{ Auth::user()->getCompanyName() }} <b class="caret"></b></a>
-						
-				    <ul class="dropdown-menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> {{ Auth::user()->getCompanyName() }}
+					@if(Auth::User()->isCompanyAdmin())
+						<b class="caret"></b>
+				    @endif
+					</a>
 					
+					@if(Auth::User()->isCompanyAdmin())
+				    <ul class="dropdown-menu">
+					    @if(Auth::User()->can('admin_user'))
                         <li>
                             <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-user"></i> My Users</a>
                         </li>
-							
+						@endif
+						 
 						<li>
                             <a href="{{ URL::to('companyadmin/role') }}"><i class="fa fa-fw fa-users"></i> User Roles</a>
                         </li>
-							
+						 
+						@if(Auth::User()->can('admin_filemark'))
 						<li>
                             <a href="{{ URL::to('companyadmin/filemark') }}"><i class="fa fa-fw fa-tags"></i> My Filemarks</a>
                         </li>
+						@endif
 						 
                     </ul>
+					@endif
 						
 				 </li>
 					
@@ -107,19 +116,25 @@
                     </ul>
                 </li>
                 
+				@if(Auth::User()->isAdmin()) 
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-edit"></i> Workflow <b class="caret"></b></a>
 						
 				    <ul class="dropdown-menu">
+					   
                         <li>
                             <a href="{{ URL::to('pickup') }}"> Pickup</a>
                         </li>
+						 
+						 
 						<li>
                             <a href="{{ URL::to('prepare') }}"> Preparation</a>
                         </li>
+					 
 						<li>
                             <a href="{{ URL::to('scan') }}"> Scan</a>
                         </li>
+					 
 						<li>
                             <a href="{{ URL::to('qa') }}"> QA</a>
                         </li>
@@ -129,7 +144,8 @@
                     </ul>
 						
 				 </li>
-					
+				
+				
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o"></i> Reports <b class="caret"></b></a>
 						
@@ -144,7 +160,8 @@
                     </ul>
 						
 				 </li>
-					
+				
+				
 				
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i> System Admin <b class="caret"></b></a>
@@ -177,20 +194,18 @@
                     </ul>
 						
 				 </li>
-					
+				@endif
+				
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ Auth::user()->getUserData()->first_name }} {{ Auth::user()->getUserData()->last_name }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
+					    @if(Auth::User()->can('user_changepassword'))
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            <a href="#"> Change Password</a>
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
+                        @endif
+                        
+                        
                         <li>
                             <a href="{{ URL::to('logout') }}"><i class="fa fa-fw fa-sign-out"></i> Log Out</a>
                         </li>
@@ -200,20 +215,29 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
            <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
+					 @if(Auth::User()->can('user_order'))
                     <li>
                          <a href="{{ URL::to('users/order') }}"><i class="fa fa-fw fa-ticket"></i> Orders</a>
 					</li>
+					@endif
+					
+					@if(Auth::User()->can('user_file') || Auth::User()->can('user_search'))
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder"></i> Files <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
+							@if(Auth::User()->can('user_search'))
                             <li>
                                 <a href="{{ URL::to('users/file/search') }}"><i class="fa fa-fw fa-search"></i> Search</a>
                             </li>
+							@endif
+							@if(Auth::User()->can('user_file'))
                             <li>
                                 <a href="{{ URL::to('users/file') }}"><i class="fa fa-fw fa-list"></i> Browse</a>
-                            </li>>
+                            </li>
+							@endif
                         </ul>
                     </li>
+					@endif
                 </ul>
             </div>  
             <!-- /.navbar-collapse -->
