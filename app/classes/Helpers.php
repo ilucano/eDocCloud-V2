@@ -20,5 +20,19 @@ class Helpers {
 		
 		return date("F j, Y, g:i a", strtotime($date));
 	}
+	
+	
+	public static function getLastQuery()
+	{
+		
+		$queries = DB::getQueryLog();
+		$last_query = end($queries);
+		return $last_query;
+	}
+	
+	public static function bytesToMegabytes($bytes)
+	{
+		return number_format($bytes / 1024 / 1024,2) .'MB';
+	}
 
 }

@@ -62,13 +62,54 @@ class UsersChartController extends \BaseController {
 	public function indexBoxOrderChart($boxId = '', $orderId = '', $chartId = '')
 	{
 		$filePermission = Auth::User()->getUserData()->file_permission;
-		print_r($filePermission);
 		
-		$files = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId() );
-				 
-		//$files = FileTable::where
+		$files = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId() )
+							->where('parent_id', '=', $chartId)
+							->where(function($query)
+								{
+									$query->whereIn('file_mark_id', json_decode(Auth::User()->getUserData()->file_permission, true))
+									      ->orWhere('file_mark_id','=', '')
+										  ->orWhereRaw('file_mark_id is null');
+								}
+							  )
+						    ->get(array('row_id', 'filename', 'creadate', 'moddate', 'pages', 'filesize', 'file_mark_id'));
+							
+	 
 			   
-		 
+		      
+       	$box = Object::where('row_id', '=', $boxId)->first();
+		
+		$order = Object::where('row_id', '=', $orderId)->first();
+		
+		$chart = Object::where('row_id', '=', $chartId)->first();
+		
+		$filemarkDropdown = array('' => '(No Label)');
+		
+		try {
+			$filemarks = Filemark::where('fk_empresa', '=', Auth::User()->getCompanyId())
+								->orWhere('global', '=', 1)
+								->orderBy('global', 'desc')
+								->orderBy('label')->get();
+            
+			
+			foreach($filemarks as $filemark)
+			{
+				$filemarkDropdown[$filemark->id] = $filemark->label;
+			}
+			
+		}
+		catch (Exception $e)
+		{
+			
+		}
+		
+		return View::make('users.chart.index_box_order_chart')
+	           ->with('box', $box)
+			   ->with('order', $order)
+			   ->with('chart', $chart)
+			   ->with('filemarkDropdown', $filemarkDropdown)
+               ->with('files', $files);
+			   
 		
 	}
 

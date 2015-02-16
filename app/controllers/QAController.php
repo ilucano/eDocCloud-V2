@@ -127,8 +127,7 @@ class QAController extends \BaseController {
 	 * @return Response
 	 */
 	public function doUpdateStatus()
-	{
-		print_r(Input::get());
+	{ 
 		
 		$rules = array(
 			'wfid' => 'required',  

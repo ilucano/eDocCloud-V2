@@ -143,6 +143,10 @@ Route::group(array('before'=>'auth'), function() {
 				'uses' => 'UsersChartController@indexBoxOrderChart'
 			));
 			
+			Route::get('file/mark', array('uses' => 'UsersFileController@doUpdateMark'));
+			
+			Route::resource('file', 'UsersFileController');
+			
 		}
 	);
 	
