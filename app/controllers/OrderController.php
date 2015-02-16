@@ -71,10 +71,26 @@ class OrderController extends \BaseController {
 	public function edit($id)
 	{
 		//
+		$companies = Company::orderBy('company_name')->get();
+		
+		
+		
+		$companyDropdown = array();
+		
+		foreach($companies as $company)
+		{
+			$companyDropdown[$company->row_id] = $company->company_name;
+		}
+		
+		
 		$object = Object::find($id);
+		$status = OrderStatus::find($object->fk_status)->status;
+		
 			// load the view and pass the data
         return View::make('order.edit')
-               ->with('object', $object);
+			   ->with('companyDropdown', $companyDropdown)
+               ->with('object', $object)
+			   ->with('status', $status);
 	}
 
 
@@ -86,7 +102,37 @@ class OrderController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		 //
+		 $rules = array(
+			'fk_company' => 'required|integer',
+			'f_code' => 'required',
+			'f_name' => 'required',
+			'ppc' => 'required|numeric',
+			'qty' => 'required|integer',
+			
+		 );
+		 
+		  
+		 $validator = Validator::make(Input::all(), $rules);
+		 
+		 if ($validator->fails()) {
+			 return Redirect::to('order/' . $id . '/edit')
+				 ->withErrors($validator)
+				 ->withInput();
+		 }
+		 
+		 $object = Object::find($id);
+		 $object->fk_company = Input::get('fk_company');
+		 $object->f_code = Input::get('f_code');
+		 $object->f_name = Input::get('f_name');
+		 $object->ppc = Input::get('ppc');
+		 $object->qty = Input::get('qty');
+		 
+		 $object->save();
+		
+		 Session::flash('message', 'Order updated');
+		 return Redirect::to('order/'. $id .'/edit');
+	  
 	}
 
 
