@@ -67,7 +67,10 @@
 					@foreach($files as $file)
 						<tr>
 						
-						<td>{{ $file->filename }} </td>
+						<td>	
+							<a class="btn btn-link" href="{{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
+						</td>	
+						
 						<td>{{ Form::select('file_mark_id', $filemarkDropdown, $file->file_mark_id, array('class'=>'form-control bootstrap-dropdown', 'data-file-id'=>$file->row_id )) }}</td>
 						<td>{{ Helpers::niceDateTime($file->creadate) }} </td>
 						<td>{{ Helpers::niceDateTime($file->moddate) }} </td>
@@ -85,10 +88,10 @@
 
 
 	
-	<div class="modal bs-example-modal-sm" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
-		  <div class="modal-content">
-			Please wait
+		  <div class="alert alert-warning">
+			Please wait...
 		  </div>
 		</div>
 	</div>
@@ -109,17 +112,16 @@
 		 } );
 	</script>
 	
-	
     <script type="text/javascript">
 
 		$(document).ready(function() {
+		
+	 
 			
-			$('.bootstrap-dropdown').change(function () {
-				console.log($('.bootstrap-dropdown').val());
-				console.log($('.bootstrap-dropdown').attr('data-file-id'));
-				
-				mark_id = $('.bootstrap-dropdown').val();
-				file_id = $('.bootstrap-dropdown').attr('data-file-id');
+			$(".bootstrap-dropdown").unbind("click").bind("click", function () {
+	
+				mark_id = $(this).val();
+				file_id = $(this).attr('data-file-id');
 				$('#loading-modal').modal('toggle');
 				$.ajax({
 				   type: "GET",

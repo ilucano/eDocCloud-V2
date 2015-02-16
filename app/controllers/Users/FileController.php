@@ -10,7 +10,8 @@ class UsersFileController extends \BaseController {
 	public function index()
 	{
 		 
-         
+         return View::make('users.file.index');
+		
 	}
 
 
@@ -103,9 +104,11 @@ class UsersFileController extends \BaseController {
 		$file = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId())
 							->where('row_id', '=', Input::get('id'))->first();
 		
+		
 		$file->file_mark_id = Input::get('file_mark_id');
 		
 		$file->save();
+		
 		sleep(1);
 		echo "success";
 		
@@ -127,7 +130,7 @@ class UsersFileController extends \BaseController {
 	{
 		
 		$rules = array(
-			'query' => 'required',			
+			'query' => 'required|min:4',			
         );
 		
 		   $validator = Validator::make(Input::all(), $rules);
@@ -176,15 +179,35 @@ class UsersFileController extends \BaseController {
 		
 	    $sqlQuery = "SELECT row_id, creadate, pages, filesize, moddate, filename, file_mark_id, " . $mainMatchQuery ." ORDER BY Score2 Desc, Score1 desc;";
 		
- 
-		$results = DB::select( DB::raw($sqlQuery) );
 		
-		echo "<pre>";
-		print_r($results);
+        
 		
-		//return View::make('users.file.searchresult')
-		//			->with('results', $results)
-	//				->with('query', $query);
+		$files = DB::select( DB::raw($sqlQuery) );
+       
+	    $filemarkDropdown = array('' => '(No Label)');
+		
+		try {
+			$filemarks = Filemark::whereIn('id',  json_decode($filePermission, true))
+								->orderBy('global', 'desc')
+								->orderBy('label')->get();
+            
+			
+			foreach($filemarks as $filemark)
+			{
+				$filemarkDropdown[$filemark->id] = $filemark->label;
+			}
+			
+		}
+		catch (Exception $e)
+		{
+			
+		}
+		
+		
+		return View::make('users.file.searchresult')
+					->with('files', $files)
+					->with('filemarkDropdown', $filemarkDropdown)
+					->with('query', $query);
 					
 		
 	}

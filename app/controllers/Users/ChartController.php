@@ -86,8 +86,7 @@ class UsersChartController extends \BaseController {
 		$filemarkDropdown = array('' => '(No Label)');
 		
 		try {
-			$filemarks = Filemark::where('fk_empresa', '=', Auth::User()->getCompanyId())
-								->orWhere('global', '=', 1)
+			$filemarks = Filemark::whereIn('id',  json_decode($filePermission, true))
 								->orderBy('global', 'desc')
 								->orderBy('label')->get();
             
