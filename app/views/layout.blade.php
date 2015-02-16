@@ -197,6 +197,10 @@
 						<li>
                             <a href="{{ URL::to('order') }}"> Orders</a>
                         </li>
+						
+						<li>
+                            <a href="{{ URL::to('admin/pickup') }}"> Pickup</a>
+                        </li>
 						 
                     </ul>
 						

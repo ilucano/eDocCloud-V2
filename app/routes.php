@@ -90,6 +90,16 @@ Route::group(array('before'=>'auth'), function() {
 	
 	Route::post('order/status', array('uses' => 'OrderController@doUpdateStatus'));
 	
+	Route::group(
+		array('prefix' => 'admin'), 
+		function() {
+			
+			Route::resource('pickup', 'AdminPickupController');
+
+		}
+	);
+	
+	
 	/* end super admin section */
 	
 	
@@ -108,7 +118,7 @@ Route::group(array('before'=>'auth'), function() {
 	);
 	
 
-	/* end super admin section */
+	/* end company admin section */
 	
 	
 });
