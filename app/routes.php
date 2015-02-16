@@ -122,6 +122,33 @@ Route::group(array('before'=>'auth'), function() {
 	/* end company admin section */
 	
 	
+	/* begin users section */
+	
+		
+	Route::group(
+		array('prefix' => 'users'), 
+		function() {
+			
+			Route::resource('order', 'UsersOrderController');
+			
+			Route::resource('chart', 'UsersChartController');
+			
+			Route::get('chart/{boxid}/{orderid}', array(
+				'as' => 'chart-box-order',
+				'uses' => 'UsersChartController@indexBoxOrder'
+			));
+			
+			Route::get('chart/{boxid}/{orderid}/{chartId}', array(
+				'as' => 'chart-box-order-chart',
+				'uses' => 'UsersChartController@indexBoxOrderChart'
+			));
+			
+		}
+	);
+	
+	/* end company admin section */
+	
+	
 });
 
 

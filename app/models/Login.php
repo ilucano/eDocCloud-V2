@@ -141,4 +141,20 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 		}
 	}
 	
+	/**
+	 * return fk_empresa from Users table
+	 */
+	public function getCompanyId()
+	{
+		try {
+			
+			return $this->getUserData()->fk_empresa;
+		 
+		}
+		catch(Exception $e) {
+			return 'fk_empresa Unknown';
+		}
+		
+	}
+	
 }
