@@ -127,7 +127,7 @@ class PrepareController extends \BaseController {
 	 */
 	public function doUpdateStatus()
 	{
-		print_r(Input::get());
+ 
 		
 		$rules = array(
 			'wfid' => 'required',  

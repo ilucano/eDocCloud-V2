@@ -64,7 +64,7 @@
 				<label>Quantity</label>
 				 <div class="form-group input-group">
 					<span class="input-group-addon"><i class="fa fa-calculator"></i></span>
-					{{ Form::text('qty', $object->qty, array('class'=>'form-control')) }}
+					{{ Form::text('qty', $object->qty, array('class'=>'form-control','disabled'=>'disabled')) }}
 				 </div>
 				 @if ($errors->has('qty')) <p class="help-block">{{ $errors->first('qty') }}</p> @endif
 			</div>

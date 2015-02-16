@@ -35,7 +35,20 @@ class OrderController extends \BaseController {
 	 */
 	public function create()
 	{
-		//
+		 //
+		 $companies = Company::orderBy('company_name')->get();
+
+		 $companyDropdown = array();
+		 
+		 foreach($companies as $company)
+		 {
+			 $companyDropdown[$company->row_id] = $company->company_name;
+		 }
+		
+		 return View::make('order.create')
+               ->with('companyDropdown', $companyDropdown);
+		
+		
 	}
 
 
@@ -47,6 +60,41 @@ class OrderController extends \BaseController {
 	public function store()
 	{
 		//
+		 $rules = array(
+			'fk_company' => 'required|integer',
+			'f_code' => 'required',
+			'f_name' => 'required',
+			'ppc' => 'required|numeric',
+			
+		 );
+		 
+		  
+		 $validator = Validator::make(Input::all(), $rules);
+		 
+		 if ($validator->fails()) {
+			 return Redirect::to('order/create')
+				 ->withErrors($validator)
+				 ->withInput();
+		 }
+		 
+		 $object = new Object;
+		 $object->fk_company = Input::get('fk_company');
+		 $object->f_code = Input::get('f_code');
+		 $object->f_name = Input::get('f_name');
+		 $object->ppc = Input::get('ppc');
+		 //default value for new order
+		 $object->fk_obj_type =  1;
+		 $object->fk_status = 1;
+		 $object->creation = date("Y-m-d H:i:s");
+		 
+		 $object->save();
+		 
+		 $orderId = $object->id;
+		 
+		 Session::flash('message', 'Order created');
+		 return Redirect::to('order');
+
+	  
 	}
 
 
@@ -108,7 +156,6 @@ class OrderController extends \BaseController {
 			'f_code' => 'required',
 			'f_name' => 'required',
 			'ppc' => 'required|numeric',
-			'qty' => 'required|integer',
 			
 		 );
 		 
@@ -126,7 +173,6 @@ class OrderController extends \BaseController {
 		 $object->f_code = Input::get('f_code');
 		 $object->f_name = Input::get('f_name');
 		 $object->ppc = Input::get('ppc');
-		 $object->qty = Input::get('qty');
 		 
 		 $object->save();
 		
@@ -156,10 +202,10 @@ class OrderController extends \BaseController {
 	 */
 	public function doUpdateStatus()
 	{
-		print_r(Input::get());
+
 		
 		$rules = array(
-			'wfid' => 'required',  
+			'row_id' => 'required',  
 			'status' => 'required'
 		);
 		
@@ -168,62 +214,25 @@ class OrderController extends \BaseController {
 
 		if ($validator->fails()) {
 			
-			return Redirect::to('prepare')
+			return Redirect::to('order')
 				->withErrors($validator);
 			
 		}
 		
-		$wfid = Input::get('wfid');
-
-		$status = Input::get('status');
-		
-		$newStatus = $status + 1;
-
 		try {
-			$workflow = Workflow::where('row_id', '=', $wfid)->first();
-		}
-		catch(Exception $e) {
-			// redirect with error
-            Session::flash('error', 'Cannot find workflow with ID:  '. $wfid );
-			return Redirect::to('prepare');
-		}
-		
-		//insert to wf history
-		$workflowHistory = new WorkflowHistory;
-		
-		$workflowHistory->wf_id = $workflow->wf_id;
-		$workflowHistory->fk_status = $workflow->fk_status;
-		$workflowHistory->created = $workflow->created;
-		$workflowHistory->modify = $workflow->modify;
-		$workflowHistory->created_by = $workflow->created_by;
-		$workflowHistory->modify_by = $workflow->modify_by;
-						
-		$workflowHistory->save();
-		
-		
-		//Auth::user()->getUserData()->row_id
-		//update workflow
-		try {
+		 
+			$object = Object::find(Input::get('row_id'));
+			$object->fk_status = Input::get('status');
+			$object->save();
 			
-			$workflow = Workflow::where('row_id', '=', $wfid)->first();
-			
-			$workflow->fk_status = $newStatus;
-			$workflow->created = date("Y-m-d H:i:s");
-			$workflow->modify = date("Y-m-d H:i:s");
-			$workflow->created_by = Auth::user()->getUserData()->row_id;
-			$workflow->modify_by = Auth::user()->getUserData()->row_id;
-					 
-			$workflow->save();
-					 
-			Session::flash('message', 'Workflow successfully updated');
-			return Redirect::to('prepare');
-					 
+			 Session::flash('message', 'Order #' . Input::get('row_id') . ' updated');
+			return Redirect::to('order');
 		}
-		catch(Exception $e)
+		catch (Exception $e)
 		{
+		 
 			Session::flash('error', $e->getMessage() );
-			return Redirect::to('prepare');
-			
+			return Redirect::to('order');
 		}
 		
 		

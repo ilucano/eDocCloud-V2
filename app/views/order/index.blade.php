@@ -6,6 +6,7 @@
 		<div class="col-lg-12">
 			<h2 class="page-header">System Admin 
 			<small>Orders</small>
+				<div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('order/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create Order</a></div>
 			</h2>
 		</div>
 	</div>
