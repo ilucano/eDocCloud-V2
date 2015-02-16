@@ -5,8 +5,8 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<h2 class="page-header">System Admin 
-			<small>Orders</small>
-				<div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('order/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create Order</a></div>
+			<small>Box</small>
+				<div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('admin/box/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create Box</a></div>
 			</h2>
 		</div>
 	</div>
@@ -31,11 +31,11 @@
 						<th>#id</th>
 						<th>Code</th>
 						<th>Name</th>
-						<th>Company / Customer</th>
-						<th>Qty</th>
+						<th>Company</th>
+						<th>Quantity</th>
 						<th>Status</th>
 						<th>Price</th>
-						<th style="width: 130px;">Actions</th>	
+						<th style="width:120px;">Action</th>	
 					</tr>
 				</thead>
 				<tbody>
@@ -45,25 +45,24 @@
 					<tr>			
 						<td>{{ $object->row_id }}</td>
 						<td>{{ $object->f_code }}</td>
-						<td>{{ $object->f_name }}</td>			
-						<td>{{ $object->company_name }}</td>
+						<td>{{ $object->f_name }}</td>
+						<td>{{ $object->company_name }}</td>			
 						<td>{{ $object->qty }}</td>
 						<td>{{ $object->status }}</td>
-						<td>{{ $object->ppc }}</td>
-						<td style="white-space: no-wrap;">
+						<td>{{ Helpers::money($object->ppc) }}</td>
+						<td> 
 								<div class="pull-left" style="margin-right:2px;">
-									<a class="btn btn-sm btn-info" href="{{ URL::to('order/' . $object->row_id . '/edit') }}"> Edit</a> 
+									<a class="btn btn-sm btn-info" href="{{ URL::to('admin/box/' . $object->row_id . '/edit') }}"> Edit</a> 
 								</div>
 								<div class="pull-left">
 								@if($object->fk_status != '5')
-									{{ Form::open(array('url' => 'order/status')) }}
+									{{ Form::open(array('url' => 'admin/box/status')) }}
 									{{ Form::hidden('row_id',  $object->row_id ) }}
 									{{ Form::hidden('status', '5') }}
 									{{ Form::submit(' Close', array('class' => 'btn btn-danger btn-sm')) }} 
 									{{ Form::close() }}
 								@endif
 								</div>
-								
 					    </td>
 					 
 					</tr>

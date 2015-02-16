@@ -1,6 +1,6 @@
 <?php
 
-class OrderController extends \BaseController {
+class AdminBoxController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -10,20 +10,35 @@ class OrderController extends \BaseController {
 	public function index()
 	{
 		//
-		$objects = Object::where('fk_obj_type', '=', 1)->orderBy('fk_status')->get();
-		
-	
+		$objects = Object::where('fk_obj_type', '=', 2)->get();
 		
 		foreach($objects as $object)
 		{
-		    
-			$object->company_name = Company::where('row_id', '=', $object->fk_company)->firstOrFail()->company_name;
-		    $object->status = OrderStatus::find($object->fk_status)->status;
+			try {
+				$object->company_name = Company::where('row_id', '=', $object->fk_company)->firstOrFail()->company_name;
+			}
+			catch (Exception $e)
+			{
+				$object->company_name = '';
+					
+			}
+			
+			try {
+				
+				$object->status = OrderStatus::find($object->fk_status)->status;
+			}
+			catch (Exception $e)
+			{
+				$object->status = '';
+					
+			}
 			
 		}
+		
+	 
 
 		// load the view and pass the data
-        return View::make('order.index')
+        return View::make('adminbox.index')
                ->with('objects', $objects);
 	}
 
@@ -35,8 +50,8 @@ class OrderController extends \BaseController {
 	 */
 	public function create()
 	{
-		 //
-		 $companies = Company::orderBy('company_name')->get();
+
+		$companies = Company::orderBy('company_name')->get();
 
 		 $companyDropdown = array();
 		 
@@ -45,7 +60,7 @@ class OrderController extends \BaseController {
 			 $companyDropdown[$company->row_id] = $company->company_name;
 		 }
 		
-		 return View::make('order.create')
+		 return View::make('adminbox.create')
                ->with('companyDropdown', $companyDropdown);
 		
 		
@@ -60,7 +75,7 @@ class OrderController extends \BaseController {
 	public function store()
 	{
 		//
-		 $rules = array(
+		  $rules = array(
 			'fk_company' => 'required|integer',
 			'f_code' => 'required',
 			'f_name' => 'required',
@@ -76,14 +91,14 @@ class OrderController extends \BaseController {
 				 ->withErrors($validator)
 				 ->withInput();
 		 }
-		 
+ 
 		 $object = new Object;
 		 $object->fk_company = Input::get('fk_company');
 		 $object->f_code = Input::get('f_code');
 		 $object->f_name = Input::get('f_name');
 		 $object->ppc = Input::get('ppc');
 		 //default value for new order
-		 $object->fk_obj_type =  1;
+		 $object->fk_obj_type =  2;
 		 $object->fk_status = 1;
 		 $object->creation = date("Y-m-d H:i:s");
 		 
@@ -91,8 +106,8 @@ class OrderController extends \BaseController {
 		 
 		 $orderId = $object->id;
 		 
-		 Session::flash('message', 'Order created');
-		 return Redirect::to('order');
+		 Session::flash('message', 'Box created');
+		 return Redirect::to('admin/box');
 
 	  
 	}
@@ -120,8 +135,6 @@ class OrderController extends \BaseController {
 	{
 		//
 		$companies = Company::orderBy('company_name')->get();
-		
-		
 		
 		$companyDropdown = array();
 		
@@ -151,6 +164,7 @@ class OrderController extends \BaseController {
 	public function update($id)
 	{
 		 //
+		 	 //
 		 $rules = array(
 			'fk_company' => 'required|integer',
 			'f_code' => 'required',
@@ -176,8 +190,8 @@ class OrderController extends \BaseController {
 		 
 		 $object->save();
 		
-		 Session::flash('message', 'Order updated');
-		 return Redirect::to('order/'. $id .'/edit');
+		 Session::flash('message', 'Box updated');
+		 return Redirect::to('admin/box/'. $id .'/edit');
 	  
 	}
 
@@ -203,7 +217,6 @@ class OrderController extends \BaseController {
 	public function doUpdateStatus()
 	{
 
-		
 		$rules = array(
 			'row_id' => 'required',  
 			'status' => 'required'
@@ -225,8 +238,8 @@ class OrderController extends \BaseController {
 			$object->fk_status = Input::get('status');
 			$object->save();
 			
-			 Session::flash('message', 'Order #' . Input::get('row_id') . ' updated');
-			return Redirect::to('order');
+			 Session::flash('message', 'Box #' . Input::get('row_id') . ' updated');
+			return Redirect::to('admin/box');
 		}
 		catch (Exception $e)
 		{

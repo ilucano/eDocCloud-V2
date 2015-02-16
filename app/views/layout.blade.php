@@ -201,7 +201,10 @@
 						<li>
                             <a href="{{ URL::to('admin/pickup') }}"> Pickup</a>
                         </li>
-						 
+						
+						<li>
+                            <a href="{{ URL::to('admin/box') }}"> Box</a>
+                        </li>
                     </ul>
 						
 				 </li>
