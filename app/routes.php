@@ -145,7 +145,13 @@ Route::group(array('before'=>'auth'), function() {
 			
 			Route::get('file/mark', array('uses' => 'UsersFileController@doUpdateMark'));
 			
+			Route::get('file/search', array('uses' => 'UsersFileController@showSearch'));
+			
+			Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
+						
 			Route::resource('file', 'UsersFileController');
+			
+			
 			
 		}
 	);

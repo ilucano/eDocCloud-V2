@@ -235,10 +235,10 @@
                          <a href="{{ URL::to('users/order') }}"><i class="fa fa-fw fa-ticket"></i> Orders</a>
 					</li>
                     <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder"></i> Files <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
                             <li>
-                                <a href="#">Dropdown Item</a>
+                                <a href="{{ URL::to('users/file/search') }}"><i class="fa fa-fw fa-search"></i> Search</a>
                             </li>
                             <li>
                                 <a href="#">Dropdown Item</a>
