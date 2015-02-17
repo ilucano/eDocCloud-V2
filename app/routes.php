@@ -153,6 +153,12 @@ Route::group(array('before'=>'auth'), function() {
 						
 			Route::resource('file', 'UsersFileController');
 			
+			Route::get('profile/password', array('uses' => 'UsersProfileController@showChangePassword'));
+			
+			Route::post('profile/password', array('uses' => 'UsersProfileController@doChangePassword'));
+			
+			Route::resource('profile', 'UsersProfileController');
+			
 			
 			
 		}

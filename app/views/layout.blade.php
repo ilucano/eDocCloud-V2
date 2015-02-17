@@ -74,11 +74,11 @@
                             <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-user"></i> My Users</a>
                         </li>
 						@endif
-						 
+						 @if(Auth::User()->can('admin_role'))
 						<li>
                             <a href="{{ URL::to('companyadmin/role') }}"><i class="fa fa-fw fa-users"></i> User Roles</a>
                         </li>
-						 
+						@endif
 						@if(Auth::User()->can('admin_filemark'))
 						<li>
                             <a href="{{ URL::to('companyadmin/filemark') }}"><i class="fa fa-fw fa-tags"></i> My Filemarks</a>
@@ -201,7 +201,7 @@
                     <ul class="dropdown-menu">
 					    @if(Auth::User()->can('user_changepassword'))
                         <li>
-                            <a href="#"> Change Password</a>
+                            <a href="{{ URL::to('users/profile/password') }} "> Change Password</a>
                         </li>
                         @endif
                         
