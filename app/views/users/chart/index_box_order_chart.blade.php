@@ -112,12 +112,14 @@
 		 } );
 	</script>
 	
+    
+	
     <script type="text/javascript">
 
 		$(document).ready(function() {
 		
-			$(".bootstrap-dropdown").unbind("click").bind("click", function () {
-	
+			//$("#datatables .bootstrap-dropdown").unbind("click").bind("click", function () {
+	        $(document).on('click', '.bootstrap-dropdown', function(){
 				mark_id = $(this).val();
 				file_id = $(this).attr('data-file-id');
 				$('#loading-modal').modal('toggle');
@@ -144,6 +146,7 @@
 		});
 
 	</script>
+		
 		
 
 @stop
