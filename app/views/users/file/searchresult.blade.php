@@ -117,7 +117,31 @@
 
 		$(document).ready(function() {
 		
-	 
+			$(".bootstrap-dropdown").unbind("click").bind("click", function () {
+	
+				mark_id = $(this).val();
+				file_id = $(this).attr('data-file-id');
+				$('#loading-modal').modal('toggle');
+				$.ajax({
+				   type: "GET",
+				   url: "{{ URL::to('users/file/mark/') }}",
+				   data: "id="+file_id+"&file_mark_id="+mark_id,
+				   success: function(html){
+					if(html != "")
+					{
+						$('#loading-modal').modal('toggle');
+						 
+					}
+					else
+					{
+						$('#loading-modal').modal('toggle');
+					}
+				 }
+				});
+				
+			});
+
+			
 		});
 
 	</script>

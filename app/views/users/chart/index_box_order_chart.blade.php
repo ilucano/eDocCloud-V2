@@ -116,8 +116,6 @@
 
 		$(document).ready(function() {
 		
-	 
-			
 			$(".bootstrap-dropdown").unbind("click").bind("click", function () {
 	
 				mark_id = $(this).val();
