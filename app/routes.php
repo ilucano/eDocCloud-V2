@@ -136,12 +136,12 @@ Route::group(array('before'=>'auth'), function() {
 			Route::resource('chart', 'UsersChartController');
 			
 			Route::get('chart/{boxid}/{orderid}', array(
-				'as' => 'chart-box-order',
+				'as' => 'chart.box.order',
 				'uses' => 'UsersChartController@indexBoxOrder'
 			));
 			
 			Route::get('chart/{boxid}/{orderid}/{chartId}', array(
-				'as' => 'chart-box-order-chart',
+				'as' => 'chart.box.order.chart',
 				'uses' => 'UsersChartController@indexBoxOrderChart'
 			));
 			
@@ -164,8 +164,22 @@ Route::group(array('before'=>'auth'), function() {
 		}
 	);
 	
-	/* end company admin section */
+	/* end users section */
 	
+	/* Attachment */
+	Route::get('attachment/file/{id}', array(
+				'as' => 'attachment.file.id',
+				'uses' => 'AttachmentController@downloadFile'
+	 ));
+	
+	Route::get('attachment/download/{id}', array(
+				'as' => 'attachment.download.id',
+				'uses' => 'AttachmentController@downloadAttachment'
+	 ));
+	
+	Route::resource('attachment', 'AttachmentController');
+	
+    /* end Attachment */
 	
 });
 
