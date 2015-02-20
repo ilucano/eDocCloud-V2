@@ -23,8 +23,13 @@ class HomeController extends BaseController {
 	
 	public function showIndex()
 	{
-
-		return View::make('home.index');
+		
+		if(Auth::User()->isAdmin()) {
+			return View::make('home.index');
+		}
+		else {
+			return Redirect::to('users/order');
+		}
 	
 	}
 	
