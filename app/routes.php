@@ -27,6 +27,9 @@ Route::post('login', array('uses' => 'HomeController@doLogin'));
 // route to show the login form
 Route::get('logout', array('uses' => 'HomeController@doLogout'));
 
+
+
+//begin routes required logged in
 Route::group(array('before'=>'auth'), function() {
 	
 	Route::get('/', array(
@@ -42,8 +45,7 @@ Route::group(array('before'=>'auth'), function() {
 	/* begin super admin section */
 	
 	Route::resource('pickup', 'PickupController');
-	 
-	
+
 	Route::resource('prepare', 'PrepareController');
 	
 	Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
@@ -108,11 +110,16 @@ Route::group(array('before'=>'auth'), function() {
 	
 	/* begin company admin section */
 	
-		
+	
+
+   // Route::when('companyadmin/user*', 'admin_user'); //admin_user permission check (app/filters.php)
+	// Route::when('companyadmin/role*', 'admin_role'); //permission check (app/filters.php)
+	// Route::when('companyadmin/filemark*', 'admin_filemark'); //permission check (app/filters.php)
+				
 	Route::group(
 		array('prefix' => 'companyadmin'), 
 		function() {
-			
+
 			Route::resource('user', 'CompanyAdminUserController');
 			Route::resource('filemark', 'CompanyAdminFilemarkController');
 			Route::resource('role', 'CompanyAdminRoleController');
@@ -120,12 +127,18 @@ Route::group(array('before'=>'auth'), function() {
 		}
 	);
 	
+	
 
 	/* end company admin section */
 	
 	
 	/* begin users section */
 	
+	Route::when('users/order*', 'user_order');  
+	Route::when('users/chart*', 'user_order');  
+	Route::when('users/file/search*', 'user_search');
+	Route::when('users/file*', 'user_file');
+	Route::when('users/profile/password', 'user_changepassword');
 		
 	Route::group(
 		array('prefix' => 'users'), 
@@ -181,9 +194,17 @@ Route::group(array('before'=>'auth'), function() {
 	
     /* end Attachment */
 	
+	
+	Route::get('system/denied', function ()
+	{
+		return View::make('system.denied');
+	}
+);
+
+
 });
 
-
+//end routes required logged in
 	
 	
 /** test entrust **/

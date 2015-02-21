@@ -109,7 +109,6 @@ class UsersFileController extends \BaseController {
 		
 		$file->save();
 		
-		sleep(1);
 		echo "success";
 		
 	}

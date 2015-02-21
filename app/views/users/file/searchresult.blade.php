@@ -87,7 +87,7 @@
 	<div class="modal" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 		  <div class="alert alert-warning">
-			Please wait...
+			<i class="fa fa-clock-o fa-fw"></i> Please wait...
 		  </div>
 		</div>
 	</div>
@@ -129,12 +129,16 @@
 				   success: function(html){
 					if(html != "")
 					{
-						$('#loading-modal').modal('toggle');
-						 
+					
+						setTimeout(function() {
+							$('#loading-modal').modal('toggle');
+						}, 1000); // milliseconds
+	
 					}
 					else
 					{
 						$('#loading-modal').modal('toggle');
+						alert('Error updating');
 					}
 				 }
 				});
