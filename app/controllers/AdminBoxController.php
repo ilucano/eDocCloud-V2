@@ -106,6 +106,16 @@ class AdminBoxController extends \BaseController {
 		 
 		 $orderId = $object->id;
 		 
+		 
+		 Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_create_box_success',
+				'action'      => 'Create',
+				'description' => 'New Box Created',
+				'details'     => 'Box Id: '.$object->row_id .', Name: '. Input::get('f_name') .', Code: '.Input::get('f_code'),
+				'updated'     => false,
+		]);
+		 
 		 Session::flash('message', 'Box created');
 		 return Redirect::to('admin/box');
 
@@ -189,6 +199,17 @@ class AdminBoxController extends \BaseController {
 		 $object->ppc = Input::get('ppc');
 		 
 		 $object->save();
+		 
+		 
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_update_box_success',
+				'action'      => 'Updated',
+				'description' => 'Box Updated',
+				'details'     => 'Box Id: '.$id .', Name: '. Input::get('f_name') .', Code: '.Input::get('f_code'),
+				'updated'     => true,
+		]);
+		  
 		
 		 Session::flash('message', 'Box updated');
 		 return Redirect::to('admin/box/'. $id .'/edit');
@@ -237,6 +258,16 @@ class AdminBoxController extends \BaseController {
 			$object = Object::find(Input::get('row_id'));
 			$object->fk_status = Input::get('status');
 			$object->save();
+			
+			
+			Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_update_box_status',
+				'action'      => 'Updated',
+				'description' => 'Box Status Updated',
+				'details'     => 'Box Id: '.Input::get('row_id')  .', Status: '. Input::get('status') ,
+				'updated'     => true,
+			]);
 			
 			 Session::flash('message', 'Box #' . Input::get('row_id') . ' updated');
 			return Redirect::to('admin/box');

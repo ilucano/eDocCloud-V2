@@ -56,7 +56,7 @@ class HomeController extends BaseController {
 			'password' => 'required'
 		);
     
-	
+	    
 		// run the validation rules 
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -67,7 +67,7 @@ class HomeController extends BaseController {
 			
 			exit;
 		}
- 
+        
 		// create our user data for the authentication
 		$userdata = array(
 			'username'     => Input::get('username'),
@@ -76,12 +76,31 @@ class HomeController extends BaseController {
 		);
 	 
 		if (Auth::attempt($userdata)) {
+			
+			Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'user_login_success',
+				'action'      => 'Create',
+				'description' => 'Successfully Logged In',
+				'details'     => 'Username: '.Input::get('username'),
+				'updated'     => false,
+			]);
+						
 			// validation successful!
 			return Redirect::to('home');
 		 
 	
 		} else {        
- 
+            
+			Activity::log([
+				'contentId'   => 0,
+				'contentType' => 'User',
+				'action'      => 'user_login_fail',
+				'description' => 'Log In Fail',
+				'details'     => 'Username: '.Input::get('username'),
+				'updated'     => false,
+			]);
+			
 			// redirect
             Session::flash('error', 'Invalid Username or Password');
 			

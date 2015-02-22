@@ -120,6 +120,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Zizaco\Entrust\EntrustServiceProvider',
+		'Regulus\ActivityLog\ActivityLogServiceProvider',
 
 	),
 
@@ -187,6 +188,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Entrust'    => 'Zizaco\Entrust\EntrustFacade',
+		'Activity' => 'Regulus\ActivityLog\Activity',
 
 	),
 	
