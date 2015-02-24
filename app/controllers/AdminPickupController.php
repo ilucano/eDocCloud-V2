@@ -128,6 +128,16 @@ class AdminPickupController extends \BaseController {
 		$pickup->fk_barcode = Input::get('fk_barcode');
 		$pickup->timestamp = date("Y-m-d H:i:s");
 		$pickup->save();
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_pickup_create',
+				'action'      => 'Created',
+				'description' => 'New Pickup Created',
+				'details'     => 'Pickup ID: '.$pickup->row_id  .', User: '.  Input::get('fk_user') . ', Order: '. Input::get('fk_order') .', Barcode: '. Input::get('fk_barcode'),
+				'updated'     => false,
+			]);
+		
 		 Session::flash('message', 'Pickup created');
 		 return Redirect::to('admin/pickup');
 
@@ -263,6 +273,17 @@ class AdminPickupController extends \BaseController {
 		 
 		$pickup->save();
 		
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_pickup_update',
+				'action'      => 'Updated',
+				'description' => 'Pickup Updated',
+				'details'     => 'Pickup ID: '.$pickup->row_id  .', User: '.  Input::get('fk_user') . ', Order: '. Input::get('fk_order') .', Barcode: '. Input::get('fk_barcode'),
+				'updated'     => true,
+			]);
+		
+		
 		Session::flash('message', 'Pickup updated');
 		return Redirect::to('admin/pickup/'. $id .'/edit');
 	  
@@ -311,6 +332,16 @@ class AdminPickupController extends \BaseController {
 			$object = Object::find(Input::get('row_id'));
 			$object->fk_status = Input::get('status');
 			$object->save();
+			
+			
+			Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_pickup_status',
+				'action'      => 'Updated',
+				'description' => 'Pickup Status Updated',
+				'details'     => 'Pickup ID: '.Input::get('row_id')  .', Status: '. Input::get('status'),
+				'updated'     => true,
+			]);
 			
 			 Session::flash('message', 'Order #' . Input::get('row_id') . ' updated');
 			return Redirect::to('order');
