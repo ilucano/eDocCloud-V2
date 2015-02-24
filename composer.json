@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"zizaco/entrust": "1.2.*@dev",
-		"regulus/activity-log": "0.3.*"
+		"regulus/activity-log": "0.3.*",
+		"pda/pheanstalk": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
