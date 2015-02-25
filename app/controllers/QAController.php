@@ -185,7 +185,18 @@ class QAController extends \BaseController {
 			$workflow->modify_by = Auth::user()->getUserData()->row_id;
 					 
 			$workflow->save();
-					 
+			
+			
+			Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_qa_update',
+				'action'      => 'Updated',
+				'description' => 'QA Status Updated',
+				'details'     => 'Workflow ID: '.$wfid  .', From Status: '. Input::get('status'). ' To Status: '.$newStatus,
+				'updated'     => true,
+			]);
+				
+				
 			Session::flash('message', 'Workflow successfully updated');
 			return Redirect::to('qa');
 					 

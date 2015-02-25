@@ -227,6 +227,15 @@ class UserController extends \BaseController {
 		$jobQueue->save();
 		
 	    
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_user_store',
+				'action'      => 'Created',
+				'description' => 'New User Created',
+				'details'     => 'Username: '.Input::get('username')  .', Company Id: '. Input::get('fk_empresa'),
+				'updated'     => false,
+			]);
+					
 		Session::flash('message', 'User successfully created');
 			
 		return Redirect::to('user');
@@ -425,6 +434,16 @@ class UserController extends \BaseController {
 		}
 
 		// redirect
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_user_update',
+				'action'      => 'Updated',
+				'description' => 'User Details Updated',
+				'details'     => 'Username: '. $user->username,
+				'updated'     => true,
+		]);
+		
 		Session::flash('message', 'User updated');
 		return Redirect::to('user/'. $id .'/edit');
 		
