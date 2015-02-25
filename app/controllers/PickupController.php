@@ -127,6 +127,16 @@ class PickupController extends \BaseController {
 					
 					$pickupId = $this->createNewPickup(Auth::user()->getUserData()->row_id, $fkCompany, $orderId, $barcode, $boxId);
 					
+					Activity::log([
+						'contentId'   => Auth::User()->id,
+						'contentType' => 'admin_pickup_store',
+						'action'      => 'Created',
+						'description' => 'Workflow - New Pickup Created',
+						'details'     => 'Pickup ID: '.$pickupId  .', Box Id: '. $boxId,
+						'updated'     => false,
+					]);
+				
+				
 					if($pickupId)
 					{
 					    $mailJobData['pickups'][] = $pickupId;
@@ -194,7 +204,7 @@ class PickupController extends \BaseController {
 		
 		$workflow->save();
 		
-		return $workflow->id;
+		return $workflow->row_id;
 	
 		
 	}
@@ -217,7 +227,7 @@ class PickupController extends \BaseController {
 		$pickup->timestamp = date("Y-m-d H:i:s");
 		$pickup->save();
 		
-		return $pickup->id;
+		return $pickup->row_id;
 	
 	}
 	
@@ -241,7 +251,7 @@ class PickupController extends \BaseController {
  
 		$newObject->save();
 		
-		return $newObject->id;
+		return $newObject->row_id;
 	
 	}
 	

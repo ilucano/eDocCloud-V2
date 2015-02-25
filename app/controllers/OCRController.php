@@ -128,8 +128,7 @@ class OCRController extends \BaseController {
 	 */
 	public function doUpdateStatus()
 	{
-		print_r(Input::get());
-		
+		 
 		$rules = array(
 			'wfid' => 'required',  
 			'status' => 'required'
@@ -186,7 +185,18 @@ class OCRController extends \BaseController {
 			$workflow->modify_by = Auth::user()->getUserData()->row_id;
 					 
 			$workflow->save();
-					 
+			
+			
+			Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_ocr_update',
+				'action'      => 'Updated',
+				'description' => 'OCR Status Updated',
+				'details'     => 'Workflow ID: '.$wfid  .', From Status: '. Input::get('status'). ' To Status: '.$newStatus,
+				'updated'     => true,
+			]);
+				
+				
 			Session::flash('message', 'Workflow successfully updated');
 			return Redirect::to('ocr');
 					 
