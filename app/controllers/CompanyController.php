@@ -87,7 +87,17 @@ class CompanyController extends \BaseController {
 		$company->fk_terms      = Input::get('fk_terms');
 		$company->creditlimit      = Input::get('creditlimit');
 		$company->save();
-
+        
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_company_store',
+				'action'      => 'Created',
+				'description' => 'Created New Company',
+				'details'     => 'Company Id: '.$company->row_id .', Name: '. Input::get('company_name'),
+				'updated'     => false,
+		]);
+		
 		// redirect
 		Session::flash('message', $company->company_name . ' successfuly created');
  
@@ -214,6 +224,17 @@ class CompanyController extends \BaseController {
 		$company->creditlimit      = Input::get('creditlimit');
 		$company->save();
 
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'admin_company_update',
+				'action'      => 'Updated',
+				'description' => 'Updated Company Details',
+				'details'     => 'Company Id: '. $id .', Name: '. Input::get('company_name'),
+				'updated'     => true,
+		]);
+		 
+		 
 		// redirect
 		Session::flash('message', 'Company info updated');
 		return Redirect::to('company/'. $id .'/edit');
