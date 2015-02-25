@@ -133,7 +133,7 @@ class AdministratorController extends \BaseController {
 			$stringResult = (Input::get('is_admin') == 'X') ? 'added' : 'removed';
 			
 			
-				Activity::log([
+			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_update_admin',
 				'action'      => 'Updated',

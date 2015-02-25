@@ -137,7 +137,16 @@ class AttachmentController extends BaseController {
 			}
 			
 		}
-	 
+	    
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'attachment_download_file',
+				'action'      => 'Created',
+				'description' => 'File Downloaded',
+				'details'     => 'File ID: '.$id  .', Is admin: '. Auth::User()->isAdmin(),
+				'updated'     => false,
+		]);
+				
 		$attachment = Config::get('app.archive_path') . $file->path;
 		return Response::download($attachment);
 		
@@ -167,6 +176,16 @@ class AttachmentController extends BaseController {
 			exit;
 			
 		}
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'attachment_download_attachment',
+				'action'      => 'Created',
+				'description' => 'Attachment Downloaded',
+				'details'     => 'Attachment ID: '.$id  .', Is admin: '. Auth::User()->isAdmin(),
+				'updated'     => false,
+		]);
+					
  
 		return Response::download($file->attach_path);
 		
