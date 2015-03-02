@@ -241,3 +241,14 @@ Route::get('/start', function()
     return 'Woohoo!';
 });
 
+/** test queue **/
+Route::get('/testqueue', function()
+{
+	echo "...";
+ Queue::push('MailService', array('to' => 'yatsum812@gmail.com',
+								  'from' => 'noreply@test2.com'));
+ 
+
+});
+
+		   
