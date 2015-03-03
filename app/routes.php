@@ -190,6 +190,11 @@ Route::group(array('before'=>'auth'), function() {
 				'uses' => 'AttachmentController@downloadAttachment'
 	 ));
 	
+	Route::get('attachment/stream/{id}', array(
+				'as' => 'attachment.stream.id',
+				'uses' => 'AttachmentController@streamAttachment'
+	 ));
+	
 	Route::resource('attachment', 'AttachmentController');
 	
     /* end Attachment */
@@ -251,4 +256,10 @@ Route::get('/testqueue', function()
 
 });
 
+
+/** test pdf viewer **/
+Route::get('/testpdf', function()
+{
+	return View::make('pdfviewer.show');
+});
 		   

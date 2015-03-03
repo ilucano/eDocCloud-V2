@@ -191,4 +191,54 @@ class AttachmentController extends BaseController {
 		
 	}
 	
+	
+	public function streamAttachment($id)
+	{
+		if( Auth::User()->getCompanyId() ==  Config::get('app.system_admin_company_id') || Auth::User()->isAdmin() )
+		{
+			try {
+				//imagingXperts staff can download all
+				$file = Attach::where('row_id', '=', $id)
+									->first(array('attach_path'));
+			}
+			catch (Exception $e)
+			{
+				echo "File not found";
+				exit;
+			} 
+								
+		}
+        else
+		{
+			echo "Invalid attachment id or permission denied.";
+			exit;
+			
+		}
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'attachment_stream_attachment',
+				'action'      => 'Created',
+				'description' => 'Attachment Streamed',
+				'details'     => 'Attachment ID: '.$id  .', Is admin: '. Auth::User()->isAdmin(),
+				'updated'     => false,
+		]);
+					
+       // $content = File::get($file->attach_path);
+		
+		//$content_types = [
+        //        'application/pdf', // pdf
+        //   ];
+		
+		//$response = Response::make($content, 200);
+		
+		//$response->header('Content-Type', $content_types);
+      //  header('Content-Type: application/pdf');
+		//readfile($file->attach_path);
+		//echo $content; 
+		//return $response;
+		
+	}
+	
+	
 }
