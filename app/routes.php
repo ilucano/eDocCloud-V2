@@ -200,11 +200,20 @@ Route::group(array('before'=>'auth'), function() {
     /* end Attachment */
 	
 	
+	/** pdf viewer **/
+	Route::get('/pdfviewer', function()
+		{
+			return View::make('pdfviewer.show');
+		}
+	);
+
+	
+	
 	Route::get('system/denied', function ()
-	{
-		return View::make('system.denied');
-	}
-);
+		{
+			return View::make('system.denied');
+		}
+	);
 
 
 });
@@ -257,9 +266,4 @@ Route::get('/testqueue', function()
 });
 
 
-/** test pdf viewer **/
-Route::get('/testpdf', function()
-{
-	return View::make('pdfviewer.show');
-});
 		   

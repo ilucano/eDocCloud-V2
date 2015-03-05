@@ -67,7 +67,7 @@
 							<tr>
 							
 							<td>	
-								<a class="btn btn-link" href="{{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
+								<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
 						    </td>
 							<td> {{ Form::select('file_mark_id', $filemarkDropdown, $file->file_mark_id, array('class'=>'form-control bootstrap-dropdown', 'data-file-id'=>$file->row_id )) }}</td>
 							<td>{{ Helpers::niceDateTime($file->creadate) }} </td>

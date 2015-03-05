@@ -36,6 +36,7 @@ http://sourceforge.net/adobe/cmap/wiki/License/
     <!-- <link rel="stylesheet" href="viewer.css"/> -->
 	{{ HTML::style('css/plugins/pdfjs/viewer.css') }}
 	
+	
 <!--#if !PRODUCTION-->
     <link rel="resource" type="application/l10n" href="locale/locale.properties"/>
 <!--#endif-->
@@ -101,6 +102,7 @@ http://sourceforge.net/adobe/cmap/wiki/License/
 <!--#else-->
 <!--#include viewer-snippet-minified.html-->
 <!--#endif-->
+   
 
   </head>
 

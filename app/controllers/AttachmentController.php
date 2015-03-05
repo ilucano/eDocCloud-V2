@@ -191,6 +191,8 @@ class AttachmentController extends BaseController {
 		
 	}
 	
+
+
 	
 	public function streamAttachment($id)
 	{
@@ -224,19 +226,11 @@ class AttachmentController extends BaseController {
 				'updated'     => false,
 		]);
 					
-       // $content = File::get($file->attach_path);
-		
-		//$content_types = [
-        //        'application/pdf', // pdf
-        //   ];
-		
-		//$response = Response::make($content, 200);
-		
-		//$response->header('Content-Type', $content_types);
-      //  header('Content-Type: application/pdf');
-		//readfile($file->attach_path);
-		//echo $content; 
-		//return $response;
+        $content = File::get($file->attach_path);
+ 
+		$response = Response::make($content, 200);
+ 
+		return $response;
 		
 	}
 	

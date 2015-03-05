@@ -44,7 +44,7 @@
 						<td>{{ $workflow->status }}</td>			
 						<td>
 						@if($workflow->attach)
-							<a class="btn btn-link" href="{{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a>
+							<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/download/' . $workflow->attach->row_id) }}">{{ $workflow->attach->attach_name }}</a>
 						@endif
 						</td>
 						<td>{{ Form::open(array('url' => 'ocr/status')) }}
