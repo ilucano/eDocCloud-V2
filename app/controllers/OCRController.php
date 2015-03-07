@@ -186,13 +186,15 @@ class OCRController extends \BaseController {
 					 
 			$workflow->save();
 			
+			$logDetails = json_encode(['row_id' => $wfid,
+									   'fk_status' => $newStatus]);
 			
 			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_ocr_update',
 				'action'      => 'Updated',
 				'description' => 'OCR Status Updated',
-				'details'     => 'Workflow ID: '.$wfid  .', From Status: '. Input::get('status'). ' To Status: '.$newStatus,
+				'details'     => $logDetails,
 				'updated'     => true,
 			]);
 				

@@ -127,12 +127,18 @@ class PickupController extends \BaseController {
 					
 					$pickupId = $this->createNewPickup(Auth::user()->getUserData()->row_id, $fkCompany, $orderId, $barcode, $boxId);
 					
+					
+					
+					$logDetails = json_encode(['pickup_id' => $pickupId,
+									   'box_id' => $boxId]);
+			
+			
 					Activity::log([
 						'contentId'   => Auth::User()->id,
 						'contentType' => 'admin_pickup_store',
 						'action'      => 'Created',
 						'description' => 'Workflow - New Pickup Created',
-						'details'     => 'Pickup ID: '.$pickupId  .', Box Id: '. $boxId,
+						'details'     => $logDetails,
 						'updated'     => false,
 					]);
 				

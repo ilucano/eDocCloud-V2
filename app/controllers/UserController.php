@@ -227,12 +227,15 @@ class UserController extends \BaseController {
 		$jobQueue->save();
 		
 	    
+				
+		$logDetails = json_encode(['row_id' => $user->row_id]);
+		
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_user_store',
 				'action'      => 'Created',
 				'description' => 'New User Created',
-				'details'     => 'Username: '.Input::get('username')  .', Company Id: '. Input::get('fk_empresa'),
+				'details'     => $logDetails,
 				'updated'     => false,
 			]);
 					
@@ -434,13 +437,14 @@ class UserController extends \BaseController {
 		}
 
 		// redirect
-		
+				
+	    $logDetails = json_encode(['row_id' => $user->row_id]);
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_user_update',
 				'action'      => 'Updated',
 				'description' => 'User Details Updated',
-				'details'     => 'Username: '. $user->username,
+				'details'     => $logDetails,
 				'updated'     => true,
 		]);
 		

@@ -132,13 +132,15 @@ class AdministratorController extends \BaseController {
 			
 			$stringResult = (Input::get('is_admin') == 'X') ? 'added' : 'removed';
 			
+			$logDetails = json_encode(['row_id' =>  Input::get('row_id'),
+									   'is_admin' => Input::get('is_admin')]);
 			
 			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_update_admin',
 				'action'      => 'Updated',
 				'description' => 'Adminstrator Status Updated',
-				'details'     => 'User ID: '.Input::get('row_id')  .', Is admin: '. Input::get('is_admin') ,
+				'details'     => $logDetails,
 				'updated'     => true,
 			]);
 			

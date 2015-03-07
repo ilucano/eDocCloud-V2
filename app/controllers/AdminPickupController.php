@@ -129,6 +129,9 @@ class AdminPickupController extends \BaseController {
 		$pickup->timestamp = date("Y-m-d H:i:s");
 		$pickup->save();
 		
+		
+		$logDetails = json_encode(['row_id' => $pickup->row_id]);
+				
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_pickup_create',
@@ -273,13 +276,14 @@ class AdminPickupController extends \BaseController {
 		 
 		$pickup->save();
 		
+		$logDetails = json_encode(['row_id' => $pickup->row_id]);
 		
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_pickup_update',
 				'action'      => 'Updated',
 				'description' => 'Pickup Updated',
-				'details'     => 'Pickup ID: '.$pickup->row_id  .', User: '.  Input::get('fk_user') . ', Order: '. Input::get('fk_order') .', Barcode: '. Input::get('fk_barcode'),
+				'details'     =>  $logDetails,
 				'updated'     => true,
 			]);
 		
@@ -333,13 +337,15 @@ class AdminPickupController extends \BaseController {
 			$object->fk_status = Input::get('status');
 			$object->save();
 			
-			
+            $logDetails = json_encode(['row_id' => Input::get('row_id'),
+									   'status' => Input::get('status')]);
+					
 			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_pickup_status',
 				'action'      => 'Updated',
 				'description' => 'Pickup Status Updated',
-				'details'     => 'Pickup ID: '.Input::get('row_id')  .', Status: '. Input::get('status'),
+				'details'     => $logDetails,
 				'updated'     => true,
 			]);
 			

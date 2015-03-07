@@ -186,12 +186,15 @@ class ScanController extends \BaseController {
 					 
 			$workflow->save();
 			
+			$logDetails = json_encode(['row_id' => $wfid,
+									   'fk_status' => $newStatus]);
+				
 			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_scan_update',
 				'action'      => 'Updated',
 				'description' => 'Scan Status Updated',
-				'details'     => 'Workflow ID: '.$wfid  .', From Status: '. Input::get('status'). ' To Status: '.$newStatus,
+				'details'     => $logDetails,
 				'updated'     => true,
 			]);
 						

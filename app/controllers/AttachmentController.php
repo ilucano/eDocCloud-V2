@@ -137,13 +137,15 @@ class AttachmentController extends BaseController {
 			}
 			
 		}
-	    
+		
+	    $logDetails = json_encode(['row_id' => $id]);
+		
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'attachment_download_file',
 				'action'      => 'Created',
 				'description' => 'File Downloaded',
-				'details'     => 'File ID: '.$id  .', Is admin: '. Auth::User()->isAdmin(),
+				'details'     => $logDetails,
 				'updated'     => false,
 		]);
 				
@@ -177,12 +179,14 @@ class AttachmentController extends BaseController {
 			
 		}
 		
+		$logDetails = json_encode(['row_id' => $id]);
+		
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'attachment_download_attachment',
 				'action'      => 'Created',
 				'description' => 'Attachment Downloaded',
-				'details'     => 'Attachment ID: '.$id  .', Is admin: '. Auth::User()->isAdmin(),
+				'details'     => $logDetails,
 				'updated'     => false,
 		]);
 					
@@ -217,12 +221,14 @@ class AttachmentController extends BaseController {
 			
 		}
 		
+		$logDetails = json_encode(['row_id' => $id]);
+		   
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'attachment_stream_attachment',
 				'action'      => 'Created',
 				'description' => 'Attachment Streamed',
-				'details'     => 'Attachment ID: '.$id  .', Is admin: '. Auth::User()->isAdmin(),
+				'details'     => $logDetails,
 				'updated'     => false,
 		]);
 					

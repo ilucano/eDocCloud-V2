@@ -88,13 +88,15 @@ class CompanyController extends \BaseController {
 		$company->creditlimit      = Input::get('creditlimit');
 		$company->save();
         
+		$logDetails = json_encode(['row_id' => $company->row_id]);
+		
 		
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_company_store',
 				'action'      => 'Created',
 				'description' => 'Created New Company',
-				'details'     => 'Company Id: '.$company->row_id .', Name: '. Input::get('company_name'),
+				'details'     => $logDetails,
 				'updated'     => false,
 		]);
 		
@@ -223,14 +225,16 @@ class CompanyController extends \BaseController {
 		$company->fk_terms      = Input::get('fk_terms');
 		$company->creditlimit      = Input::get('creditlimit');
 		$company->save();
-
+     
+	 
+	    $logDetails = json_encode(['row_id' => $id ]);
 		
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_company_update',
 				'action'      => 'Updated',
 				'description' => 'Updated Company Details',
-				'details'     => 'Company Id: '. $id .', Name: '. Input::get('company_name'),
+				'details'     => $logDetails,
 				'updated'     => true,
 		]);
 		 

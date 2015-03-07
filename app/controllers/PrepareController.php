@@ -187,12 +187,15 @@ class PrepareController extends \BaseController {
 			$workflow->save();
 			
 			
+			$logDetails = json_encode(['row_id' => $wfid,
+									   'fk_status' => $newStatus]);
+ 	
 			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_prepare_update',
 				'action'      => 'Updated',
 				'description' => 'Preparation Status Updated',
-				'details'     => 'Workflow ID: '.$wfid  .', From Status: '. Input::get('status'). ' To Status: '.$newStatus,
+				'details'     => $logDetails,
 				'updated'     => true,
 			]);
 				
