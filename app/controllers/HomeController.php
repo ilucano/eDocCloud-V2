@@ -74,7 +74,9 @@ class HomeController extends BaseController {
 			'password'  => Input::get('password'),
 			'active'	=> 1
 		);
-	 
+	    
+		$logDetails = json_encode(['username' => Input::get('username')]);
+		
 		if (Auth::attempt($userdata)) {
 			
 			Activity::log([
@@ -82,7 +84,7 @@ class HomeController extends BaseController {
 				'contentType' => 'user_login_success',
 				'action'      => 'Create',
 				'description' => 'Successfully Logged In',
-				'details'     => 'Username: '.Input::get('username'),
+				'details'     => $logDetails,
 				'updated'     => false,
 			]);
 						
@@ -94,10 +96,10 @@ class HomeController extends BaseController {
             
 			Activity::log([
 				'contentId'   => 0,
-				'contentType' => 'User',
-				'action'      => 'user_login_fail',
+				'contentType' => 'user_login_success',
+				'action'      => 'Create',
 				'description' => 'Log In Fail',
-				'details'     => 'Username: '.Input::get('username'),
+				'details'     => $logDetails,
 				'updated'     => false,
 			]);
 			

@@ -106,13 +106,14 @@ class AdminBoxController extends \BaseController {
 		 
 		 $orderId = $object->id;
 		 
+		 $logDetails = json_encode(['row_id' => $object->row_id]);
 		 
 		 Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_create_box_success',
 				'action'      => 'Create',
 				'description' => 'New Box Created',
-				'details'     => 'Box Id: '.$object->row_id .', Name: '. Input::get('f_name') .', Code: '.Input::get('f_code'),
+				'details'     => $logDetails,
 				'updated'     => false,
 		]);
 		 
@@ -198,15 +199,15 @@ class AdminBoxController extends \BaseController {
 		 $object->f_name = Input::get('f_name');
 		 $object->ppc = Input::get('ppc');
 		 
-		 $object->save();
+		$object->save();
 		 
-		 
+        $logDetails = json_encode(['row_id' => $id]);
 		Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_update_box_success',
 				'action'      => 'Updated',
 				'description' => 'Box Updated',
-				'details'     => 'Box Id: '.$id .', Name: '. Input::get('f_name') .', Code: '.Input::get('f_code'),
+				'details'     => $logDetails,
 				'updated'     => true,
 		]);
 		  
@@ -260,12 +261,15 @@ class AdminBoxController extends \BaseController {
 			$object->save();
 			
 			
+			$logDetails = json_encode(['row_id' => Input::get('row_id'),
+									   'status' => Input::get('status')]);
+			
 			Activity::log([
 				'contentId'   => Auth::User()->id,
 				'contentType' => 'admin_update_box_status',
 				'action'      => 'Updated',
 				'description' => 'Box Status Updated',
-				'details'     => 'Box Id: '.Input::get('row_id')  .', Status: '. Input::get('status') ,
+				'details'     => $logDetails,
 				'updated'     => true,
 			]);
 			
