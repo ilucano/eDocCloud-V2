@@ -116,6 +116,17 @@ class UsersProfileController extends \BaseController {
 		
 		$user->password = Hash::make(Input::get('password'));
         $user->save();
+ 
+		$logDetails = json_encode(['row_id' => Auth::User()->getUserData()->row_id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'user_profile_changepassword',
+				'action'      => 'Updated',
+				'description' => 'Changed password',
+				'details'     => $logDetails,
+				'updated'     => true,
+			]);
 		
 		Session::flash('message', 'Password Changed');
 			

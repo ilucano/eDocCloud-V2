@@ -204,8 +204,9 @@
                             <a href="{{ URL::to('users/profile/password') }} "> Change Password</a>
                         </li>
                         @endif
-                        
-                        
+                         <li>
+                            <a href="{{ URL::to('users/activity') }} "> Activity History</a>
+                        </li>
                         <li>
                             <a href="{{ URL::to('logout') }}"><i class="fa fa-fw fa-sign-out"></i> Log Out</a>
                         </li>

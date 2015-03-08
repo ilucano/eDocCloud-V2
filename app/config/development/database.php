@@ -59,7 +59,7 @@ return array(
 			'username'  => 'shaman', //user must have create, drop, alter, delete table privileges for db structure changes
 			'password'  => 'pampita1280',
 			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
+			'collation' => 'utf8_general_ci',
 			'prefix'    => '',
 		),
 

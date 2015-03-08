@@ -109,6 +109,19 @@ class UsersFileController extends \BaseController {
 		
 		$file->save();
 		
+		
+		$logDetails = json_encode(['row_id' => Input::get('id'), 'file_mark_id' => Input::get('file_mark_id')]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'user_file_updatemark',
+				'action'      => 'Updated',
+				'description' => 'Updated a file label',
+				'details'     => $logDetails,
+				'updated'     => true,
+			]);
+		
+		
 		echo "success";
 		
 	}
@@ -202,6 +215,17 @@ class UsersFileController extends \BaseController {
 			
 		}
 		
+		
+		$logDetails = json_encode(['query' => Input::get('query')]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'user_file_search',
+				'action'      => 'Created',
+				'description' => 'Performed file search',
+				'details'     => $logDetails,
+				'updated'     => false,
+			]);
 		
 		return View::make('users.file.searchresult')
 					->with('files', $files)

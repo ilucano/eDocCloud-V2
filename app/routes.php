@@ -172,8 +172,8 @@ Route::group(array('before'=>'auth'), function() {
 			
 			Route::resource('profile', 'UsersProfileController');
 			
-			
-			
+			Route::resource('activity', 'UsersActivityController');
+
 		}
 	);
 	

@@ -113,12 +113,14 @@
 				
 				
 					
-			<div class="form-group">
+			<div class="form-group @if ($errors->has('assigned_roles')) has-error @endif">
 				<label>User Role</label>
 				 <div class="form-group">
 				 
 				{{ Form::select('assigned_roles[]', $roleDropdown, $assignedRoles, array('class'=>'form-control', 'multiple'=>'multiple', 'id'=>'assigned_roles')) }}
                 </div>
+				
+					 @if ($errors->has('assigned_roles')) <p class="help-block">{{ $errors->first('assigned_roles') }}</p> @endif
 			</div>
 				
 			<div class="form-group">

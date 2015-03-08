@@ -174,6 +174,18 @@ class CompanyAdminUserController extends \BaseController {
 		$jobQueue->save();
 		
 	    
+		$logDetails = json_encode(['row_id' => $user->row_id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'companyadmin_user_store',
+				'action'      => 'Created',
+				'description' => 'New User Created',
+				'details'     => $logDetails,
+				'updated'     => false,
+			]);
+		
+		
 		Session::flash('message', 'User successfully created');
 			
 		return Redirect::to('companyadmin/user');
@@ -360,8 +372,9 @@ class CompanyAdminUserController extends \BaseController {
             'password' => 'min:5',
 			'first_name' => 'required',
 			'last_name' => 'required',
-			'email' => 'email|required'
-			
+			'email' => 'email|required',
+			'assigned_roles' => 'required',
+
         );
 		 
         $validator = Validator::make(Input::all(), $rules);
@@ -420,7 +433,20 @@ class CompanyAdminUserController extends \BaseController {
 		{
 			Log::error($exception);
 		}
-
+        
+		
+		$logDetails = json_encode(['row_id' => $id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'companyadmin_user_updated',
+				'action'      => 'Updated',
+				'description' => 'User Updated',
+				'details'     => $logDetails,
+				'updated'     => true,
+			]);
+		
+		
 		// redirect
 		Session::flash('message', 'User updated');
 		return Redirect::to('companyadmin/user/'. $id .'/edit');

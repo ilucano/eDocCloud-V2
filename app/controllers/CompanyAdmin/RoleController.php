@@ -84,7 +84,20 @@ class CompanyAdminRoleController extends \BaseController {
 		$role->save();
 		
 		$role->perms()->sync(Input::get('permission_list'));
-	         
+	    
+		
+		   
+		$logDetails = json_encode(['row_id' => $role->id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'companyadmin_role_store',
+				'action'      => 'Created',
+				'description' => 'New Role Created',
+				'details'     => $logDetails,
+				'updated'     => false,
+			]);
+		
 		Session::flash('message', '<strong>'.Input::get('name') .'</strong> successfully created');
 			
 		return Redirect::to('companyadmin/role');
@@ -187,7 +200,20 @@ class CompanyAdminRoleController extends \BaseController {
 		$role->save();
 		
 		$role->perms()->sync(Input::get('permission_list'));
-	         
+	    
+		
+		$logDetails = json_encode(['row_id' => $id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'companyadmin_role_update',
+				'action'      => 'Updated',
+				'description' => 'Role Updated',
+				'details'     => $logDetails,
+				'updated'     => true,
+			]);
+		
+		 
 		Session::flash('message', '<strong>'.Input::get('name') .'</strong> successfully updated');
 			
 		return Redirect::to('companyadmin/role');

@@ -102,7 +102,19 @@ class CompanyAdminFilemarkController extends \BaseController {
 		$filemark->fk_empresa = Auth::User()->getUserData()->fk_empresa;
 		$filemark->create_date = date("Y-m-d H:i:s");
 		$filemark->save();
-	
+	    
+		
+		$logDetails = json_encode(['row_id' => $filemark->id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'companyadmin_filemark_store',
+				'action'      => 'Created',
+				'description' => 'New Filemark Created',
+				'details'     => $logDetails,
+				'updated'     => false,
+			]);
+		
 	         
 		Session::flash('message', '<strong>'.Input::get('label') .'</strong> successfully created');
 			
@@ -188,7 +200,18 @@ class CompanyAdminFilemarkController extends \BaseController {
 		$filemark->label = Input::get('label');
 		$filemark->save();
 	
-	         
+	    
+		$logDetails = json_encode(['row_id' => $id]);
+		
+		Activity::log([
+				'contentId'   => Auth::User()->id,
+				'contentType' => 'companyadmin_filemark_update',
+				'action'      => 'Updated',
+				'description' => 'Filemark Updated',
+				'details'     => $logDetails,
+				'updated'     => true,
+			]);
+		
 		Session::flash('message', 'Filemark successfully updated');
 			
 		return Redirect::to('companyadmin/filemark');
