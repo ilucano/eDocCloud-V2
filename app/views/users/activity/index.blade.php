@@ -20,7 +20,7 @@
 			
 			@if(Auth::User()->isCompanyAdmin())
 				<div class="alert alert-info alert-dismissable">
-                    <i class="fa fa-info-circle"></i>  <strong>Note:</strong> As a company admin, you are viewing activities of all company users for past 6 months.
+                    <i class="fa fa-info-circle"></i>  <strong>Note:</strong> As a company admin, you are viewing activities of all company users for past 3 months.
 				</div>	
 			@endif
          
@@ -49,7 +49,8 @@
 						<th>Event</th>
 						<th>Details (to do more)</th>
 						<th>IP Address</th>
-						<th>Date Time</th>	
+						<th>Date Time</th>
+						<th>Past</th>
 					</tr>
 				</thead>
 				
@@ -68,13 +69,18 @@
 							 {{ $activityLog->description }} 
 						</td>
 						<td>
-							 {{ $activityLog->details }} 
+							 {{ $activityLog->details }}
+							 / {{ $activityLog->detailsText }} 
 						</td>
 						<td>
 							 {{ $activityLog->ip_address }} 
 						</td>
 		                <td>
 							{{ Helpers::niceDateTime($activityLog->created_at)}}
+						</td>
+						
+						<td>
+							{{ Helpers::timeAgo(strtotime($activityLog->created_at)) }} ago
 						</td>
 
 					</tr>
