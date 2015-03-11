@@ -57,20 +57,23 @@ class UsersActivityController extends \BaseController {
 			
 			try {
 				
-				$this->detailsText = $this->getDetailsInfo($activityLog->content_type, $activityLog->details);
+				$activityLog->detailsText = $this->getDetailsInfo($activityLog->content_type, $activityLog->details);
 				
 			}
 			catch (Exception $e)
 			{
-				$this->detailsText = $jsonDetails;
+				$activityLog->detailsText = $jsonDetails;
 				
 				Log::error('Failed to parse activity details. id: '.  $activityLog->id. '. Details: '. $jsonDetails);
 			}
 			
 			
+			
+			
 		}
 		
 	 
+		
         return View::make('users.activity.index')
 					 ->with('activityLogs', $activityLogs);
 
@@ -90,7 +93,7 @@ class UsersActivityController extends \BaseController {
 	private function getDetailsInfo($contentType = '', $jsonDetails = '')
 	{
 		$arrayDetails = json_decode($jsonDetails, true);
-		
+	
 		if(!is_array($arrayDetails) )
 		{
 			Log::error('getDetailsInfo() - Invalid $jsonDetails : '.  $jsonDetails);
@@ -102,18 +105,61 @@ class UsersActivityController extends \BaseController {
 		{
 			case 'user_login_success':
 				
-                $text = $arrayDetails['username'];
+				$text = $arrayDetails['username'];
 				$userId = User::where('username', '=',  $arrayDetails['username'])->first()->row_id;
-				
-			    $link =   URL::action('CompanyAdminUserController@show', $userId);
-				return HTML::link($link, $text);
+				 
+				return self::getShowUserRouteLink($text, $userId);
 			
+			break;
+		
+			case 'user_profile_changepassword':
+			case 'companyadmin_user_store':
+			case 'companyadmin_user_updated':
+				
+				$userId = $arrayDetails['row_id'];
+                $text = User::find($userId)->username;
+	
+				return self::getShowUserRouteLink($text, $userId);
+			 
+			break;
+			
+			case 'companyadmin_role_store':	
+			case 'companyadmin_role_update':
+			
+				$roleId = $arrayDetails['row_id'];
+				$text = Role::find($roleId)->name;
+				
+		        return self::getShowRoleRouteLink($text, $roleId);
+			
+			case 'user_file_search':
+				return 'Query: <i>' . $arrayDetails['query'] . '</i>';
+			break;
+		
+			case 'companyadmin_filemark_store':
+			case 'companyadmin_filemark_update':
+				
+				$fileMarkId = $arrayDetails['row_id'];
+				$text = Filemark::find($fileMarkId)->label;
+			 
+				return self::getEditFilemarkRouteLink($text, $fileMarkId);
+		    
+			break;
+		
+			case 'user_file_updatemark':
+			    $fileId = $arrayDetails['row_id'];
+				$fileMarkId = $arrayDetails['file_mark_id'];
+				
+				$fileName = FileTable::find($fileId)->filename;
+				$markLabel = Filemark::find($fileMarkId)->label;
+				
+				return self::getDownloadFileRouteLink($fileName, $fileId) . " labeled as <i>" . $markLabel . "</i>";
+				
 			break;
 		
 			default:
 				
 			   Log::error('getDetailsInfo() - Not valid option for $contentType : '.  $contentType);
-			   return '';
+			   return $jsonDetails;
 			
 			break;
 
@@ -139,5 +185,28 @@ class UsersActivityController extends \BaseController {
 		return $results;
 	}
 	
+	
+	protected function getShowUserRouteLink($text, $id)
+	{
+		return HTML::linkAction('CompanyAdminUserController@show', $text, array($id));
+	}
+	
+	
+	protected function getShowRoleRouteLink($text, $id)
+	{
+		return HTML::linkAction('CompanyAdminRoleController@show', $text, array($id));
+	}
+	
+	
+	protected function getEditFilemarkRouteLink($text, $id)
+	{
+		return HTML::linkAction('CompanyAdminFilemarkController@edit', $text, array($id));
+	}
+	
+	protected function getDownloadFileRouteLink($text, $id)
+	{
+		
+		return HTML::linkAction('AttachmentController@downloadFile', $text, array($id));
+	}
 	
 }
