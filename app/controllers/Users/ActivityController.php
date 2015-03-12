@@ -144,6 +144,23 @@ class UsersActivityController extends \BaseController {
 				return self::getEditFilemarkRouteLink($text, $fileMarkId);
 		    
 			break;
+		    
+			
+			case 'attachment_download_file':
+				$fileId = $arrayDetails['row_id'];
+				$fileName = FileTable::find($fileId)->filename;
+				 
+				return self::getDownloadFileRouteLink($fileName, $fileId);
+				
+			break;
+		    
+			case 'attachment_download_attachment':
+				$attachmentId = $arrayDetails['row_id'];
+				$attachmentName = Attach::find($attachmentId)->attach_name;
+				
+				return self::getDownloadAttachmentRouteLink($attachmentName, $attachmentId);
+				
+			break;
 		
 			case 'user_file_updatemark':
 			    $fileId = $arrayDetails['row_id'];
@@ -154,6 +171,12 @@ class UsersActivityController extends \BaseController {
 				
 				return self::getDownloadFileRouteLink($fileName, $fileId) . " labeled as <i>" . $markLabel . "</i>";
 				
+			break;
+		
+			case 'admin_ocr_update':
+				$boxName =  self::getBoxIdByWorkflowId($arrayDetails['row_id']);
+				$status =  self::getWorkflowStatus($arrayDetails['fk_status']);
+				return 'Box: '. $boxName . ', Status: '. $status;
 			break;
 		
 			default:
@@ -186,6 +209,33 @@ class UsersActivityController extends \BaseController {
 	}
 	
 	
+	protected function getBoxIdByWorkflowId($id)
+	{
+		try {
+			
+			$workflow = Workflow::find($id);
+		 
+			return substr($workflow->wf_id, 6);
+		}
+		catch (Exception $e)
+		{
+			return '';
+		}
+		
+	}
+	
+	protected function getWorkflowStatus($status_id)
+	{
+		try {
+			return WorkflowStatus::where('row_id', '=', $status_id)->firstOrFail()->status;
+		}
+		catch (Exception $e)
+		{
+			return '';
+		}
+		
+	}
+	
 	protected function getShowUserRouteLink($text, $id)
 	{
 		return HTML::linkAction('CompanyAdminUserController@show', $text, array($id));
@@ -207,6 +257,12 @@ class UsersActivityController extends \BaseController {
 	{
 		
 		return HTML::linkAction('AttachmentController@downloadFile', $text, array($id));
+	}
+	
+	protected function getDownloadAttachmentRouteLink($text, $id)
+	{
+		
+		return HTML::linkAction('AttachmentController@downloadAttachment', $text, array($id));
 	}
 	
 }

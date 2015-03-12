@@ -64,7 +64,7 @@
 						</td>
 						
 						<td>
-							 {{ $activityLog->description }}
+							 {{ $activityLog->description }} / {{ $activityLog->content_type }}
 						</td>
 						<td>
 							 {{ $activityLog->detailsText }} 

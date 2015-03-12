@@ -135,7 +135,7 @@ class OrderController extends \BaseController {
 		$status = OrderStatus::find($object->fk_status)->status;
 		
 			// load the view and pass the data
-        return View::make('adminbox.edit')
+        return View::make('order.edit')
 			   ->with('companyDropdown', $companyDropdown)
                ->with('object', $object)
 			   ->with('status', $status);

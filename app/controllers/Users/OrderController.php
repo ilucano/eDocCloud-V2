@@ -122,36 +122,6 @@ class UsersOrderController extends \BaseController {
 	}
    
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-		$companies = Company::orderBy('company_name')->get();
-		
-		
-		
-		$companyDropdown = array();
-		
-		foreach($companies as $company)
-		{
-			$companyDropdown[$company->row_id] = $company->company_name;
-		}
-		
-		
-		$object = Object::find($id);
-		$status = OrderStatus::find($object->fk_status)->status;
-		
-			// load the view and pass the data
-        return View::make('adminbox.edit')
-			   ->with('companyDropdown', $companyDropdown)
-               ->with('object', $object)
-			   ->with('status', $status);
-	}
 
 
 	/**

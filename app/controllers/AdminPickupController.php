@@ -137,7 +137,7 @@ class AdminPickupController extends \BaseController {
 				'contentType' => 'admin_pickup_create',
 				'action'      => 'Created',
 				'description' => 'New Pickup Created',
-				'details'     => 'Pickup ID: '.$pickup->row_id  .', User: '.  Input::get('fk_user') . ', Order: '. Input::get('fk_order') .', Barcode: '. Input::get('fk_barcode'),
+				'details'     => $logDetails,
 				'updated'     => false,
 			]);
 		
