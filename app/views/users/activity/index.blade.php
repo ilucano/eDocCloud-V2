@@ -64,7 +64,7 @@
 						</td>
 						
 						<td>
-							 {{ $activityLog->description }} / {{ $activityLog->content_type }}
+							 {{ $activityLog->description }}
 						</td>
 						<td>
 							 {{ $activityLog->detailsText }} 
@@ -104,7 +104,8 @@
 		
 			$('#datatables').DataTable(
 				{
-				  "order": [[ 0, "desc" ]]
+				  "order": [[ 0, "desc" ]],
+				  "stateSave": true
 				}
 			);
 		 } );

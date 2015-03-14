@@ -174,11 +174,60 @@ class UsersActivityController extends \BaseController {
 			break;
 		
 			case 'admin_ocr_update':
+			case 'admin_qa_update':
+			case 'admin_prepare_update':
+			case 'admin_scan_update':
 				$boxName =  self::getBoxIdByWorkflowId($arrayDetails['row_id']);
 				$status =  self::getWorkflowStatus($arrayDetails['fk_status']);
-				return 'Box: '. $boxName . ', Status: '. $status;
+				return 'Box: '. $boxName . ' updated to '. $status;
+			break;
+	 
+			case 'admin_pickup_store':
+				$barcode = self::getPickupBarcodeById($arrayDetails['pickup_id']);
+				$boxCode = self::getFCodeById($arrayDetails['box_id']);
+                return 'Barcode: ' .$barcode .', Box Code: '. $boxCode;
+			break;
+		    
+			case 'admin_create_box_success':
+			case 'admin_update_box_success':
+				$boxCode = self::getFCodeById($arrayDetails['row_id']);
+				$boxName = self::getBoxNameById($arrayDetails['row_id']);
+				
+				return 'Box Code: ' . $boxCode . ', Box Name: ' . $boxName;
+				
 			break;
 		
+			case 'admin_pickup_create':
+			case 'admin_pickup_update':
+				$barcode = self::getPickupBarcodeById($arrayDetails['row_id']);
+				return self::getShowPickupRouteLink($barcode, $arrayDetails['row_id']);
+			
+			case 'admin_update_admin':
+				$admin = User::find($arrayDetails['row_id'])->username;
+				$status = ( strtolower($arrayDetails['is_admin']) == 'x') ? ' added to admin'  : ' removed from admin'; 
+				
+				return self::getShowAdminUserListRouteLink($admin) . $status;
+			
+			break;
+		
+			case 'admin_user_store':
+			case 'admin_user_update':
+				$user = User::find($arrayDetails['row_id'])->username;
+				return self::getAdminShowUserRouteLink($user, $arrayDetails['row_id']);
+		
+			break;
+		
+			case 'admin_company_store':
+			case 'admin_company_update':
+				$companyName = Company::find($arrayDetails['row_id'])->company_name;
+				return self::getShowCompanyRouteLink($companyName, $arrayDetails['row_id']);
+			break;
+			
+			case 'admin_update_box_status':
+				$code = Object::find($arrayDetails['row_id'])->f_code;
+				$status = OrderStatus::find($arrayDetails['status'])->status;
+				return self::getShowBoxRouteLink($code, $arrayDetails['row_id']) . ' updated to '. $status;
+			break;
 			default:
 				
 			   Log::error('getDetailsInfo() - Not valid option for $contentType : '.  $contentType);
@@ -235,6 +284,52 @@ class UsersActivityController extends \BaseController {
 		}
 		
 	}
+ 
+	protected function getPickupBarcodeById($id)
+	{
+		try {
+		 
+			$barcode = Pickup::find($id)->fk_barcode;
+			return $barcode;
+			
+		}
+		catch (Exception $e)
+		{
+			Log::error('getPickupNameById() failed. id: '.  $id);
+			return '';
+		}
+	}
+	
+	protected function getFCodeById($id)
+	{
+		try {
+			
+			$fCode =  Object::find($id)->f_code;
+			return $fCode;
+		}
+		catch  (Exception $e){
+			
+			Log::error('getFCodeById() failed. id: '.  $id);
+			return '';
+		}
+		
+	}
+	
+	
+	protected function getBoxNameById($id)
+	{
+		try {
+			
+			$fName =  Object::find($id)->f_name;
+			return $fName;
+		}
+		catch  (Exception $e){
+			
+			Log::error('getBoxNameById() failed. id: '.  $id);
+			return '';
+		}
+		
+	}
 	
 	protected function getShowUserRouteLink($text, $id)
 	{
@@ -247,6 +342,7 @@ class UsersActivityController extends \BaseController {
 		return HTML::linkAction('CompanyAdminRoleController@show', $text, array($id));
 	}
 	
+
 	
 	protected function getEditFilemarkRouteLink($text, $id)
 	{
@@ -264,5 +360,37 @@ class UsersActivityController extends \BaseController {
 		
 		return HTML::linkAction('AttachmentController@downloadAttachment', $text, array($id));
 	}
+	
+	
+	protected function getShowPickupRouteLink($text, $id)
+	{
+		
+		return HTML::linkAction('AdminPickupController@edit', $text, array($id));
+	}
+	
+	protected function getShowAdminUserListRouteLink($text)
+	{
+		return HTML::linkAction('AdministratorController@index', $text);
+
+	}
+	
+	protected function getAdminShowUserRouteLink($text, $id)
+	{
+		return HTML::linkAction('UserController@show', $text, array($id));
+
+	}
+	
+	protected function getShowCompanyRouteLink($text, $id)
+	{
+		return HTML::linkAction('CompanyController@show', $text, array($id));
+
+	}
+	
+	protected function getShowBoxRouteLink($text, $id)
+	{
+		
+		return HTML::linkAction('AdminBoxController@edit', $text, array($id));
+	}
+	
 	
 }
