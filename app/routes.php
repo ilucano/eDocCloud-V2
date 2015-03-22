@@ -101,6 +101,9 @@ Route::group(array('before'=>'auth'), function() {
 			Route::resource('pickup', 'AdminPickupController');
 			Route::resource('box', 'AdminBoxController');
             Route::post('box/status', array('uses' => 'AdminBoxController@doUpdateStatus'));
+			
+			Route::resource('filemark', 'AdminFilemarkController');
+			
 		}
 	);
 	

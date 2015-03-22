@@ -121,7 +121,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Zizaco\Entrust\EntrustServiceProvider',
 		'Regulus\ActivityLog\ActivityLogServiceProvider',
-
+        'Services\Filemark\FilemarkServiceProvider',
 	),
 
 	/*
