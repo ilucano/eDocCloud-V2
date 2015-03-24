@@ -19,7 +19,9 @@ class AdminFilemarkController extends \BaseController {
 	 */
 	public function index()
 	{
-		$filemarks = $this->filemark->selectAll();
+		$filemarks = $this->filemark->getFilemarkByCompany(3, false);
+		//$filemarks = $this->filemark->getAll();
+		echo "<pre>";
 		print_r($filemarks);
 	}
 

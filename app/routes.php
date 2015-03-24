@@ -268,12 +268,3 @@ Route::get('/testqueue', function()
 
 });
 
-
-Route::get('/mytest' , function()
-{
-	
-	echo URL::action('UsersOrderController@show', '123');
-	
-});
-
-		   

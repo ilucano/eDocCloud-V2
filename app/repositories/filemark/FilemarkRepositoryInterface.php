@@ -3,8 +3,11 @@ namespace Repositories\Filemark;
  
 interface FilemarkRepositoryInterface {
 	
-	public function selectAll();
+	public function getAll();
 	
 	public function find($id);
 	
+	public function getGlobalFilemark();
+	
+	public function getFilemarkByCompany($companyId, $global);
 }
