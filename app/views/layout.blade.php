@@ -179,6 +179,10 @@
 						<li>
                             <a href="{{ URL::to('administrator') }}"> Manage Admins</a>
                         </li>
+
+                        <li>
+                            <a href="{{ URL::to('admin/filemark') }}"> Manage Filemarks</a>
+                        </li>
 						
 						<li>
                             <a href="{{ URL::to('order') }}"> Orders</a>
