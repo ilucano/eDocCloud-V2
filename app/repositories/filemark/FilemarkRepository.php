@@ -1,5 +1,4 @@
-<?php
-namespace repositories\filemark;
+<?php namespace Repositories\Filemark;
 
 use Filemark;
 use FileTable;
