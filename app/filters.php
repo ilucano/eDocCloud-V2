@@ -11,15 +11,12 @@
 |
 */
 
-App::before(function($request)
-{
-	//
+App::before(function ($request) {
+    //
 });
 
-
-App::after(function($request, $response)
-{
-	//
+App::after(function ($request, $response) {
+    //
 });
 
 /*
@@ -33,15 +30,14 @@ App::after(function($request, $response)
 |
 */
 
-Route::filter('auth', function()
-{
-	if (Auth::guest()) return Redirect::guest('login');
+Route::filter('auth', function () {
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
 });
 
-
-Route::filter('auth.basic', function()
-{
-	return Auth::basic();
+Route::filter('auth.basic', function () {
+    return Auth::basic();
 });
 
 /*
@@ -55,9 +51,10 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('guest', function()
-{
-	if (Auth::check()) return Redirect::to('/');
+Route::filter('guest', function () {
+    if (Auth::check()) {
+        return Redirect::to('/');
+    }
 });
 
 /*
@@ -71,85 +68,76 @@ Route::filter('guest', function()
 |
 */
 
-Route::filter('csrf', function()
-{
-	if (Session::token() != Input::get('_token'))
-	{
-		throw new Illuminate\Session\TokenMismatchException;
-	}
+Route::filter('csrf', function () {
+    if (Session::token() != Input::get('_token')) {
+        throw new Illuminate\Session\TokenMismatchException();
+    }
 });
 
-
-/**
+/*
  * begin Company Admin routes
  */
 
-Route::filter('admin_user', function()
-{
-    if ( ! Auth::User()->can('admin_user') || ! Auth::User()->isCompanyAdmin() ) // Checks the current user
-    {
+Route::filter('admin_user', function () {
+    if (! Auth::User()->can('admin_user') || ! Auth::User()->isCompanyAdmin()) {
+        // Checks the current user
+
         return Redirect::to('system/denied');
     }
 });
 
+Route::filter('admin_role', function () {
+    if (! Auth::User()->can('admin_role') || ! Auth::User()->isCompanyAdmin()) {
+        // Checks the current user
 
-Route::filter('admin_role', function()
-{
-    if ( ! Auth::User()->can('admin_role') || ! Auth::User()->isCompanyAdmin() ) // Checks the current user
-    {
         return Redirect::to('system/denied');
     }
 });
 
-Route::filter('admin_filemark', function()
-{
-    if ( ! Auth::User()->can('admin_filemark') || ! Auth::User()->isCompanyAdmin() ) // Checks the current user
-    {
+Route::filter('admin_filemark', function () {
+    if (! Auth::User()->can('admin_filemark') || ! Auth::User()->isCompanyAdmin()) {
+        // Checks the current user
+
         return Redirect::to('system/denied');
     }
 });
 
-
-
-/**
+/*
  * end Company Admin routes
  */
 
- 
  /* Begin user routes */
 
- 
-Route::filter('user_order', function()
-{
-    if ( !Auth::User()->can('user_order') ) // Checks the current user
-    {
+Route::filter('user_order', function () {
+    if (!Auth::User()->can('user_order')) {
+        // Checks the current user
+
         return Redirect::to('system/denied');
     }
 });
 
-Route::filter('user_search', function()
-{
-    if ( !Auth::User()->can('user_search') ) // Checks the current user
-    {
+Route::filter('user_search', function () {
+    if (!Auth::User()->can('user_search')) {
+        // Checks the current user
+
         return Redirect::to('system/denied');
     }
 });
 
-Route::filter('user_file', function()
-{
-    if ( !Auth::User()->can('user_file') ) // Checks the current user
-    {
+Route::filter('user_file', function () {
+    if (!Auth::User()->can('user_file')) {
+        // Checks the current user
+
         return Redirect::to('system/denied');
     }
 });
 
-Route::filter('user_changepassword', function()
-{
-    if ( !Auth::User()->can('user_changepassword') ) // Checks the current user
-    {
+Route::filter('user_changepassword', function () {
+    if (!Auth::User()->can('user_changepassword')) {
+        // Checks the current user
+
         return Redirect::to('system/denied');
     }
 });
 
 /* End user routes */
-	

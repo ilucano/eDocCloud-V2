@@ -141,7 +141,6 @@ class AdminFilemarkController extends \BaseController
         $filemark->fk_empresa = Auth::User()->getUserData()->fk_empresa;
         $filemark->create_date = date("Y-m-d H:i:s");
         $filemark->save();
- 
 
         Session::flash('message', '<strong>'.Input::get('label').'</strong> successfully created');
 
