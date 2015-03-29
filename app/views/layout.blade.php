@@ -195,6 +195,10 @@
 						<li>
                             <a href="{{ URL::to('admin/box') }}"> Box</a>
                         </li>
+
+                        <li>
+                            <a href="{{ URL::to('admin/activity') }}"> All Users Activities</a>
+                        </li>
                     </ul>
 						
 				 </li>

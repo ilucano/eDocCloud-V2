@@ -17,8 +17,11 @@ class AdminActivityController extends \BaseController
      */
     public function index()
     {
-        $activity = $this->activity->getAll();
-        print_r($activity);
+        $activityLogs = $this->activity->getAll();
+        
+        return View::make('adminactivity.index')
+                     ->with('activityLogs', $activityLogs);
+
     }
 
     /**
