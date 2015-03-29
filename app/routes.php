@@ -106,6 +106,7 @@ Route::group(array('before' => 'auth'), function () {
         }
     );
 
+    Route::resource('role', 'RoleController');
     /* end super admin section */
 
     /* begin company admin section */

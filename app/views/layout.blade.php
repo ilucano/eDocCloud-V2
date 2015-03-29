@@ -175,6 +175,10 @@
 						<li>
                             <a href="{{ URL::to('user') }}"> Users</a>
                         </li>
+
+                        <li>
+                            <a href="{{ URL::to('role') }}"> Roles (Groups)</a>
+                        </li>
 							
 						<li>
                             <a href="{{ URL::to('administrator') }}"> Manage Admins</a>
