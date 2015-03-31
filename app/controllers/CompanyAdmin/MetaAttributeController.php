@@ -11,10 +11,14 @@ class CompanyAdminMetaAttributeController extends BaseController
 
     public function index()
     {
-        $companyId = 5;
-
+        $companyId = Auth::User()->getCompanyId();
+        
         $metaAttributes = $this->meta_attribute->getCompanyAttributes($companyId);
 
-        dd($metaAttributes);
+           // load the view and pass the data
+        return View::make('companyadmin.metaattribute.index')
+                     ->with('attributes', $metaAttributes);
+        
+
     }
 }

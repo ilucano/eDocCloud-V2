@@ -5,8 +5,8 @@
  
 		<div class="col-lg-10">
 			<h2 class="page-header">{{ Auth::User()->getCompanyName() }}
-			<small>Filemarks</small>
-			<div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('companyadmin/filemark/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create New Label</a></div>
+			<small>Meta Data (Attributes)</small>
+			<div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('companyadmin/metaattribute/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create New Attribute</a></div>
 			</h2>
 			
 		    <ol class="breadcrumb">
@@ -14,7 +14,7 @@
 					<i class="fa fa-fw fa-dashboard"></i> Company Admin
 				</li>
 				<li class="active">
-					<i class="fa fa-tag"></i> Filemarks
+					<i class="fa fa-tag"></i> Meta Data / Attributes
 				</li>
 			</ol>
 			
@@ -43,23 +43,19 @@
 				</thead>
 				<tbody>
 					
-					@foreach($filemarks as $filemark)
+					@foreach($attributes as $attribute)
 					
 					<tr>			
 						<td>
-							 {{ $filemark->label }} <span class="badge">{{ $filemark->file_count }} files</span>
+							 
 							 
 						</td>
 		                <td>
-							{{ date("F j, Y",strtotime($filemark->create_date)) }}
+						 
 						</td>
 						
 						<td>
-							@if($filemark->global == '0')
-								<a class="btn btn-sm btn-info" href="{{ URL::to('companyadmin/filemark/' . $filemark->id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Rename</a>
-							@else
-								<button type="button" class="btn btn-default btn-sm" disabled="disabled">(Built-in label)</button>
-							@endif
+							 
 						</td>
 	
 					</tr>
