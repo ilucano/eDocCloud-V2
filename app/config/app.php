@@ -123,6 +123,7 @@ return array(
         'Regulus\ActivityLog\ActivityLogServiceProvider',
         'Services\Filemark\FilemarkServiceProvider',
         'Services\Activity\ActivityServiceProvider',
+        'Services\MetaAttribute\MetaAttributeServiceProvider',
     ),
 
     /*

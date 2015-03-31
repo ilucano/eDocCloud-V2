@@ -84,6 +84,10 @@
                             <a href="{{ URL::to('companyadmin/filemark') }}"><i class="fa fa-fw fa-tags"></i> My Filemarks</a>
                         </li>
 						@endif
+
+                        <li>
+                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square-o"></i> Metadata (Attributes)</a>
+                        </li>
 						 
                     </ul>
 					@endif
