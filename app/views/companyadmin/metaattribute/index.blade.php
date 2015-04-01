@@ -36,7 +36,9 @@
 			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped" id="datatables">
 				<thead>
 					<tr>
-						<th><i class="fa fa-tag"></i> Label</th>
+						<th><i class="fa fa-tag"></i> Name</th>
+						<th> Type</th>
+						<th> Required</th>
 						<th> Created Date</th>
 						<th> Action</th>
 					</tr>
@@ -78,7 +80,7 @@
 		$(document).ready(function() {
 		
 			$('#datatables').DataTable(
-				{ "order": [[ 2, "desc" ]] }
+				{ "order": [[ 0, "asc" ]] }
 			);
 		 } );
 	</script>

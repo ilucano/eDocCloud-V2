@@ -14,4 +14,25 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
 
         return $metaAttributes;
     }
+
+
+    public function getAttributeTypes()
+    {
+
+        return array(
+                        'string'  => 'Text Box',
+                        'boolean' => 'Yes/No',
+                        'radio'  => 'Radio Button',
+                        'select' => 'Drop Down',
+                        'checkbox' => 'Check Boxes',
+                        'multiselect' => 'Multiselect',
+                        'date'     => 'Date Time',
+                    );
+    }
+
+    public function getRequiredDropdown()
+    {
+        return ['1' => 'Yes',
+                '0' => 'No'];
+    }
 }

@@ -3,4 +3,8 @@
 interface MetaAttributeRepositoryInterface
 {
     public function getCompanyAttributes($companyId);
+
+    public function getAttributeTypes();
+
+    public function getRequiredDropdown();
 }
