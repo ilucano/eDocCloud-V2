@@ -48,10 +48,14 @@
 		   {{ Form::close() }}
 		</div>
 		
+
+		
 		<div class="col-lg-12">
+		
 			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed" id="datatables">
 					<thead>
 						<tr>
+							<th><i class="fa fa-download" title="Select to download"></i> </th>
 							<th>Filename</th>
 							<th>Mark</th>
 							<th>Created</th>
@@ -65,7 +69,9 @@
 						
 						@foreach($files as $file)
 							<tr>
-							
+							<td>
+								{{ Form::checkbox('tozip', $file->row_id, null, ['class' => 'checkbox-zip']) }}
+							</td>
 							<td>	
 								<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
 						    </td>
@@ -79,7 +85,12 @@
 	 
 					</tbody>
 				</table>
-		</div>			
+				{{ Form::open(array('url' => 'attachment/fileszip')) }}
+				{{ Form::hidden('ziplist', '',  array('id' => 'ziplist')) }}
+				{{ Form::submit('Download Selected File', array('class' => 'btn btn-success btn-sm', 'id' => 'download-button', 'disabled' => 'disabled')) }}
+				{{ Form::close() }}	
+		</div>		
+
 	</div>
    
   
@@ -103,7 +114,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 		
-			$('#datatables').DataTable(
+			var datatable = $('#datatables').DataTable(
 				{
 					"aaSorting": []
 				}
@@ -146,6 +157,45 @@
 			});
 
 			
+		});
+
+        
+
+		$(document).ready(function() {
+			
+			$(document).on('click', '.checkbox-zip', function(){
+				var id =  $(this).val();
+				var isChecked = $(this).prop('checked');
+				
+				if ($("#ziplist").val() != '') {
+ 					var selectedArray = $("#ziplist").val().split(',');
+ 				}
+ 				else {
+ 					var selectedArray = [];
+ 				}
+
+                if (isChecked == true) {
+					selectedArray.push(id);
+                }
+                else {	
+
+                	var found = $.inArray(id, selectedArray);
+					if (found >= 0) {
+					    // Element was found, remove it.
+					    selectedArray.splice(found, 1);
+					} 
+                } 
+
+                $("#ziplist").val(selectedArray.join(','));
+                if(selectedArray.length >= 1) {
+                	$("#download-button").val('Download Selected ' + selectedArray.length  + ' File(s)');
+                	$("#download-button").removeAttr("disabled");
+                }
+                else {
+                	$("#download-button").val('Download Selected File');
+                	$("#download-button").attr("disabled", true);
+                }
+			}); 	
 		});
 
 	</script>

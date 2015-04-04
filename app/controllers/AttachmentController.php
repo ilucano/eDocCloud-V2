@@ -239,6 +239,66 @@ class AttachmentController extends BaseController {
 		return $response;
 		
 	}
+
+
+	public function zipFiles()
+	{
+       
+    	$zipList = Input::get('ziplist');
+    	if ($zipList == '') {
+    		exit('no file input');
+    	}
+ 		$arrayList = explode(",", $zipList);
+
+		if (count($arrayList)  < 1) {
+			exit('no files selected');
+		}
+
+		$attachments = array();
+       
+		foreach ($arrayList as $id)
+		{
+
+			try {
+				//imagingXperts staff can download all
+				$file = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId() )
+									->where('row_id', '=', $id)
+									->where(function($query)
+										{
+											$query->whereIn('file_mark_id', json_decode(Auth::User()->getUserData()->file_permission, true))
+												  ->orWhere('file_mark_id','=', '')
+												  ->orWhereRaw('file_mark_id is null');
+										}
+									  )
+									->first(array('path'));
+                $attachments[]  = Config::get('app.archive_path') . $file->path;
+			}
+			catch (Exception $e) {
+				echo "$id File not found";
+			} 
+		}
+
+		if (count($attachments) >= 1) {
+
+			$zipname =  storage_path() . '/zip_' . date("Ymdhis") . '_' . uniqid() . '.zip';
+			//echo $zipname;
+			$zip = new ZipArchive;
+			$zip->open($zipname, ZipArchive::CREATE);
+
+
+			foreach ($attachments as $key => $attachment) {
+			  	$zip->addFile($attachment, $key . '_' . basename($attachment));
+			}
+
+			$zip->close();
+
+    		return Response::download($zipname);
+
+		}
+
+
+
+	}
 	
 	
 }

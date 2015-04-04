@@ -86,7 +86,7 @@
 						@endif
 
                         <li>
-                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-squarew"></i> Metadata (Attributes)</a>
+                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square"></i> Metadata Setup</a>
                         </li>
 						 
                     </ul>

@@ -52,68 +52,73 @@
             {{ Form::open(array('url' => 'companyadmin/metaattribute', 'class' => 'form')) }}
         
         
-            <div class="form-group input-group @if ($errors->has('name')) has-error @endif">
+            <div class="form-group @if ($errors->has('name')) has-error @endif">
             
-             
-                <span class="input-group-addon"><i class="fa fa-tag"></i></span>
-                
+                <label>Attribute Name</label>
+                 
                 {{ Form::text('name', Input::old('name'), array('class'=>'form-control', 'placeholder'=>'Enter attribute name')) }}
                 
                 
                     
             </div>
-            @if ($errors->has('label')) <p class="help-block">{{ $errors->first('label') }}</p> @endif
+            @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
             
 
             <div class="form-group  @if ($errors->has('type')) has-error @endif">
-                <label>Input Type</label>
+                <label>Attribute Type</label>
                     
                 {{ Form::select('type', $attributeTypes, null, array('class'=>'form-control')) }}
                 @if ($errors->has('type')) <p class="help-block">{{ $errors->first('type') }}</p> @endif
                 
             </div>
 
-
-            <div class="container">
-                <div class="row">
-                    <div class="control-group" id="fields">
-                        <label class="control-label" for="field1">Options</label>
-                        <div class="controls"> 
-                            <form role="form" autocomplete="off">
-                                <div class="entry input-group col-xs-3">
-                                    <input class="form-control" name="fields[]" type="text" placeholder="Type something" />
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-success btn-add" type="button">
-                                            <span class="glyphicon glyphicon-plus"></span>
-                                        </button>
-                                    </span>
-                                </div>
-                            </form>
-                        <br>
-                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
-                        </div>
+            
+            <div class="controls"> 
+                  <label>Dropdown Options</label>
+                <form role="form" autocomplete="off">
+                    <div class="entry input-group">
+                        <input class="form-control" name="fields[]" type="text" placeholder="Type something">
+                        <span class="input-group-btn">
+                            <button class="btn btn-remove btn-danger" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+                        </span>
                     </div>
-                </div>
-            </div>
-
-             <div class="form-group  @if ($errors->has('required')) has-error @endif">
+                <div class="entry input-group">
+                        <input class="form-control" name="fields[]" type="text" placeholder="Type something">
+                        <span class="input-group-btn">
+                            <button class="btn btn-remove btn-danger" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+                        </span>
+                    </div><div class="entry input-group">
+                        <input class="form-control" name="fields[]" type="text" placeholder="Type something">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success btn-add" type="button">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div></form>
+            <br>
+            <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another option</small>
+            </div><a href=""></a>
+            <div class="form-group  @if ($errors->has('required')) has-error @endif">
                 <label>Required</label>
                     
-                {{ Form::select('type', $requiredDropdown, null, array('class'=>'form-control')) }}
+                {{ Form::select('required', $requiredDropdown, null, array('class'=>'form-control')) }}
                 @if ($errors->has('required')) <p class="help-block">{{ $errors->first('required') }}</p> @endif
                 
             </div>
 
+            <div class="form-group pull-left">
+                    
+                    <a class="btn btn-sm btn-info" href="{{ URL::to('admin/box') }}"> Back</a>
+            </div>
+                        
+            <div class="form-group pull-right">
+                            
+                    {{ Form::submit('Create', array('class' => 'btn btn-sm btn-success')) }}
+            </div>
 
-            {{ Form::submit('Create', array('class' => 'btn btn-sm btn-success')) }}
-    
-            
-            
-                
-            {{ Form::close() }}
 
-        </div>      
-    
+        </div>
+
 @stop
 
 
@@ -128,12 +133,10 @@
             {
                 e.preventDefault();
                 
-                var controlForm = $('.controls form:first'),
+                var controlForm = $('#options-row form:first'),
                     currentEntry = $(this).parents('.entry:first'),
                     newEntry = $(currentEntry.clone()).appendTo(controlForm);
             
-                console.log(currentEntry);
-
                 newEntry.find('input').val('');
                 controlForm.find('.entry:not(:last) .btn-add')
                     .removeClass('btn-add').addClass('btn-remove')

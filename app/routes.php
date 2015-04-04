@@ -127,8 +127,6 @@ Route::group(array('before' => 'auth'), function () {
             Route::resource('metatargetattributevalue', 'CompanyAdminMetaTargetAttributeValueController');
             Route::resource('metaattributeoption', 'CompanyAdminMetaAttributeOptionController');
 
-
-
         }
     );
 
@@ -197,6 +195,12 @@ Route::group(array('before' => 'auth'), function () {
                 'uses' => 'AttachmentController@streamAttachment',
      ));
 
+
+    Route::post('attachment/fileszip', array(
+        'uses' => 'AttachmentController@zipFiles',
+    ));
+
+
     Route::resource('attachment', 'AttachmentController');
 
     /* end Attachment */
@@ -257,4 +261,3 @@ Route::get('/testqueue', function () {
                                   'from' => 'noreply@test2.com', ));
 
 });
-

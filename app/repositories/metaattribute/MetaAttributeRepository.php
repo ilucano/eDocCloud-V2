@@ -11,7 +11,7 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         }
 
         $metaAttributes = MetaAttribute::where('fk_empresa', '=', $companyId)->get();
-
+  
         return $metaAttributes;
     }
 
