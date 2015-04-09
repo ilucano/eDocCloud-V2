@@ -16,6 +16,9 @@
 
 
 </style>
+
+
+
         <div class="col-sm-12">
             
 
@@ -73,31 +76,31 @@
             </div>
 
             
-            <div class="controls"> 
-                  <label>Dropdown Options</label>
-                <form role="form" autocomplete="off">
-                    <div class="entry input-group">
-                        <input class="form-control" name="fields[]" type="text" placeholder="Type something">
-                        <span class="input-group-btn">
-                            <button class="btn btn-remove btn-danger" type="button"><span class="glyphicon glyphicon-minus"></span></button>
-                        </span>
+            <div class="container">
+                <div class="row">
+                    <div class="control-group" id="fields">
+                        <label class="control-label" for="field1">Nice Multiple Form Fields</label>
+                        <div class="controls"> 
+                            <div id="controls-form" role="form" autocomplete="off">
+                                <div class="entry input-group col-xs-3">
+                                    <input class="form-control" name="fields[]" type="text" placeholder="Type something" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success btn-add" type="button">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        <br>
+                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                        </div>
                     </div>
-                <div class="entry input-group">
-                        <input class="form-control" name="fields[]" type="text" placeholder="Type something">
-                        <span class="input-group-btn">
-                            <button class="btn btn-remove btn-danger" type="button"><span class="glyphicon glyphicon-minus"></span></button>
-                        </span>
-                    </div><div class="entry input-group">
-                        <input class="form-control" name="fields[]" type="text" placeholder="Type something">
-                        <span class="input-group-btn">
-                            <button class="btn btn-success btn-add" type="button">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                        </span>
-                    </div></form>
-            <br>
-            <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another option</small>
-            </div><a href=""></a>
+                </div>
+            </div>
+
+
+
+
             <div class="form-group  @if ($errors->has('required')) has-error @endif">
                 <label>Required</label>
                     
@@ -127,16 +130,16 @@
     <script type="text/javascript">
       
 
-      $(function()
+        $(function()
         {
             $(document).on('click', '.btn-add', function(e)
             {
                 e.preventDefault();
-                
-                var controlForm = $('#options-row form:first'),
+
+                var controlForm = $('#controls-form'),
                     currentEntry = $(this).parents('.entry:first'),
                     newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            
+
                 newEntry.find('input').val('');
                 controlForm.find('.entry:not(:last) .btn-add')
                     .removeClass('btn-add').addClass('btn-remove')
@@ -150,6 +153,7 @@
                 return false;
             });
         });
+
 
 
 

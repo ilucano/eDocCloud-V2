@@ -27,237 +27,269 @@ Route::post('login', array('uses' => 'HomeController@doLogin'));
 Route::get('logout', array('uses' => 'HomeController@doLogout'));
 
 //begin routes required logged in
-Route::group(array('before' => 'auth'), function () {
+Route::group(
+    array('before' => 'auth'), function () {
 
-    Route::get('/', array(
+        Route::get(
+            '/', array(
                           'uses' => 'HomeController@showIndex',
                           'as' => 'home.index',
-    ));
+            )
+    );
 
-    Route::get('/home/', array(
+        Route::get(
+            '/home/', array(
                                 'uses' => 'HomeController@showIndex',
                                 'as' => 'home.index',
-    ));
+            )
+    );
 
-    /* begin super admin section */
+        /* begin super admin section */
 
-    Route::resource('pickup', 'PickupController');
+        Route::resource('pickup', 'PickupController');
 
-    Route::resource('prepare', 'PrepareController');
+        Route::resource('prepare', 'PrepareController');
 
-    Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
+        Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
 
-    Route::resource('scan', 'ScanController');
+        Route::resource('scan', 'ScanController');
 
-    Route::post('scan/status', array('uses' => 'ScanController@doUpdateStatus'));
+        Route::post('scan/status', array('uses' => 'ScanController@doUpdateStatus'));
 
-    Route::resource('qa', 'QAController');
+        Route::resource('qa', 'QAController');
 
-    Route::post('qa/status', array('uses' => 'QAController@doUpdateStatus'));
+        Route::post('qa/status', array('uses' => 'QAController@doUpdateStatus'));
 
-    Route::resource('ocr', 'OCRController');
+        Route::resource('ocr', 'OCRController');
 
-    Route::post('ocr/status', array('uses' => 'OCRController@doUpdateStatus'));
+        Route::post('ocr/status', array('uses' => 'OCRController@doUpdateStatus'));
 
-    Route::get('reports/allboxes', array(
+        Route::get(
+            'reports/allboxes', array(
                                 'uses' => 'ReportsController@showAllBoxes',
                                 'as' => 'reports.allboxes',
-    ));
+            )
+    );
 
-    Route::get('reports/groupbystatus', array(
+        Route::get(
+            'reports/groupbystatus', array(
                                 'uses' => 'ReportsController@showGroupByStatus',
                                 'as' => 'reports.groupbystatus',
-    ));
+            )
+    );
 
-    Route::resource('company', 'CompanyController');
+        Route::resource('company', 'CompanyController');
 
-    Route::resource('user', 'UserController');
+        Route::resource('user', 'UserController');
 
-    Route::get('user/create/company/{fk_empresa}', array(
+        Route::get(
+            'user/create/company/{fk_empresa}', array(
                                 'uses' => 'UserController@createStep2',
                                 'as' => 'user.create.step2',
-    ));
+            )
+    );
 
-    Route::post('user/create/company/{fk_empresa}', array(
+        Route::post(
+            'user/create/company/{fk_empresa}', array(
                                 'uses' => 'UserController@storeStep2',
                                 'as' => 'user.create.storestep2',
-    ));
-
-    Route::resource('administrator', 'AdministratorController');
-
-    Route::post('administrator/isadmin', array('uses' => 'AdministratorController@doUpdateIsAdmin'));
-
-    Route::resource('order', 'OrderController');
-
-    Route::post('order/status', array('uses' => 'OrderController@doUpdateStatus'));
-
-    Route::group(
-        array('prefix' => 'admin'),
-        function () {
-
-            Route::resource('pickup', 'AdminPickupController');
-            Route::resource('box', 'AdminBoxController');
-            Route::post('box/status', array('uses' => 'AdminBoxController@doUpdateStatus'));
-
-            Route::resource('filemark', 'AdminFilemarkController');
-
-            Route::resource('activity', 'AdminActivityController');
-
-        }
+            )
     );
 
-    Route::resource('role', 'RoleController');
-    /* end super admin section */
+        Route::resource('administrator', 'AdministratorController');
 
-    /* begin company admin section */
+        Route::post('administrator/isadmin', array('uses' => 'AdministratorController@doUpdateIsAdmin'));
 
-   // Route::when('companyadmin/user*', 'admin_user'); //admin_user permission check (app/filters.php)
-    // Route::when('companyadmin/role*', 'admin_role'); //permission check (app/filters.php)
-    // Route::when('companyadmin/filemark*', 'admin_filemark'); //permission check (app/filters.php)
+        Route::resource('order', 'OrderController');
 
-    Route::group(
-        array('prefix' => 'companyadmin'),
-        function () {
+        Route::post('order/status', array('uses' => 'OrderController@doUpdateStatus'));
 
-            Route::resource('user', 'CompanyAdminUserController');
-            Route::resource('filemark', 'CompanyAdminFilemarkController');
-            Route::resource('role', 'CompanyAdminRoleController');
+        Route::group(
+            array('prefix' => 'admin'),
+            function () {
 
-            Route::resource('metaattribute', 'CompanyAdminMetaAttributeController');
-            Route::resource('metatargetattributevalue', 'CompanyAdminMetaTargetAttributeValueController');
-            Route::resource('metaattributeoption', 'CompanyAdminMetaAttributeOptionController');
+                Route::resource('pickup', 'AdminPickupController');
+                Route::resource('box', 'AdminBoxController');
+                Route::post('box/status', array('uses' => 'AdminBoxController@doUpdateStatus'));
 
-        }
-    );
+                Route::resource('filemark', 'AdminFilemarkController');
 
-    /* end company admin section */
+                Route::resource('activity', 'AdminActivityController');
 
-    /* begin users section */
+            }
+        );
 
-    Route::when('users/order*', 'user_order');
-    Route::when('users/chart*', 'user_order');
-    Route::when('users/file/search*', 'user_search');
-    Route::when('users/file*', 'user_file');
-    Route::when('users/profile/password', 'user_changepassword');
+        Route::resource('role', 'RoleController');
+        /* end super admin section */
 
-    Route::group(
-        array('prefix' => 'users'),
-        function () {
+        /* begin company admin section */
 
-            Route::resource('order', 'UsersOrderController');
+        // Route::when('companyadmin/user*', 'admin_user'); //admin_user permission check (app/filters.php)
+        // Route::when('companyadmin/role*', 'admin_role'); //permission check (app/filters.php)
+        // Route::when('companyadmin/filemark*', 'admin_filemark'); //permission check (app/filters.php)
 
-            Route::resource('chart', 'UsersChartController');
+        Route::group(
+            array('prefix' => 'companyadmin'),
+            function () {
 
-            Route::get('chart/{boxid}/{orderid}', array(
-                'as' => 'chart.box.order',
-                'uses' => 'UsersChartController@indexBoxOrder',
-            ));
+                Route::resource('user', 'CompanyAdminUserController');
+                Route::resource('filemark', 'CompanyAdminFilemarkController');
+                Route::resource('role', 'CompanyAdminRoleController');
 
-            Route::get('chart/{boxid}/{orderid}/{chartId}', array(
-                'as' => 'chart.box.order.chart',
-                'uses' => 'UsersChartController@indexBoxOrderChart',
-            ));
+                Route::resource('metaattribute', 'CompanyAdminMetaAttributeController');
+                Route::resource('metatargetattributevalue', 'CompanyAdminMetaTargetAttributeValueController');
+                Route::resource('metaattributeoption', 'CompanyAdminMetaAttributeOptionController');
 
-            Route::get('file/mark', array('uses' => 'UsersFileController@doUpdateMark'));
+            }
+        );
 
-            Route::get('file/search', array('uses' => 'UsersFileController@showSearch'));
+        /* end company admin section */
 
-            Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
+        /* begin users section */
 
-            Route::resource('file', 'UsersFileController');
+        Route::when('users/order*', 'user_order');
+        Route::when('users/chart*', 'user_order');
+        Route::when('users/file/search*', 'user_search');
+        Route::when('users/file*', 'user_file');
+        Route::when('users/profile/password', 'user_changepassword');
 
-            Route::get('profile/password', array('uses' => 'UsersProfileController@showChangePassword'));
+        Route::group(
+            array('prefix' => 'users'),
+            function () {
 
-            Route::post('profile/password', array('uses' => 'UsersProfileController@doChangePassword'));
+                Route::resource('order', 'UsersOrderController');
 
-            Route::resource('profile', 'UsersProfileController');
+                Route::resource('chart', 'UsersChartController');
 
-            Route::resource('activity', 'UsersActivityController');
+                Route::get(
+                    'chart/{boxid}/{orderid}', array(
+                    'as' => 'chart.box.order',
+                    'uses' => 'UsersChartController@indexBoxOrder',
+                    )
+            );
 
-        }
-    );
+                Route::get(
+                    'chart/{boxid}/{orderid}/{chartId}', array(
+                    'as' => 'chart.box.order.chart',
+                    'uses' => 'UsersChartController@indexBoxOrderChart',
+                    )
+            );
 
-    /* end users section */
+                Route::get('file/mark', array('uses' => 'UsersFileController@doUpdateMark'));
 
-    /* Attachment */
-    Route::get('attachment/file/{id}', array(
+                Route::get('file/search', array('uses' => 'UsersFileController@showSearch'));
+
+                Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
+
+                Route::resource('file', 'UsersFileController');
+
+                Route::get('profile/password', array('uses' => 'UsersProfileController@showChangePassword'));
+
+                Route::post('profile/password', array('uses' => 'UsersProfileController@doChangePassword'));
+
+                Route::resource('profile', 'UsersProfileController');
+
+                Route::resource('activity', 'UsersActivityController');
+
+            }
+        );
+
+        /* end users section */
+
+        /* Attachment */
+        Route::get(
+            'attachment/file/{id}', array(
                 'as' => 'attachment.file.id',
                 'uses' => 'AttachmentController@downloadFile',
-     ));
+            )
+    );
 
-    Route::get('attachment/download/{id}', array(
+        Route::get(
+            'attachment/download/{id}', array(
                 'as' => 'attachment.download.id',
                 'uses' => 'AttachmentController@downloadAttachment',
-     ));
+            )
+        );
 
-    Route::get('attachment/stream/{id}', array(
+        Route::get(
+            'attachment/stream/{id}', array(
                 'as' => 'attachment.stream.id',
                 'uses' => 'AttachmentController@streamAttachment',
-     ));
-
-
-    Route::post('attachment/fileszip', array(
-        'uses' => 'AttachmentController@zipFiles',
-    ));
-
-
-    Route::resource('attachment', 'AttachmentController');
-
-    /* end Attachment */
-
-    /* pdf viewer **/
-    Route::get('/pdfviewer', function () {
-            return View::make('pdfviewer.show');
-        }
+            )
     );
 
-    Route::get('system/denied', function () {
-            return View::make('system.denied');
-        }
+        Route::post(
+            'attachment/fileszip', array(
+            'uses' => 'AttachmentController@zipFiles',
+            )
     );
 
-});
+        Route::resource('attachment', 'AttachmentController');
+
+        /* end Attachment */
+
+        /* pdf viewer **/
+        Route::get(
+            '/pdfviewer', function () {
+                return View::make('pdfviewer.show');
+            }
+    );
+
+        Route::get(
+            'system/denied', function () {
+                return View::make('system.denied');
+            }
+    );
+
+    }
+);
 
 //end routes required logged in
 
 
 /* test entrust **/
-Route::get('/start', function () {
-    $subscriber = new Role();
-    $subscriber->name = 'Subscriber';
-    $subscriber->save();
+Route::get(
+    '/start', function () {
+        $subscriber = new Role();
+        $subscriber->name = 'Subscriber';
+        $subscriber->save();
 
-    $author = new Role();
-    $author->name = 'Author';
-    $author->save();
+        $author = new Role();
+        $author->name = 'Author';
+        $author->save();
 
-    $read = new Permission();
-    $read->name = 'can_read';
-    $read->display_name = 'Can Read Posts';
-    $read->save();
+        $read = new Permission();
+        $read->name = 'can_read';
+        $read->display_name = 'Can Read Posts';
+        $read->save();
 
-    $edit = new Permission();
-    $edit->name = 'can_edit';
-    $edit->display_name = 'Can Edit Posts';
-    $edit->save();
+        $edit = new Permission();
+        $edit->name = 'can_edit';
+        $edit->display_name = 'Can Edit Posts';
+        $edit->save();
 
-    $subscriber->attachPermission($read);
-    $author->attachPermission($read);
-    $author->attachPermission($edit);
+        $subscriber->attachPermission($read);
+        $author->attachPermission($read);
+        $author->attachPermission($edit);
 
-    $user1 = Login::find(3);
-    $user2 = Login::find(4);
+        $user1 = Login::find(3);
+        $user2 = Login::find(4);
 
-    $user1->attachRole($subscriber);
-    $user2->attachRole($author);
+        $user1->attachRole($subscriber);
+        $user2->attachRole($author);
 
-    return 'Woohoo!';
-});
+        return 'Woohoo!';
+    }
+);
 
 /* test queue **/
-Route::get('/testqueue', function () {
-    echo "...";
-    Queue::push('MailService', array('to' => 'yatsum812@gmail.com',
-                                  'from' => 'noreply@test2.com', ));
+Route::get(
+    '/testqueue', function () {
+        echo '...';
+        Queue::push(
+            'MailService', array('to' => 'yatsum812@gmail.com',
+                                  'from' => 'noreply@test2.com', )
+    );
 
-});
+    }
+);

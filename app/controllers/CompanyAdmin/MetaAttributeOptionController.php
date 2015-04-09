@@ -2,5 +2,4 @@
 
 class CompanyAdminMetaAttributeOptionController extends BaseController
 {
-  
 }
