@@ -14,6 +14,9 @@
     font-size: 12px;
 }
 
+#container-options-form {
+    display: none;
+}
 
 </style>
 
@@ -70,16 +73,16 @@
             <div class="form-group  @if ($errors->has('type')) has-error @endif">
                 <label>Attribute Type</label>
                     
-                {{ Form::select('type', $attributeTypes, null, array('class'=>'form-control')) }}
+                {{ Form::select('type', $attributeTypes, null, array('class'=>'form-control', 'id'=>'select-type')) }}
                 @if ($errors->has('type')) <p class="help-block">{{ $errors->first('type') }}</p> @endif
                 
             </div>
 
             
-            <div class="container">
+            <div class="container" id="container-options-form">
                 <div class="row">
                     <div class="control-group" id="fields">
-                        <label class="control-label" for="field1">Nice Multiple Form Fields</label>
+                        <label class="control-label" for="field1" id="options-label">Options</label>
                         <div class="controls"> 
                             <div id="controls-form" role="form" autocomplete="off">
                                 <div class="entry input-group col-xs-3">
@@ -92,14 +95,11 @@
                                 </div>
                             </div>
                         <br>
-                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another optoin</small>
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
 
             <div class="form-group  @if ($errors->has('required')) has-error @endif">
                 <label>Required</label>
@@ -153,6 +153,26 @@
                 return false;
             });
         });
+
+
+        $(function()
+        {
+            $(document).on('change', '#select-type', function(e)
+            {
+                e.preventDefault();
+
+                var selected = $(this).val();
+                if ( $.inArray(selected, ['radio', 'select', 'checkbox', 'multiselect']) >= 0 ) {
+                    $('#container-options-form').show();
+                }
+                else {
+                    $('#container-options-form').hide();
+                }
+
+            });
+        });
+
+
 
 
 

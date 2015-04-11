@@ -26,7 +26,7 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
                         'select' => 'Drop Down',
                         'checkbox' => 'Check Boxes',
                         'multiselect' => 'Multiselect',
-                        'date'     => 'Date Time',
+                        'datetime'     => 'Date Time',
                     );
     }
 
