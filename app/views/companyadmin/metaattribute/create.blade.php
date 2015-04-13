@@ -14,10 +14,6 @@
     font-size: 12px;
 }
 
-#container-options-form {
-    display: none;
-}
-
 </style>
 
 
@@ -154,6 +150,17 @@
             });
         });
 
+        var showHideOptions = function()
+        {
+            var selected = $('#select-type').val();
+            if ( $.inArray(selected, ['radio', 'select', 'checkbox', 'multiselect']) >= 0 ) {
+                    $('#container-options-form').show();
+            }
+            else {
+                $('#container-options-form').hide();
+            }
+
+        }
 
         $(function()
         {
@@ -161,15 +168,12 @@
             {
                 e.preventDefault();
 
-                var selected = $(this).val();
-                if ( $.inArray(selected, ['radio', 'select', 'checkbox', 'multiselect']) >= 0 ) {
-                    $('#container-options-form').show();
-                }
-                else {
-                    $('#container-options-form').hide();
-                }
+                showHideOptions();
 
             });
+
+            showHideOptions();
+
         });
 
 
