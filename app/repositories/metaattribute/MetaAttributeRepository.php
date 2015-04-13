@@ -35,4 +35,9 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         return ['1' => 'Yes',
                 '0' => 'No'];
     }
+
+    public function getTypesRequiredOptions()
+    {
+        return ['radio', 'select', 'checkbox', 'multiselect'];
+    }
 }

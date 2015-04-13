@@ -64,16 +64,16 @@
                  
                 {{ Form::text('name', Input::old('name'), array('class'=>'form-control', 'placeholder'=>'Enter attribute name')) }}
                 
-                
+                @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
                     
             </div>
-            @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+         
             
 
             <div class="form-group  @if ($errors->has('type')) has-error @endif">
                 <label>Attribute Type</label>
                     
-                {{ Form::select('type', $attributeTypes, null, array('class'=>'form-control', 'id'=>'select-type')) }}
+                {{ Form::select('type', $attributeTypes,  Input::old('type'), array('class'=>'form-control', 'id'=>'select-type')) }}
                 @if ($errors->has('type')) <p class="help-block">{{ $errors->first('type') }}</p> @endif
                 
             </div>
@@ -86,7 +86,7 @@
                         <div class="controls"> 
                             <div id="controls-form" role="form" autocomplete="off">
                                 <div class="entry input-group col-xs-3">
-                                    <input class="form-control" name="fields[]" type="text" placeholder="Type something" />
+                                    <input class="form-control" name="options[]" type="text" placeholder="Type something" />
                                     <span class="input-group-btn">
                                         <button class="btn btn-success btn-add" type="button">
                                             <span class="glyphicon glyphicon-plus"></span>

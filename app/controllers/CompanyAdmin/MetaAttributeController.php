@@ -30,4 +30,39 @@ class CompanyAdminMetaAttributeController extends BaseController
                      ->with('attributeTypes', $attributeTypes)
                      ->with('requiredDropdown', $requiredDropdown);
     }
+
+
+    public function store()
+    {
+        $rules = [
+            'name' => 'required',
+            'type' => 'required',
+        ];
+        
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('companyadmin/metaattribute/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+        
+
+        if (in_array(Input::get('type'), $this->repo->getTypesRequiredOptions())) {
+            $_options = Input::get('options');
+
+            for ($i = 0; $i < count($_options); $i++) {
+                $rules['options.' . $i] = 'required';
+            }
+
+            $validator = Validator::make(Input::all(), $rules);
+            if ($validator->fails()) {
+                return Redirect::to('companyadmin/metaattribute/create')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        }
+
+    }
 }

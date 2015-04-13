@@ -7,4 +7,6 @@ interface MetaAttributeRepositoryInterface
     public function getAttributeTypes();
 
     public function getRequiredDropdown();
+
+    public function getTypesRequiredOptions();
 }
