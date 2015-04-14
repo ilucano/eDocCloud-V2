@@ -9,4 +9,6 @@ interface MetaAttributeRepositoryInterface
     public function getRequiredDropdown();
 
     public function getTypesRequiredOptions();
+
+    public function createMetaAttribute($companyId, $input);
 }

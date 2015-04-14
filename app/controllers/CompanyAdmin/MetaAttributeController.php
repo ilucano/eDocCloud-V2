@@ -1,12 +1,15 @@
 <?php
 
 use Repositories\MetaAttribute\MetaAttributeRepositoryInterface;
+use App\Services\Validation\MetaAttributeValidator as Validator;
+use App\Exceptions\ValidationException;
 
 class CompanyAdminMetaAttributeController extends BaseController
 {
-    public function __construct(MetaAttributeRepositoryInterface $metaAttribute)
+    public function __construct(MetaAttributeRepositoryInterface $metaAttribute, Validator $validator)
     {
         $this->repo = $metaAttribute;
+        $this->validator = $validator;
     }
 
     public function index()
@@ -34,35 +37,32 @@ class CompanyAdminMetaAttributeController extends BaseController
 
     public function store()
     {
-        $rules = [
-            'name' => 'required',
-            'type' => 'required',
-        ];
-        
+       
+        try {
+            $validate_data = $this->validator->validateOnStore(Input::all());
 
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails()) {
+        } catch (ValidationException $e) {
             return Redirect::to('companyadmin/metaattribute/create')
-                ->withErrors($validator)
-                ->withInput();
-        }
-        
-
-        if (in_array(Input::get('type'), $this->repo->getTypesRequiredOptions())) {
-            $_options = Input::get('options');
-
-            for ($i = 0; $i < count($_options); $i++) {
-                $rules['options.' . $i] = 'required';
-            }
-
-            $validator = Validator::make(Input::all(), $rules);
-            if ($validator->fails()) {
-                return Redirect::to('companyadmin/metaattribute/create')
-                    ->withErrors($validator)
+                    ->withErrors($e->get_errors())
                     ->withInput();
-            }
+
         }
 
+        $companyId = Auth::User()->getCompanyId();
+
+        try {
+            $this->repo->createMetaAttribute($companyId, Input::all());
+
+            Session::flash('message', 'Attribute successfully created');
+            
+            return Redirect::to('companyadmin/metaattribute');
+
+
+        } catch (Exception $e) {
+            Session::flash('error', 'Error creating attribute');
+            return Redirect::to('companyadmin/metaattribute/create');
+
+        }
+ 
     }
 }

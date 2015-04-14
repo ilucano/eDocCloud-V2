@@ -49,8 +49,16 @@
             @if (Session::has('error'))
                 <div class="alert alert-danger">{{ Session::get('error') }}</div>
             @endif
-        
-            
+
+            @if($errors->has())
+                <div class="alert alert-danger">
+               @foreach ($errors->all() as $error)
+                 <li>{{ $error }}</li>
+              @endforeach
+                </div>
+            @endif
+
+
             {{ Form::open(array('url' => 'companyadmin/metaattribute', 'class' => 'form')) }}
         
         
@@ -59,9 +67,7 @@
                 <label>Attribute Name</label>
                  
                 {{ Form::text('name', Input::old('name'), array('class'=>'form-control', 'placeholder'=>'Enter attribute name')) }}
-                
-                @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
-                    
+
             </div>
          
             
@@ -70,14 +76,13 @@
                 <label>Attribute Type</label>
                     
                 {{ Form::select('type', $attributeTypes,  Input::old('type'), array('class'=>'form-control', 'id'=>'select-type')) }}
-                @if ($errors->has('type')) <p class="help-block">{{ $errors->first('type') }}</p> @endif
-                
+            
             </div>
 
             
             <div class="container" id="container-options-form">
                 <div class="row">
-                    <div class="control-group" id="fields">
+                    <div class="control-group @if ($errors->has('options*')) has-error @endif" id="fields" >
                         <label class="control-label" for="field1" id="options-label">Options</label>
                         <div class="controls"> 
                             <div id="controls-form" role="form" autocomplete="off">
@@ -101,8 +106,7 @@
                 <label>Required</label>
                     
                 {{ Form::select('required', $requiredDropdown, null, array('class'=>'form-control')) }}
-                @if ($errors->has('required')) <p class="help-block">{{ $errors->first('required') }}</p> @endif
-                
+               
             </div>
 
             <div class="form-group pull-left">
