@@ -18,10 +18,24 @@ class CompanyAdminMetaAttributeController extends BaseController
 
         $metaAttributes = $this->repo->getCompanyAttributes($companyId);
 
-           // load the view and pass the data
+
         return View::make('companyadmin.metaattribute.index')
-                     ->with('attributes', $metaAttributes);
+                     ->with('metaAttributes', $metaAttributes);
          
+    }
+
+    public function edit($id)
+    {
+        $metaAttribute = $this->repo->getAttributeDetails($id);
+        
+        $attributeTypes = $this->repo->getAttributeTypes();
+        $requiredDropdown = $this->repo->getRequiredDropdown();
+
+        return View::make('companyadmin.metaattribute.edit')
+                     ->with('metaAttribute', $metaAttribute)
+                     ->with('attributeTypes', $attributeTypes)
+                     ->with('requiredDropdown', $requiredDropdown);
+
     }
 
     public function create()
@@ -64,5 +78,54 @@ class CompanyAdminMetaAttributeController extends BaseController
 
         }
  
+    }
+
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        $input = Input::all();
+
+        try {
+            $validate_data = $this->validator->validateOnUpdate($input);
+
+        } catch (ValidationException $e) {
+            return Redirect::to('companyadmin/metaattribute/'.$id.'/edit')
+                    ->withErrors($e->get_errors())
+                    ->withInput();
+
+        }
+
+        $companyId = Auth::User()->getCompanyId();
+        
+        $name = Input::get('name');
+
+        $unique = $this->validator->validateUniqueName($id, $name, $companyId);
+        
+        if ($unique == false) {
+            Session::flash('error', 'Attribute Name <strong>'.$name.'</strong> already exists');
+            return Redirect::to('companyadmin/metaattribute/'.$id.'/edit');
+            exit;
+        }
+
+        //all ok, update it
+        try {
+            $this->repo->updateMetaAttribute($id, $input);
+            Session::flash('message', 'Attribute successfully updated');
+
+            return Redirect::to('companyadmin/metaattribute/'.$id.'/edit');
+        } catch (Exception $e) {
+            Session::flash('error', 'Error updating attribute');
+
+            return Redirect::to('companyadmin/metaattribute/'.$id.'/edit');
+        }
+
+
     }
 }

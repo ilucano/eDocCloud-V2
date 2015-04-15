@@ -16,14 +16,12 @@
 
 </style>
 
-
-
-        <div class="col-sm-12">
+        <div class="col-lg-12">
             
-
             <h2 class="page-header">{{ Auth::User()->getCompanyName() }}
-            <small>Attribute</small>
+                <small>Attribute</small>
             </h2>
+                
                 
             <ol class="breadcrumb">
                 <li>
@@ -31,11 +29,7 @@
                 </li>
                     
                 <li class="active">
-                    <i class="fa fa-tags"></i> <a href="{{ URL::to('companyadmin/metaattribute') }}">Attributes</a>
-                </li>
- 
-                <li class="active">
-                    <i class="fa fa-pencil"></i> Create New Attribute
+                    <i class="fa fa-tags"></i> <a href="{{ URL::to('companyadmin/metaattribute/') }}">{{ $metaAttribute->name }}</a>
                 </li>
             </ol
         </div>
@@ -59,9 +53,8 @@
             @endif
 
 
-            {{ Form::open(array('url' => 'companyadmin/metaattribute', 'class' => 'form')) }}
-        
-        
+                {{ Form::model($metaAttribute, array('route' => array('companyadmin.metaattribute.update', $metaAttribute->id), 'method' => 'PUT')) }}
+
             <div class="form-group @if ($errors->has('name')) has-error @endif">
             
                 <label>Attribute Name</label>
@@ -69,14 +62,14 @@
                 {{ Form::text('name', Input::old('name'), array('class'=>'form-control', 'placeholder'=>'Enter attribute name')) }}
 
             </div>
-         
-            
 
             <div class="form-group  @if ($errors->has('type')) has-error @endif">
                 <label>Attribute Type</label>
-                    
-                {{ Form::select('type', $attributeTypes,  Input::old('type'), array('class'=>'form-control', 'id'=>'select-type')) }}
-            
+                
+
+                {{ Form::select('disable_type', $attributeTypes, $metaAttribute->type, array('class'=>'form-control', 'disabled' => 'disabled', 'id'=>'select-type')) }}
+                
+                {{ Form::hidden('type', $metaAttribute->type) }}
             </div>
 
             
@@ -86,14 +79,28 @@
                         <label class="control-label" for="field1" id="options-label">Options</label>
                         <div class="controls"> 
                             <div id="controls-form" role="form" autocomplete="off">
-                                <div class="entry input-group col-xs-3">
-                                    <input class="form-control" name="options[]" type="text" placeholder="Type something" />
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-success btn-add" type="button">
-                                            <span class="glyphicon glyphicon-plus"></span>
-                                        </button>
-                                    </span>
-                                </div>
+                                @if (!empty($metaAttribute->attribute_options->options)) 
+                                    <?php
+                                        $arrayOptions = json_decode($metaAttribute->attribute_options->options, true);
+                                    ?> 
+                                    @for ( $i = 0; $i < count($arrayOptions); $i++)
+                                        <div class="entry input-group col-xs-3">
+                                            <input class="form-control" name="options[]" type="text" value="{{ $arrayOptions[$i] }}"/>
+                                            <span class="input-group-btn">
+                                                @if ($i == (count($arrayOptions) - 1))
+                                                    <button class="btn btn-success btn-add" type="button">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                    </button>
+                                                @elseif
+                                                    <button class="btn btn-danger btn-remove" type="button">
+                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                    </button>
+                                                @endif
+                                            </span>
+                                        </div>
+                                    @endfor
+
+                                @endif
                             </div>
                         <br>
                         <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another optoin</small>
@@ -105,7 +112,7 @@
             <div class="form-group  @if ($errors->has('required')) has-error @endif">
                 <label>Required</label>
                     
-                {{ Form::select('required', $requiredDropdown, null, array('class'=>'form-control')) }}
+                {{ Form::select('required', $requiredDropdown, $metaAttribute->required, array('class'=>'form-control')) }}
                
             </div>
 
@@ -116,16 +123,21 @@
                         
             <div class="form-group pull-right">
                             
-                    {{ Form::submit('Create', array('class' => 'btn btn-sm btn-success')) }}
+                    {{ Form::submit('Save', array('class' => 'btn btn-sm btn-success')) }}
             </div>
 
 
-        </div>
 
+            </div>      
+        
+        {{ Form::close() }}
 @stop
 
 
+
+
 @section('loadjs')
+    
     
     <script type="text/javascript">
       
@@ -180,10 +192,7 @@
 
         });
 
-
-
-
-
-
     </script>
+
 @stop
+

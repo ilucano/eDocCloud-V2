@@ -31,7 +31,6 @@
 			@if (Session::has('message'))
 				<div class="alert alert-info">{{ Session::get('message') }}</div>
 			@endif
-			
 
 			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped" id="datatables">
 				<thead>
@@ -45,84 +44,26 @@
 				</thead>
 				<tbody>
 					
-					 
+				@foreach($metaAttributes as $attribute)
 					<tr>			
 						<td>
-							Industry		 
+							{{ $attribute->name }}
 						</td>
 		                <td>
-							Dropdown
+							{{ $attribute->type_name }}
 						</td>
 						<td>
-							Yes
+							{{ $attribute->required_type }}
 						</td>
 						<td>
-							Jan 1, 2015
+							{{ Helpers::niceDateTime($attribute->created_at)}}
 						</td>
 						<td>
-							 <a class="btn btn-sm btn-info"><i class="fa fa-edit fa-lg"></i> Edit</a>
+							 <a class="btn btn-sm btn-info" href="{{ URL::to('companyadmin/metaattribute/' . $attribute->id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
 						</td>
-	
 					</tr>
-					
-					<tr>			
-						<td>
-							Sales Contact		 
-						</td>
-		                <td>
-							Text
-						</td>
-						<td>
-							No
-						</td>
-						<td>
-							Jan 12, 2015
-						</td>
-						<td>
-							 <a class="btn btn-sm btn-info"><i class="fa fa-edit fa-lg"></i> Edit</a>
-						</td>
-	
-					</tr>
+				@endforeach 
 
-
-					<tr>			
-						<td>
-							Status
-						</td>
-		                <td>
-							Dropdown
-						</td>
-						<td>
-							Yes
-						</td>
-						<td>
-							Jan 12, 2015
-						</td>
-						<td>
-							 <a class="btn btn-sm btn-info"><i class="fa fa-edit fa-lg"></i> Edit</a>
-						</td>
-	
-					</tr>
-
-					<tr>			
-						<td>
-							Products
-						</td>
-		                <td>
-							Check Boxes
-						</td>
-						<td>
-							No
-						</td>
-						<td>
-							Jan 10, 2015
-						</td>
-						<td>
-							 <a class="btn btn-sm btn-info"><i class="fa fa-edit fa-lg"></i> Edit</a>
-						</td>
-	
-					</tr>
-					 
 				</tbody>
 			</table>
 

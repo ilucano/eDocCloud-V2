@@ -35,4 +35,20 @@ class MetaAttributeValidator extends AbstractValidator
         return $this->validate($input, $rules, $custom_errors);
 
     }
+
+    public function validateOnUpdate(array $input, array $rules = array(), array $custom_errors = array())
+    {
+        return $this->validateOnStore($input, $rules, $custom_errors);
+    }
+
+    /**
+     * [validateUniqueName description]
+     * @return [boolean] [description]
+     */
+    public function validateUniqueName($id, $name, $companyId = null)
+    {
+        return $this->_repo->getIsUniqueName($id, $name, $companyId);
+
+    }
+    
 }

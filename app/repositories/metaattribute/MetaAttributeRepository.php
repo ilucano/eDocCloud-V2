@@ -12,7 +12,15 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         }
 
         $metaAttributes = MetaAttribute::where('fk_empresa', '=', $companyId)->get();
-  
+        
+        $attributeTypes = $this->getAttributeTypes();
+        $requiredOptions = $this->getRequiredDropdown();
+
+        foreach ($metaAttributes as $attribute) {
+            $attribute->type_name =  $attributeTypes[$attribute->type];
+            $attribute->required_type = $requiredOptions[$attribute->required];
+        }
+
         return $metaAttributes;
     }
 
@@ -77,7 +85,61 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
 
         }
 
+    }
 
+    public function updateMetaAttribute($id, $input)
+    {
 
+        try {
+            $meta = MetaAttribute::find($id);
+            $meta->name = $input['name'];
+            $meta->required = $input['required'];
+            $meta->save();
+
+            if (in_array($input['type'], $this->getTypesRequiredOptions())) {
+                $metaAttributeOption = MetaAttributeOption::where('attribute_id', '=', $id)->first();
+                $options = json_encode($input['options']);
+                $metaAttributeOption->options = $options;
+                $metaAttributeOption->save();
+            }
+
+            return true;
+
+        } catch (Exception $e) {
+            return false;
+
+        }
+
+    }
+
+    /**
+     * [getAttributeDetails description]
+     * @param  [integer] $id [attribute id]
+     * @return [object]     [Details of attribute]
+     */
+    public function getAttributeDetails($id)
+    {
+        $meta = MetaAttribute::find($id);
+
+        $metaOptions = MetaAttributeOption::where('attribute_id', '=', $id)->first();
+        $meta->attribute_options = $metaOptions;
+
+        return $meta;
+
+    }
+
+    public function getIsUniqueName($id, $name, $companyId)
+    {
+         ///check if exist of same name 
+        $check = MetaAttribute::where('name', '=', $name)
+                             ->where('id', '<>', $id);
+
+        if ($companyId) {
+            $check = $check->where('fk_empresa', '=', $companyId);
+        }
+
+        $count = $check->count();
+        
+        return ($count >= 1) ? false : true;
     }
 }

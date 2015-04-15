@@ -11,4 +11,8 @@ interface MetaAttributeRepositoryInterface
     public function getTypesRequiredOptions();
 
     public function createMetaAttribute($companyId, $input);
+
+    public function getAttributeDetails($id);
+
+    public function getIsUniqueName($id, $name, $companyId);
 }
