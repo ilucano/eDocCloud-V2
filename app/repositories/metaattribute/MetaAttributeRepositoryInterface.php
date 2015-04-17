@@ -15,4 +15,10 @@ interface MetaAttributeRepositoryInterface
     public function getAttributeDetails($id);
 
     public function getIsUniqueName($id, $name, $companyId);
+
+    public function getAttributeOptions($attributeId);
+
+    public function getFilterableTypes();
+
+    public function getCompanyFilterableAttributes($companyId);
 }

@@ -19,6 +19,7 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         foreach ($metaAttributes as $attribute) {
             $attribute->type_name =  $attributeTypes[$attribute->type];
             $attribute->required_type = $requiredOptions[$attribute->required];
+            $attribute->attribute_options = $this->getAttributeOptions($attribute->id);
         }
 
         return $metaAttributes;
@@ -37,6 +38,11 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
                         'multiselect' => 'Multiselect',
                         'datetime'     => 'Date Time',
                     );
+    }
+
+    public function getFilterableTypes()
+    {
+        return ['string', 'boolean', 'radio', 'select'];
     }
 
     public function getRequiredDropdown()
@@ -120,17 +126,30 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
     public function getAttributeDetails($id)
     {
         $meta = MetaAttribute::find($id);
-
-        $metaOptions = MetaAttributeOption::where('attribute_id', '=', $id)->first();
+        $metaOptions = $this->getAttributeOptions($id);
         $meta->attribute_options = $metaOptions;
 
         return $meta;
+    }
+
+
+    public function getAttributeOptions($attributeId)
+    {
+        try {
+            $metaOptions = MetaAttributeOption::where('attribute_id', '=', $attributeId)->first();
+
+            return $metaOptions;
+
+        } catch (Exception $e) {
+            return null;
+        }
 
     }
 
+
     public function getIsUniqueName($id, $name, $companyId)
     {
-         ///check if exist of same name 
+         ///check if exist of same name
         $check = MetaAttribute::where('name', '=', $name)
                              ->where('id', '<>', $id);
 
@@ -141,5 +160,30 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         $count = $check->count();
         
         return ($count >= 1) ? false : true;
+    }
+
+
+    public function getCompanyFilterableAttributes($companyId)
+    {
+        if (!$companyId) {
+            return null;
+        }
+
+        $metaAttributes = MetaAttribute::where('fk_empresa', '=', $companyId)
+                                         ->whereIn('type', $this->getFilterableTypes())
+                                         ->get();
+        
+        $attributeTypes = $this->getAttributeTypes();
+        $requiredOptions = $this->getRequiredDropdown();
+
+        foreach ($metaAttributes as $attribute) {
+            $attribute->type_name =  $attributeTypes[$attribute->type];
+            $attribute->required_type = $requiredOptions[$attribute->required];
+            $attribute->attribute_options = $this->getAttributeOptions($attribute->id);
+        }
+
+        return $metaAttributes;
+
+
     }
 }

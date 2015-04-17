@@ -1,12 +1,14 @@
 <?php
 
 use Repositories\File\FileRepositoryInterface;
+use Repositories\MetaAttribute\MetaAttributeRepositoryInterface;
 
 class UsersFileController extends \BaseController
 {
-    public function __construct(FileRepositoryInterface $repository)
+    public function __construct(FileRepositoryInterface $repository, MetaAttributeRepositoryInterface $metaAttribute)
     {
         $this->repo = $repository;
+        $this->meta_attribute = $metaAttribute;
     }
 
     /**
@@ -23,9 +25,12 @@ class UsersFileController extends \BaseController
 
         $filemarkDropdown = $this->getFileMarkDropdown($permission);
 
+        $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
+
         return View::make('users.file.index')
                     ->with('files', $files)
-                    ->with('filemarkDropdown', $filemarkDropdown);
+                    ->with('filemarkDropdown', $filemarkDropdown)
+                    ->with('attributeFilters', $attributeFilters);
     }
 
     /**
