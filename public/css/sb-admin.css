@@ -245,3 +245,8 @@ ul.alert-dropdown {
     margin-left: 0px !important;
     display: inline !important;
 }
+
+/* smaller font for long table */
+.small-font, .small-font a, .small-font input, .small-font select {
+    font-size: 12px;
+}

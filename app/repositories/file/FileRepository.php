@@ -3,6 +3,7 @@
 use FileTable;
 use Company;
 use DB;
+use Helpers;
 
 class FileRepository implements FileRepositoryInterface
 {
@@ -34,5 +35,36 @@ class FileRepository implements FileRepositoryInterface
         $files = DB::select(DB::raw($sqlQuery));
 
         return $files;
+    }
+
+    public function getFile($id, $companyId = null, array $permission = array())
+    {
+        if (!$id) {
+            return null;
+        }
+
+
+        $file = FileTable::where('row_id', '=', $id)
+                            ->where(function($query) use ($permission)
+                                {   
+                                    if (count($permission) >= 1) {
+                                        $query->whereIn('file_mark_id', $permission)
+                                              ->orWhere('file_mark_id','=', '')
+                                              ->orWhereRaw('file_mark_id is null');
+                                    }
+                                    else {
+                                        $query->where('file_mark_id','=', '')
+                                              ->orWhereRaw('file_mark_id is null');
+                                    }
+                                }
+                              );
+
+        if ($companyId) {
+            $file = $file->where('fk_empresa', '=', $companyId);
+        }
+        
+        $file = $file->first();
+
+        return $file;
     }
 }

@@ -45,13 +45,9 @@
 			</p>
 			<div class="collapse" id="collapseExample">
 			  <div class="well">
-			  		<div class="row">
-					  	<div class="col-sm-8">
-					    @foreach ($attributeFilters as $filter)
-					    	{{ Helpers::renderMetaAttributeFormFilter($filter->type, $filter->id, $filter->name, $filter->attribute_options) }}
-					    @endforeach
-					   	</div>
-				   </div>
+
+			  		@include('partials.metaattribute.filter', array('attributeFilters' => $attributeFilters))
+
 			  </div>
 			</div>
 		</div>
@@ -60,16 +56,16 @@
 
 		<div class="col-lg-12">
 
-			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed small-font" id="datatables">
 					<thead>
 						<tr>
 							<th><i class="fa fa-download" title="Select to download"></i> </th>
 							<th>Filename</th>
 							<th>Mark</th>
 							<th>Created</th>
-							<th>Updated</th>
 							<th>Pages</th>
 							<th>Size</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -84,10 +80,10 @@
 								<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
 						    </td>
 							<td> {{ Form::select('file_mark_id', $filemarkDropdown, $file->file_mark_id, array('class'=>'form-control bootstrap-dropdown', 'data-file-id'=>$file->row_id )) }}</td>
-							<td>{{ Helpers::niceDateTime($file->creadate) }} </td>
-							<td>{{ Helpers::niceDateTime($file->moddate) }} </td>
-							<td>{{ $file->pages }} </td>
-							<td>{{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
+							<td> {{ Helpers::niceDateTime($file->creadate) }} </td>
+							<td> {{ $file->pages }} </td>
+							<td> {{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
+							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
 							</tr>
 						@endforeach
 
@@ -124,7 +120,8 @@
 
 			var datatable = $('#datatables').DataTable(
 				{
-					"aaSorting": []
+					"aaSorting": [],
+					stateSave: true
 				}
 			);
 

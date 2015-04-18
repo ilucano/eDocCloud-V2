@@ -179,6 +179,14 @@ Route::group(
 
                 Route::get('file/search', array('uses' => 'UsersFileController@showSearch'));
 
+                Route::get('file/attributes/{id}/edit', array('uses' => 'UsersFileController@editAttributes'));
+
+                Route::put('file/attributes/{id}', array(
+                                                        'uses' => 'UsersFileController@updateAttributes', 
+                                                         'as' => 'users.file.attribute.update'
+                                                         )
+                                                    );
+
                 Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
 
                 Route::resource('file', 'UsersFileController');

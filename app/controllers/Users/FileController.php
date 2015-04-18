@@ -230,4 +230,37 @@ class UsersFileController extends \BaseController
 
         return $filemarkDropdown;
     }
+
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function editAttributes($id)
+    {
+        
+        $companyId = Auth::User()->getCompanyId();
+
+        $permission = json_decode(Auth::User()->getUserData()->file_permission, true);
+
+        $file = $this->repo->getFile($id, $companyId, $permission);
+
+        $attributeSets = $this->meta_attribute->getCompanyAttributes($companyId);
+        
+        foreach ($attributeSets as $attribute) {
+            $attribute->user_value  = $this->meta_attribute->getTargetAttributeValues($id, 'file', $attribute->id);
+        }
+        
+        echo "<pre>";
+        print_r($attributeSets);
+        exit;
+        return View::make('users.file.attributes.edit')
+                    ->with('file', $file)
+                    ->with('fileAttributes', $fileAttributes)
+                    ->with('attributeFilters', $attributeSets);
+
+    }
 }

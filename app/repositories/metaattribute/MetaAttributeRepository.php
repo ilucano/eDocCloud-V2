@@ -2,6 +2,7 @@
 
 use MetaAttribute;
 use MetaAttributeOption;
+use MetaTargetAttributeValue;
 
 class MetaAttributeRepository implements MetaAttributeRepositoryInterface
 {
@@ -185,5 +186,26 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         return $metaAttributes;
 
 
+    }
+
+    public function getTargetAttributeValues($targetId, $targetType = 'file', $attributeId = null)
+    {
+        if (!$targetId) {
+            return null;
+        }
+        try {
+            $records = MetaTargetAttributeValue::where('target_id', '=', $targetId)
+                                                ->where('target_type', '=', $targetType);
+            if ($attributeId) {
+                $records = $records->where('attribute_id', '=', $attributeId);
+            }  
+
+            $records= $records->get();
+
+        } catch (Exception $e) {
+            return null;
+        }
+
+        return $records;
     }
 }

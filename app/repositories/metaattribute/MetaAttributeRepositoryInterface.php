@@ -21,4 +21,6 @@ interface MetaAttributeRepositoryInterface
     public function getFilterableTypes();
 
     public function getCompanyFilterableAttributes($companyId);
+
+    public function getTargetAttributeValues($targetId, $targetType = 'file', $attributeId = null);
 }
