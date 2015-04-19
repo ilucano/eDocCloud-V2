@@ -207,6 +207,10 @@
                         <li>
                             <a href="{{ URL::to('admin/activity') }}"> All Users Activities</a>
                         </li>
+
+                         <li>
+                            <a href="{{ URL::to('passwordpolicy') }}"> Password Policy</a>
+                        </li>
                     </ul>
 						
 				 </li>

@@ -71,6 +71,9 @@ Route::group(
             )
     );
 
+        Route::resource('passwordpolicy', 'PasswordPolicyController');
+        
+
         Route::get(
             'reports/groupbystatus', array(
                                 'uses' => 'ReportsController@showGroupByStatus',
