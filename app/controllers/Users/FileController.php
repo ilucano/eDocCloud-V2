@@ -21,7 +21,15 @@ class UsersFileController extends \BaseController
         $companyId = Auth::User()->getCompanyId();
         $permission = json_decode(Auth::User()->getUserData()->file_permission, true);
 
-        $files = $this->repo->getFiles($companyId, $permission);
+        $limit = 50;
+
+        $searchFilters = Input::except('limit');
+
+        if (Input::get('limit')) {
+            $limit =  Input::get('limit');
+        }
+       
+        $files = $this->repo->getFiles($companyId, $permission, 0, $limit, $searchFilters);
 
         $filemarkDropdown = $this->getFileMarkDropdown($permission);
 

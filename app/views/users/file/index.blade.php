@@ -35,7 +35,7 @@
 
 		<div class='clearfix'></div>
 
-		<div class="col-lg-6">
+		<div class="col-lg-8">
 			<!-- search filter -->
 			<p>
 				<button class="btn btn-sm btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -45,9 +45,14 @@
 			</p>
 			<div class="collapse" id="collapseExample">
 			  <div class="well">
-
-			  		@include('partials.metaattribute.filter', array('attributeFilters' => $attributeFilters))
-
+			  		{{ Form::open(array('route' => 'users.file.index', 'method' => 'get')) }}
+			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
+			  		
+			  		<div class="form-group">
+			  			Display Results: {{ Form::select('limit', ['50'=> '50', '200' => '200', '500' => '500', '1000' => '1000',  '99999999' =>  '> 1000'], Input::get('limit')) }}
+			  		</div>
+			  		{{ Form::submit('Search', array('class' => 'btn btn-sm btn-primary')) }}
+			  		{{ Form::close() }}
 			  </div>
 			</div>
 		</div>
