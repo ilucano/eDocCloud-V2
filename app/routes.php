@@ -199,6 +199,17 @@ Route::group(
 
                 Route::resource('activity', 'UsersActivityController');
 
+
+                Route::get('order/attributes/{id}/edit', array('uses' => 'UsersOrderController@editAttributes'));
+
+                Route::put('order/attributes/{id}', array(
+                                                        'uses' => 'UsersOrderController@updateAttributes', 
+                                                         'as' => 'users.order.attribute.update'
+                                                         )
+                                                    );
+
+
+
             }
         );
 

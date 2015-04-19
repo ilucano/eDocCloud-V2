@@ -43,14 +43,15 @@
 				   <span class="caret"></span>
 				</button>
 			</p>
-			<div class="collapse" id="collapseExample">
-			  <div class="well">
+			<div class="collapse @if ($filterExpand) @endif" id="collapseExample">
+			  <div class="well small-font">
 			  		{{ Form::open(array('route' => 'users.file.index', 'method' => 'get')) }}
 			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
 			  		
 			  		<div class="form-group">
 			  			Display Results: {{ Form::select('limit', ['50'=> '50', '200' => '200', '500' => '500', '1000' => '1000',  '99999999' =>  '> 1000'], Input::get('limit')) }}
 			  		</div>
+			  		<a class="btn btn-sm btn-info" href="{{ URL::to('users/file') }}"> Clear</a>
 			  		{{ Form::submit('Search', array('class' => 'btn btn-sm btn-primary')) }}
 			  		{{ Form::close() }}
 			  </div>

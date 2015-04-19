@@ -24,7 +24,28 @@
 		
  
 	<div class="row">
-	
+		
+		<div class='clearfix'></div>
+
+		<div class="col-lg-8">
+			<!-- search filter -->
+			<p>
+				<button class="btn btn-sm btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				  Filters
+				   <span class="caret"></span>
+				</button>
+			</p>
+			<div class="collapse @if ($filterExpand) in @endif" id="collapseExample">
+			  <div class="well small-font">
+			  		{{ Form::open(array('route' => 'users.order.index', 'method' => 'get')) }}
+			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
+			  		<a class="btn btn-sm btn-info" href="{{ URL::to('users/order') }}"> Clear</a>
+			  		{{ Form::submit('Search', array('class' => 'btn btn-sm btn-primary')) }}
+			  		{{ Form::close() }}
+			  </div>
+			</div>
+		</div>
+
 		<div class="col-lg-12">
 
 			@if (Session::has('error'))
@@ -36,7 +57,7 @@
 			@endif
 			
 
-			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed small-font" id="datatables">
 				<thead>
 					<tr>
 						<th>Order</th>
@@ -60,6 +81,8 @@
 						<td style="white-space: no-wrap;">
 						 
 									<a class="btn btn-sm btn-success" href="{{ URL::to('users/order/' . $object->row_id) }}"><i class="fa fa-caret-right fa-lg"></i> View</a> 
+
+									<a class="btn btn-sm btn-info" href="{{ URL::to('users/order/attributes/' . $object->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>
 				 		
 					    </td>
 					 
@@ -74,6 +97,38 @@
 			
 	</div>
 
+
+	<style>
+
+		#attributeModal .modal-content
+		{
+		  height: 600px;
+		  width: 700px;
+		  overflow:auto;
+		}
+
+	</style>
+		
+
+		<div class="modal fade" id="attributeModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title">Modal title</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>One fine body&hellip;</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+
 @stop
 
 
@@ -85,6 +140,7 @@
 			$('#datatables').DataTable(
 				{
 				   "aaSorting": [[ 5, "asc" ]],
+				   stateSave: true
 				}
 			);
 		 } );

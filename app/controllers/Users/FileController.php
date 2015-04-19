@@ -29,16 +29,20 @@ class UsersFileController extends \BaseController
             $limit =  Input::get('limit');
         }
        
+        $filterExpand =  (count($searchFilters) >= 1) ? true: false;
+
         $files = $this->repo->getFiles($companyId, $permission, 0, $limit, $searchFilters);
 
         $filemarkDropdown = $this->getFileMarkDropdown($permission);
 
         $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
-    
+        
+
         return View::make('users.file.index')
                     ->with('files', $files)
                     ->with('filemarkDropdown', $filemarkDropdown)
-                    ->with('attributeFilters', $attributeFilters);
+                    ->with('attributeFilters', $attributeFilters)
+                    ->with('filterExpand', $filterExpand);
     }
 
     /**

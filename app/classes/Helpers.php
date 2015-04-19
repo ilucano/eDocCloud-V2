@@ -6,7 +6,7 @@ class Helpers
     {
         setlocale(LC_MONETARY, $locale);
 
-        return $money_format.symbol('%i', $amount);
+        return $symbol . money_format('%i', $amount);
     }
 
     /**
