@@ -26,7 +26,7 @@ class UsersFileController extends \BaseController
         $filemarkDropdown = $this->getFileMarkDropdown($permission);
 
         $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
-
+    
         return View::make('users.file.index')
                     ->with('files', $files)
                     ->with('filemarkDropdown', $filemarkDropdown)
@@ -281,11 +281,11 @@ class UsersFileController extends \BaseController
 
             Session::flash('message', 'File attributes successfully updated');
 
-            return Redirect::to('users/file/attributes/'.$id.'/edit');
+            return Redirect::to('users/file');
 
         } catch (Exception $e) {
              Session::flash('error', 'Error updating file attributes');
-            return Redirect::to('users/file/attributes/'.$id.'/edit');
+            return Redirect::to('users/file');
         }
     }
 }

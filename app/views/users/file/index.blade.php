@@ -83,7 +83,7 @@
 							<td> {{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td> {{ $file->pages }} </td>
 							<td> {{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
-							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
+							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
 							</tr>
 						@endforeach
 
@@ -107,7 +107,35 @@
 		</div>
 	</div>
 
+	<style>
 
+		#attributeModal .modal-content
+		{
+		  height: 600px;
+		  width: 700px;
+		  overflow:auto;
+		}
+
+	</style>
+		
+
+		<div class="modal fade" id="attributeModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title">Modal title</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>One fine body&hellip;</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 
 @stop

@@ -28,5 +28,7 @@ interface MetaAttributeRepositoryInterface
 
     public function updateMetaAttribute($id, $input, $companyId = null);
 
+    public function getCompanyAttributeHeaders($companyId);
+
 
 }

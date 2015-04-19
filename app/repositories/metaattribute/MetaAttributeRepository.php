@@ -279,4 +279,18 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         }
 
     }
+
+
+
+    public function getCompanyAttributeHeaders($companyId)
+    {
+        $attributes = $this->getCompanyAttributes(($companyId));
+       
+        $headers = array();
+        foreach ($attributes as $attribute) {
+            $headers[$attribute->id] = $attribute->name;
+        }
+
+        return $headers;
+    }
 }
