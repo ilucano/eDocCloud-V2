@@ -1,6 +1,6 @@
 <?php
 
-namespace repositories\metaattribute;
+namespace Repositories\MetaAttribute;
 
 use MetaAttribute;
 use MetaAttributeOption;
