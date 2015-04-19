@@ -254,13 +254,38 @@ class UsersFileController extends \BaseController
             $attribute->user_value  = $this->meta_attribute->getTargetAttributeValues($id, 'file', $attribute->id);
         }
         
-        echo "<pre>";
-        print_r($attributeSets);
-        exit;
         return View::make('users.file.attributes.edit')
                     ->with('file', $file)
-                    ->with('fileAttributes', $fileAttributes)
-                    ->with('attributeFilters', $attributeSets);
+                    ->with('attributeSets', $attributeSets);
 
+    }
+
+
+    public function updateAttributes($id)
+    {
+        //make sure is owner of file
+        try {
+            $companyId = Auth::User()->getCompanyId();
+            $permission = json_decode(Auth::User()->getUserData()->file_permission, true);
+            $file = $this->repo->getFile($id, $companyId, $permission);
+        } catch (Exception $e) {
+            exit('cannot retrieve file');
+        }
+        
+        $id = $file->row_id;
+
+        $input = Input::except('_method', '_token');
+
+        try {
+            $this->meta_attribute->updateTargetAttributeValues($id, 'file', $input);
+
+            Session::flash('message', 'File attributes successfully updated');
+
+            return Redirect::to('users/file/attributes/'.$id.'/edit');
+
+        } catch (Exception $e) {
+             Session::flash('error', 'Error updating file attributes');
+            return Redirect::to('users/file/attributes/'.$id.'/edit');
+        }
     }
 }

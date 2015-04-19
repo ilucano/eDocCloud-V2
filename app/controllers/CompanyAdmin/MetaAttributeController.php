@@ -27,7 +27,7 @@ class CompanyAdminMetaAttributeController extends BaseController
     public function edit($id)
     {
         $metaAttribute = $this->repo->getAttributeDetails($id);
-        
+ 
         $attributeTypes = $this->repo->getAttributeTypes();
         $requiredDropdown = $this->repo->getRequiredDropdown();
 
@@ -116,7 +116,7 @@ class CompanyAdminMetaAttributeController extends BaseController
 
         //all ok, update it
         try {
-            $this->repo->updateMetaAttribute($id, $input);
+            $this->repo->updateMetaAttribute($id, $input, $companyId);
             Session::flash('message', 'Attribute successfully updated');
 
             return Redirect::to('companyadmin/metaattribute/'.$id.'/edit');

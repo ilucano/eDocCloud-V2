@@ -23,4 +23,10 @@ interface MetaAttributeRepositoryInterface
     public function getCompanyFilterableAttributes($companyId);
 
     public function getTargetAttributeValues($targetId, $targetType = 'file', $attributeId = null);
+
+    public function updateTargetAttributeValues($targetId, $targetType = 'file', array $values = array());
+
+    public function updateMetaAttribute($id, $input, $companyId = null);
+
+
 }

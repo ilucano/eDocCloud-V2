@@ -1,4 +1,6 @@
-<?php namespace Repositories\MetaAttribute;
+<?php
+
+namespace repositories\metaattribute;
 
 use MetaAttribute;
 use MetaAttributeOption;
@@ -9,11 +11,11 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
     public function getCompanyAttributes($companyId)
     {
         if (!$companyId) {
-            return null;
+            return;
         }
 
         $metaAttributes = MetaAttribute::where('fk_empresa', '=', $companyId)->get();
-        
+
         $attributeTypes = $this->getAttributeTypes();
         $requiredOptions = $this->getRequiredDropdown();
 
@@ -26,10 +28,8 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         return $metaAttributes;
     }
 
-
     public function getAttributeTypes()
     {
-
         return array(
                         'string'  => 'Text Box',
                         'boolean' => 'Yes/No',
@@ -37,7 +37,7 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
                         'select' => 'Drop Down',
                         'checkbox' => 'Check Boxes',
                         'multiselect' => 'Multiselect',
-                        'datetime'     => 'Date Time',
+                        //'datetime'     => 'Date Time',
                     );
     }
 
@@ -49,7 +49,7 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
     public function getRequiredDropdown()
     {
         return ['1' => 'Yes',
-                '0' => 'No'];
+                '0' => 'No', ];
     }
 
     public function getTypesRequiredOptions()
@@ -58,17 +58,18 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
     }
 
     /**
-     * [createMetaAttribute description]
-     * @param  integer $companyId [description]
-     * @param  array   $input      [description]
-     * @return [type]             [description]
+     * [createMetaAttribute description].
+     *
+     * @param int   $companyId [description]
+     * @param array $input     [description]
+     *
+     * @return [type] [description]
      */
     public function createMetaAttribute($companyId = 0, $input)
     {
-
         try {
-            $meta = new MetaAttribute;
-            
+            $meta = new MetaAttribute();
+
             $meta->fk_empresa = $companyId;
             $meta->type = $input['type'];
             $meta->name = $input['name'];
@@ -77,52 +78,72 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
 
             if (in_array($input['type'], $this->getTypesRequiredOptions())) {
                 $attribute_id = $meta->id;
-                $options = json_encode($input['options']);
-                
-                $metaAttributeOption = new MetaAttributeOption;
-                $metaAttributeOption->attribute_id = $attribute_id;
-                $metaAttributeOption->options = $options;
-                $metaAttributeOption->save();
+
+                foreach ($input['options'] as $option) {
+                    $metaAttributeOption = new MetaAttributeOption();
+                    $metaAttributeOption->attribute_id = $attribute_id;
+                    $metaAttributeOption->options = $option;
+                    $metaAttributeOption->save();
+                }
             }
 
             return true;
-
         } catch (Exception $e) {
             return false;
-
         }
-
     }
 
-    public function updateMetaAttribute($id, $input)
+    public function updateMetaAttribute($id, $input, $companyId = null)
     {
+        try {
+            $meta = MetaAttribute::where('id', '=', $id);
+
+            //make sure it's own by that company
+            if ($companyId) {
+                $meta = $meta->where('fk_empresa', '=', $companyId);
+            }
+            $meta = $meta->first();
+        } catch (Exception $e) {
+            return false;
+        }
 
         try {
-            $meta = MetaAttribute::find($id);
             $meta->name = $input['name'];
             $meta->required = $input['required'];
             $meta->save();
 
             if (in_array($input['type'], $this->getTypesRequiredOptions())) {
-                $metaAttributeOption = MetaAttributeOption::where('attribute_id', '=', $id)->first();
-                $options = json_encode($input['options']);
-                $metaAttributeOption->options = $options;
-                $metaAttributeOption->save();
+                //remove old attribute set
+                //$removeOld = MetaAttributeOption::where('attribute_id', '=', $id)->delete();
+
+                foreach ($input['options'] as $key => $option) {
+                    $metaAttributeOption = MetaAttributeOption::where('id', '=', $key)->first();
+                    $metaAttributeOption->options = $option;
+                    $metaAttributeOption->save();
+                }
+
+                foreach ($input['newoptions'] as $newoption) {
+                    if($newoption != '') {
+                        $metaAttributeOption = new MetaAttributeOption();
+                        $metaAttributeOption->attribute_id = $id;
+                        $metaAttributeOption->options = $newoption;
+                        $metaAttributeOption->save();
+                    }
+                }
             }
 
             return true;
-
         } catch (Exception $e) {
             return false;
-
         }
-
     }
 
     /**
-     * [getAttributeDetails description]
-     * @param  [integer] $id [attribute id]
-     * @return [object]     [Details of attribute]
+     * [getAttributeDetails description].
+     *
+     * @param [integer] $id [attribute id]
+     *
+     * @return [object] [Details of attribute]
      */
     public function getAttributeDetails($id)
     {
@@ -133,24 +154,20 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         return $meta;
     }
 
-
     public function getAttributeOptions($attributeId)
     {
         try {
-            $metaOptions = MetaAttributeOption::where('attribute_id', '=', $attributeId)->first();
+            $metaOptions = MetaAttributeOption::where('attribute_id', '=', $attributeId)->get();
 
             return $metaOptions;
-
         } catch (Exception $e) {
-            return null;
+            return;
         }
-
     }
-
 
     public function getIsUniqueName($id, $name, $companyId)
     {
-         ///check if exist of same name
+        ///check if exist of same name
         $check = MetaAttribute::where('name', '=', $name)
                              ->where('id', '<>', $id);
 
@@ -159,21 +176,20 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         }
 
         $count = $check->count();
-        
+
         return ($count >= 1) ? false : true;
     }
-
 
     public function getCompanyFilterableAttributes($companyId)
     {
         if (!$companyId) {
-            return null;
+            return;
         }
 
         $metaAttributes = MetaAttribute::where('fk_empresa', '=', $companyId)
                                          ->whereIn('type', $this->getFilterableTypes())
                                          ->get();
-        
+
         $attributeTypes = $this->getAttributeTypes();
         $requiredOptions = $this->getRequiredDropdown();
 
@@ -184,28 +200,83 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
         }
 
         return $metaAttributes;
-
-
     }
 
     public function getTargetAttributeValues($targetId, $targetType = 'file', $attributeId = null)
     {
         if (!$targetId) {
-            return null;
+            return;
         }
         try {
             $records = MetaTargetAttributeValue::where('target_id', '=', $targetId)
                                                 ->where('target_type', '=', $targetType);
             if ($attributeId) {
                 $records = $records->where('attribute_id', '=', $attributeId);
-            }  
+            }
 
-            $records= $records->get();
-
+            $records = $records->get();
         } catch (Exception $e) {
-            return null;
+            return;
         }
 
         return $records;
+    }
+
+
+    public function updateTargetAttributeValues($targetId, $targetType = 'file', array $values = array())
+    {
+
+        foreach ($values as $attribute_id => $value) {
+            //if multiple options
+            if (is_array($value)) {
+                try {
+                    //remove existing records
+                    $remove = MetaTargetAttributeValue::where('target_id', '=', $targetId)
+                                                      ->where('target_type', '=', $targetType)
+                                                      ->where('attribute_id', '=', $attribute_id)
+                                                      ->delete();
+                    foreach ($value as $optionId) {
+                        if ($optionId != '') {
+                            $record = new MetaTargetAttributeValue();
+                            $record->target_id = $targetId;
+                            $record->target_type = $targetType;
+                            $record->attribute_id = $attribute_id;
+                            $record->value = $optionId;
+                            $record->save();
+                        }
+                    }
+
+                } catch (Exception $e) {
+                    continue;
+                }
+
+
+            } else {
+                //single option
+                try {
+                    $exist = MetaTargetAttributeValue::where('target_id', '=', $targetId)
+                                                     ->where('target_type', '=', $targetType)
+                                                     ->where('attribute_id', '=', $attribute_id)->first();
+
+
+                } catch (Exception $e) {
+                    $exist = null;
+                }
+                
+
+                if (count($exist) >=1) {
+                    $record = $exist;
+                } else {
+                    $record = new MetaTargetAttributeValue();
+                }
+     
+                $record->target_id = $targetId;
+                $record->target_type = $targetType;
+                $record->attribute_id = $attribute_id;
+                $record->value = $value;
+                $record->save();
+            }
+        }
+
     }
 }

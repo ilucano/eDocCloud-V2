@@ -36,10 +36,24 @@
     <div class="col-lg-8">
         <div class="row">
             <div class="col-sm-8">
-            @include('partials.file.metaattribute', array('attributeFilters' => $attributeFilters, 'fileAttributes' => $fileAttributes));
+            @include('partials.file.metaattribute', array('attributeSets' => $attributeSets))
             </div>
         </div>
+
     </div>
+
+    <div class="clearfix"></div>
+
+    <div class="col-lg-4">
+            <div class="form-group pull-left">
+            <a class="btn btn-sm btn-info" href="{{ URL::to('users/file') }}"> Cancel</a>
+        </div>
+        <div class="form-group pull-right">
+            {{ Form::submit('Save', array('class' => 'btn btn-sm btn-success')) }}
+        </div>
+    </div>
+
+
     {{ Form::close() }}
 
 @stop

@@ -79,28 +79,30 @@
                         <label class="control-label" for="field1" id="options-label">Options</label>
                         <div class="controls"> 
                             <div id="controls-form" role="form" autocomplete="off">
-                                @if (!empty($metaAttribute->attribute_options->options)) 
-                                    <?php
-                                        $arrayOptions = json_decode($metaAttribute->attribute_options->options, true);
-                                    ?> 
-                                    @for ( $i = 0; $i < count($arrayOptions); $i++)
+                                
+                                @if ( count($metaAttribute->attribute_options) >= 1) 
+                                   
+                                    @for ( $i = 0; $i < count($metaAttribute->attribute_options); $i++)
                                         <div class="entry input-group col-xs-3">
-                                            <input class="form-control" name="options[]" type="text" value="{{ $arrayOptions[$i] }}"/>
+                                            <input class="form-control locked" name="options[{{ $metaAttribute->attribute_options[$i]['id'] }}]" type="text" value="{{ $metaAttribute->attribute_options[$i]['options'] }}"/>
                                             <span class="input-group-btn">
-                                                @if ($i == (count($arrayOptions) - 1))
-                                                    <button class="btn btn-success btn-add" type="button">
-                                                        <span class="glyphicon glyphicon-plus"></span>
-                                                    </button>
-                                                @elseif
-                                                    <button class="btn btn-danger btn-remove" type="button">
-                                                        <span class="glyphicon glyphicon-minus"></span>
-                                                    </button>
-                                                @endif
+                                                    <button class="btn btn-default" type="button">
+                                                        <span class="glyphicon glyphicon-ban-circle"></span>
+                                                    </button>                                            
                                             </span>
                                         </div>
                                     @endfor
 
                                 @endif
+
+                                <div class="entry input-group col-xs-3">
+                                    <input class="form-control" name="newoptions[]" type="text" value="" placeholder="Enter new option here"/>
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-success btn-add" type="button">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>                                            
+                                    </span>
+                                </div>
                             </div>
                         <br>
                         <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another optoin</small>
@@ -153,6 +155,9 @@
                     newEntry = $(currentEntry.clone()).appendTo(controlForm);
 
                 newEntry.find('input').val('');
+                newEntry.find('input').removeClass("locked");
+                newEntry.find('input').attr('name', 'newoptions[]');
+
                 controlForm.find('.entry:not(:last) .btn-add')
                     .removeClass('btn-add').addClass('btn-remove')
                     .removeClass('btn-success').addClass('btn-danger')

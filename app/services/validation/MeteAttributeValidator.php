@@ -38,7 +38,26 @@ class MetaAttributeValidator extends AbstractValidator
 
     public function validateOnUpdate(array $input, array $rules = array(), array $custom_errors = array())
     {
-        return $this->validateOnStore($input, $rules, $custom_errors);
+        
+        if (empty($rules)) {
+            $rules = [
+                      'name' => 'required',
+                      'type' => 'required'
+                      ];
+
+        }
+
+        if (in_array($input['type'], $this->_repo->getTypesRequiredOptions())) {
+            $_options = $input['options'];
+
+            foreach ($_options as $key => $_option) {
+                $rules['options.' . $key] = 'required';
+            }
+            
+        }
+
+        return $this->validate($input, $rules, $custom_errors);
+
     }
 
     /**
