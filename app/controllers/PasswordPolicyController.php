@@ -13,6 +13,8 @@ class PasswordPolicyController extends BaseController {
       
       if (!$policy) {
          $policy = new PasswordPolicy();
+         $policy->min_length = 6;
+         $policy->expire_days = 90;
          $policy->save();
       }
 
@@ -83,6 +85,7 @@ class PasswordPolicyController extends BaseController {
       
       );
       
+
       $validator = Validator::make(Input::all(), $rules);
     
       if ($validator->fails()) {

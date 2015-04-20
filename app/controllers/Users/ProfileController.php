@@ -97,9 +97,20 @@ class UsersProfileController extends \BaseController {
 	public function doChangePassword()
 	{
 		
-		
+		try {
+			$policy = PasswordPolicy::first();
+		} catch (Exception $e) {
+			$policy = null;
+		}
+
+		if ($policy) {
+			$minLength = $policy->min_length;
+		} else {
+			$minLength = '5';
+		}
+
 		$rules = array(
-			'password' => 'required|min:5|confirmed',
+			'password' => 'required|min:'.$minLength.'|confirmed',
 			'password_confirmation' => 'required|min:5'
 		);
 		
@@ -110,6 +121,31 @@ class UsersProfileController extends \BaseController {
             return Redirect::to('users/profile/password')
                 ->withErrors($validator)
                 ->withInput();
+        }
+
+        //check base on rules
+        if ($policy) {
+        	if($policy->uppercase == 1) {
+        		if (!preg_match('/[A-Z]/', Input::get('password'))) {
+				  	Session::flash('error', 'Password must contain at least one uppercase');
+					return Redirect::to('users/profile/password');
+				}
+        	}
+
+        	if($policy->lowercase == 1) {
+        		if (!preg_match('/[a-z]/', Input::get('password'))) {
+				  	Session::flash('error', 'Password must contain at least one lowercase');
+					return Redirect::to('users/profile/password');
+				}
+        	}
+
+        	if($policy->special_character == 1) {
+        		if (!preg_match('/[!@#$%^&*\/\\:"\'<>,]/', Input::get('password'))) {
+				  	Session::flash('error', 'Password must contain at least one special character');
+					return Redirect::to('users/profile/password');
+				}
+        	}
+
         }
 		
 		$user =	Login::findOrFail(Auth::User()->id);

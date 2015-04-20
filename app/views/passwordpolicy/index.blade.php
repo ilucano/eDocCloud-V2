@@ -72,8 +72,9 @@
                    
                 </div>
   
-            
-            {{ Form::submit('Update Policy', array('class' => 'btn btn-sm btn-info')) }}
+            <div class="pull-right">
+              {{ Form::submit('Update Policy', array('class' => 'btn btn-sm btn-info')) }}
+            </div>
         </div>
             
         {{ Form::close() }}
