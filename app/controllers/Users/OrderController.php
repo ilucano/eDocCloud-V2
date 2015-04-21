@@ -45,16 +45,32 @@ class UsersOrderController extends \BaseController
 		    
 		    $object->status = OrderStatus::find($object->fk_status)->status;
 			$object->price = $object->qty * $object->ppc;
+			
+			$metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($object->row_id, 'object');
+			$_tmp = array();
+			if (count($metaAttributeValues) >= 1) {
+                foreach ($metaAttributeValues as $item) {
+                	
+                    $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
+                    if (count($options) >=1 ) {
+                            $_tmp[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
+                        } else {
+                           	 $_tmp[$item->attribute_id][] = $item->value;
+                        }
+                    }
+            }
+            $object->attributeValues = $_tmp;
 		}
-
+	 
 		$attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
-
+		$companyAttributeHeaders  = $this->meta_attribute->getCompanyAttributeHeaders($companyId);
        	
 		// load the view and pass the data
         return View::make('users.order.index')
                ->with('objects', $objects)
                ->with('attributeFilters', $attributeFilters)
-               ->with('filterExpand', $filterExpand);
+               ->with('filterExpand', $filterExpand)
+               ->with('companyAttributeHeaders', $companyAttributeHeaders);
 	}
 
 

@@ -46,7 +46,7 @@
 			</div>
 		</div>
 
-		<div class="col-lg-12">
+		<div class="col-lg-12" style="overflow: auto;">
 
 			@if (Session::has('error'))
 				<div class="alert alert-danger">{{ Session::get('error') }}</div>
@@ -65,6 +65,9 @@
 						<th>Status</th>
 						<th>Pages</th>
 						<th>Cost</th>
+						@foreach ($companyAttributeHeaders as $header)
+								<th>{{ $header }}</th>
+						@endforeach
 						<th>Action</th>	
 					</tr>
 				</thead>
@@ -73,12 +76,19 @@
 					@foreach($objects as $object)
 					
 					<tr>			
-						<td>{{ $object->f_code }} / {{ $object->f_name }}</td>
+						<td nowrap>{{ $object->f_code }} / {{ $object->f_name }}</td>
 						<td>{{ Helpers::niceDateTime($object->creation) }}</td>
 						<td>{{ $object->status }}</td>			
 						<td>{{ $object->qty }}</td>
 						<td>{{ $object->price }}</td>
-						<td style="white-space: no-wrap;">
+						@foreach ($companyAttributeHeaders as $_attributeId => $header)
+							@if(isset($object->attributeValues[$_attributeId]))
+							<td>{{  implode(", ", $object->attributeValues[$_attributeId]) }}</td>
+							@else
+							<td> </td>
+							@endif
+						@endforeach
+						<td style="white-space: no-wrap;" nowrap>
 						 
 									<a class="btn btn-sm btn-success" href="{{ URL::to('users/order/' . $object->row_id) }}"><i class="fa fa-caret-right fa-lg"></i> View</a> 
 
