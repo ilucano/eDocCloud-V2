@@ -60,7 +60,7 @@
 
 
 
-		<div class="col-lg-12">
+		<div class="col-lg-12" style="overflow: auto;">
 
 			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed small-font" id="datatables">
 					<thead>
@@ -71,6 +71,9 @@
 							<th>Created</th>
 							<th>Pages</th>
 							<th>Size</th>
+							@foreach ($companyAttributeHeaders as $header)
+								<th>{{ $header }}</th>
+							@endforeach
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -89,6 +92,13 @@
 							<td> {{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td> {{ $file->pages }} </td>
 							<td> {{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
+							@foreach ($companyAttributeHeaders as $_attributeId => $header)
+								@if(isset($file->attributeValues[$_attributeId]))
+								<td>{{  implode(", ", $file->attributeValues[$_attributeId]) }}</td>
+								@else
+								<td> </td>
+								@endif
+							@endforeach
 							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
 							</tr>
 						@endforeach
@@ -102,7 +112,6 @@
 		</div>
 
 	</div>
-
 
 
 	<div class="modal" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">

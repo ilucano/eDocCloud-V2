@@ -70,7 +70,8 @@ class FileRepository implements FileRepositoryInterface
 
 
         $files = DB::select(DB::raw($sqlQuery));
- 
+
+
         return $files;
     }
 

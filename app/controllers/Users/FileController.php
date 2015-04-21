@@ -32,17 +32,38 @@ class UsersFileController extends \BaseController
         $filterExpand =  (count($searchFilters) >= 1) ? true: false;
 
         $files = $this->repo->getFiles($companyId, $permission, 0, $limit, $searchFilters);
+       
+        foreach ($files as $file) {
+            $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($file->row_id, 'file');
+
+            if (count($metaAttributeValues) >= 1) {
+                foreach ($metaAttributeValues as $item) {
+                    $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
+                    if (count($options) >=1 ) {
+                            $file->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
+                        } else {
+                             $file->attributeValues[$item->attribute_id][] = $item->value;
+                        }
+                    }
+            }
+
+ 
+
+        }
+ 
 
         $filemarkDropdown = $this->getFileMarkDropdown($permission);
 
         $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
         
-
+        $companyAttributeHeaders  = $this->meta_attribute->getCompanyAttributeHeaders($companyId);
+ 
         return View::make('users.file.index')
                     ->with('files', $files)
                     ->with('filemarkDropdown', $filemarkDropdown)
                     ->with('attributeFilters', $attributeFilters)
-                    ->with('filterExpand', $filterExpand);
+                    ->with('filterExpand', $filterExpand)
+                    ->with('companyAttributeHeaders', $companyAttributeHeaders);
     }
 
     /**

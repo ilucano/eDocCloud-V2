@@ -30,5 +30,7 @@ interface MetaAttributeRepositoryInterface
 
     public function getCompanyAttributeHeaders($companyId);
 
+    public function getAttributeOptionLabel($rowId);
+
 
 }

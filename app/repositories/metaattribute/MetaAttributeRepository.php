@@ -293,4 +293,14 @@ class MetaAttributeRepository implements MetaAttributeRepositoryInterface
 
         return $headers;
     }
+
+     public function getAttributeOptionLabel($rowId)   
+     {  
+        try {
+            $row = MetaAttributeOption::find($rowId);
+            return $row['options'];
+        } catch (Exception $e) {
+            return '';
+        }
+     }
 }
