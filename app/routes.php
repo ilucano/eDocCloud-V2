@@ -69,7 +69,7 @@ Route::group(
                                 'uses' => 'ReportsController@showAllBoxes',
                                 'as' => 'reports.allboxes',
             )
-    );
+        );
 
         Route::resource('passwordpolicy', 'PasswordPolicyController');
         
@@ -79,7 +79,14 @@ Route::group(
                                 'uses' => 'ReportsController@showGroupByStatus',
                                 'as' => 'reports.groupbystatus',
             )
-    );
+         );
+
+        Route::get(
+            'reports/datausage', array(
+                                'uses' => 'ReportsController@showDataUsage',
+                                'as' => 'reports.datausage',
+            )
+         );
 
         Route::resource('company', 'CompanyController');
 

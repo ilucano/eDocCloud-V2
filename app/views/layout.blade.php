@@ -160,6 +160,10 @@
 						<li>
                             <a href="{{ URL::to('reports/groupbystatus') }}"> Group By Status</a>
                         </li>
+
+                        <li>
+                            <a href="{{ URL::to('reports/datausage') }}"> Data Usage</a>
+                        </li>
 						 
                     </ul>
 						
@@ -211,6 +215,8 @@
                          <li>
                             <a href="{{ URL::to('passwordpolicy') }}"> Password Policy</a>
                         </li>
+
+
                     </ul>
 						
 				 </li>

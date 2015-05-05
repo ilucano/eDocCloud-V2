@@ -38,6 +38,11 @@ class Helpers
         return number_format($bytes / 1024 / 1024, 2).'MB';
     }
 
+    public static function bytesToGigabytes($bytes)
+    {
+        return number_format($bytes / 1024 / 1024 / 1024, 2).'GB';
+    }
+
     /**
      * Return string contains X days Y minutes.
      *

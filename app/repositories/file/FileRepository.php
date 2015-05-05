@@ -105,4 +105,41 @@ class FileRepository implements FileRepositoryInterface
 
         return $file;
     }
+
+    public function getDataUsage($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null)
+     {
+        if ($toDate == '') {
+            $toDate = date("Y-m-d H:i:s");
+        }
+
+        $total = Db::table('files')->where('creadate', '>=', $fromDate)
+                                    ->where('creadate', '<=', $toDate);
+        if ($companyId) {
+            $total = $total->where('fk_empresa', '=', $companyId);
+        }
+
+        $total = $total->sum('filesize');
+    
+        return $total;
+
+
+    }
+
+     public function getNumberOfFiles($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null)
+     {
+        if ($toDate == '') {
+            $toDate = date("Y-m-d H:i:s");
+        }
+
+        $total = Db::table('files')->where('creadate', '>=', $fromDate)
+                                    ->where('creadate', '<=', $toDate);
+
+        if ($companyId) {
+            $total = $total->where('fk_empresa', '=', $companyId);
+        }
+
+        $total = $total->count('row_id');
+ 
+        return $total;
+    }
 }
