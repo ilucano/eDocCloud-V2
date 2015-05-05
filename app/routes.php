@@ -71,6 +71,9 @@ Route::group(
             )
     );
 
+        Route::resource('passwordpolicy', 'PasswordPolicyController');
+        
+
         Route::get(
             'reports/groupbystatus', array(
                                 'uses' => 'ReportsController@showGroupByStatus',
@@ -198,6 +201,17 @@ Route::group(
                 Route::resource('profile', 'UsersProfileController');
 
                 Route::resource('activity', 'UsersActivityController');
+
+
+                Route::get('order/attributes/{id}/edit', array('uses' => 'UsersOrderController@editAttributes'));
+
+                Route::put('order/attributes/{id}', array(
+                                                        'uses' => 'UsersOrderController@updateAttributes', 
+                                                         'as' => 'users.order.attribute.update'
+                                                         )
+                                                    );
+
+
 
             }
         );

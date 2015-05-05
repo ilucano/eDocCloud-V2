@@ -69,17 +69,17 @@
 					
 					@if(Auth::User()->isCompanyAdmin())
 				    <ul class="dropdown-menu">
-					    @if(Auth::User()->can('admin_user'))
+					    @if(Auth::User()->can('admin_user') || Auth::User()->isAdmin())
                         <li>
                             <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-user"></i> My Users</a>
                         </li>
 						@endif
-						 @if(Auth::User()->can('admin_role'))
+						 @if(Auth::User()->can('admin_role') || Auth::User()->isAdmin())
 						<li>
                             <a href="{{ URL::to('companyadmin/role') }}"><i class="fa fa-fw fa-users"></i> User Roles</a>
                         </li>
 						@endif
-						@if(Auth::User()->can('admin_filemark'))
+						@if(Auth::User()->can('admin_filemark') || Auth::User()->isAdmin())
 						<li>
                             <a href="{{ URL::to('companyadmin/filemark') }}"><i class="fa fa-fw fa-tags"></i> My Filemarks</a>
                         </li>
@@ -206,6 +206,10 @@
 
                         <li>
                             <a href="{{ URL::to('admin/activity') }}"> All Users Activities</a>
+                        </li>
+
+                         <li>
+                            <a href="{{ URL::to('passwordpolicy') }}"> Password Policy</a>
                         </li>
                     </ul>
 						

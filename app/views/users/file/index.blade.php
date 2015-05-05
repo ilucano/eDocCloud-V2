@@ -35,7 +35,7 @@
 
 		<div class='clearfix'></div>
 
-		<div class="col-lg-6">
+		<div class="col-lg-8">
 			<!-- search filter -->
 			<p>
 				<button class="btn btn-sm btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -43,18 +43,24 @@
 				   <span class="caret"></span>
 				</button>
 			</p>
-			<div class="collapse" id="collapseExample">
-			  <div class="well">
-
-			  		@include('partials.metaattribute.filter', array('attributeFilters' => $attributeFilters))
-
+			<div class="collapse @if ($filterExpand) @endif" id="collapseExample">
+			  <div class="well small-font">
+			  		{{ Form::open(array('route' => 'users.file.index', 'method' => 'get')) }}
+			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
+			  		
+			  		<div class="form-group">
+			  			Display Results: {{ Form::select('limit', ['50'=> '50', '200' => '200', '500' => '500', '1000' => '1000',  '99999999' =>  '> 1000'], Input::get('limit')) }}
+			  		</div>
+			  		<a class="btn btn-sm btn-info" href="{{ URL::to('users/file') }}"> Clear</a>
+			  		{{ Form::submit('Search', array('class' => 'btn btn-sm btn-primary')) }}
+			  		{{ Form::close() }}
 			  </div>
 			</div>
 		</div>
 
 
 
-		<div class="col-lg-12">
+		<div class="col-lg-12" style="overflow: auto;">
 
 			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed small-font" id="datatables">
 					<thead>
@@ -65,6 +71,9 @@
 							<th>Created</th>
 							<th>Pages</th>
 							<th>Size</th>
+							@foreach ($companyAttributeHeaders as $header)
+								<th>{{ $header }}</th>
+							@endforeach
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -83,7 +92,14 @@
 							<td> {{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td> {{ $file->pages }} </td>
 							<td> {{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
-							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
+							@foreach ($companyAttributeHeaders as $_attributeId => $header)
+								@if(isset($file->attributeValues[$_attributeId]))
+								<td>{{  implode(", ", $file->attributeValues[$_attributeId]) }}</td>
+								@else
+								<td> </td>
+								@endif
+							@endforeach
+							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
 							</tr>
 						@endforeach
 
@@ -98,7 +114,6 @@
 	</div>
 
 
-
 	<div class="modal" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 		  <div class="alert alert-warning">
@@ -107,7 +122,34 @@
 		</div>
 	</div>
 
+	<style>
 
+		#attributeModal .modal-content
+		{
+		  height: 600px;
+		  width: 700px;
+		  overflow:auto;
+		}
+
+	</style>
+		
+
+		<div class="modal fade" id="attributeModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        
+		      </div>
+		      <div class="modal-body">
+		         
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 
 @stop

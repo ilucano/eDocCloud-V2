@@ -3,11 +3,11 @@
 @section('content')
 
 
-    {{ Form::model($file, array('route' => array('users.file.attribute.update', $file->row_id), 'method' => 'PUT')) }}
+    {{ Form::model($object, array('route' => array('users.order.attribute.update', $object->row_id), 'method' => 'PUT')) }}
 
 
     <div class="modal-header">
-        <h3 class="modal-title">{{ $file->filename }}</h3>
+        <h3 class="modal-title">{{ $object->f_code }} / {{ $object->f_name }}</h3>
     </div>
 
     <div class="modal-body">
