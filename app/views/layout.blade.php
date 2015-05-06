@@ -86,9 +86,12 @@
 						@endif
 
                         <li>
-                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square"></i> Metadata Setup</a>
+                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square-o"></i> Metadata Setup</a>
                         </li>
-						 
+						
+                         <li>
+                            <a href="{{ URL::to('companyadmin/reports/usagechart') }}"><i class="fa fa-fw fa-bar-chart"></i> Data Usage</a>
+                        </li>
                     </ul>
 					@endif
 						
@@ -291,6 +294,8 @@
     <!-- Bootstrap Core JavaScript -->
 	{{ HTML::script('js/bootstrap.min.js') }}
 
+    {{ HTML::script('js/plugins/morris/raphael.min.js') }}
+    {{ HTML::script('js/plugins/morris/morris.min.js') }}
 
 	<!-- jQuery Data Table -->
 	{{ HTML::script('js/plugins/datatable/jquery.dataTables.min.js') }}

@@ -40,16 +40,18 @@
                         <th>Company Name</th>
                         <th>Number of Files</th>
                         <th>Current Month Usage</th>
-                        <th>Total Usage</th>                 
+                        <th>Total Usage</th>
+                        <th>Action</th>                               
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($companies as $company)
                         <tr>
                             <td>{{ $company->company_name }}</td>
-                            <td>{{ $company->number_of_files }}</td>
-                            <td>{{ Helpers::bytesToGigabytes($company->monthly_data_usage) }}</td>
-                            <td>{{ Helpers::bytesToGigabytes($company->todate_data_usage) }}</td>
+                            <td class="text-right">{{ $company->number_of_files }}</td>
+                            <td class="text-right">{{ Helpers::bytesToGigabytes($company->monthly_data_usage) }}</td>
+                            <td class="text-right">{{ Helpers::bytesToGigabytes($company->todate_data_usage) }}</td>
+                            <td><a class="btn btn-sm btn-info" href="{{ URL::to('reports/usagechart/' . $company->row_id) }}"> <i class="fa fa-bar-chart fa-lg"></i> Charts</a>  </td>
                          </tr>
                     @endforeach
                 </tbody>
@@ -58,6 +60,8 @@
         </div>
             
     </div>
+
+    
 
 @stop
 

@@ -88,6 +88,13 @@ Route::group(
             )
          );
 
+        Route::get(
+            'reports/usagechart/{fk_empresa}', array(
+                                'uses' => 'ReportsController@showUsageChart',
+                                'as' => 'reports.usagechart',
+            )
+         );
+
         Route::resource('company', 'CompanyController');
 
         Route::resource('user', 'UserController');
@@ -149,6 +156,13 @@ Route::group(
                 Route::resource('metaattribute', 'CompanyAdminMetaAttributeController');
                 Route::resource('metatargetattributevalue', 'CompanyAdminMetaTargetAttributeValueController');
                 Route::resource('metaattributeoption', 'CompanyAdminMetaAttributeOptionController');
+
+                Route::get(
+                'reports/usagechart', array(
+                                    'uses' => 'CompanyAdminReportsController@showUsageChart',
+                                    'as' => 'companyadminreports.usagechart',
+                )
+         );
 
             }
         );

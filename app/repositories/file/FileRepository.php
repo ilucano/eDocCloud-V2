@@ -142,4 +142,35 @@ class FileRepository implements FileRepositoryInterface
  
         return $total;
     }
+
+    public function getMonthlyDataUsage($companyId = null, $limit = 12)
+    {
+        $data = array();
+
+        for ($i = $limit - 1; $i >= 0; $i--) {
+            $startTimeStamp = strtotime(date("Y-m-d")." -$i months");
+            $startDate = date("Y-m-01", $startTimeStamp) . " 00:00:00";
+            $toDate = date("Y-m-t", $startTimeStamp). " 23:59:59";
+            $yearMonth = date("Y-m", $startTimeStamp);
+            $data[$yearMonth] = $this->getDataUsage($companyId, $startDate, $toDate);
+        }
+
+        return $data;
+    }
+
+    public function getMonthlyNumberOfFiles($companyId = null, $limit = 12)
+    {
+        $data = array();
+
+        for ($i = $limit - 1; $i >= 0; $i--) {
+            $startTimeStamp = strtotime(date("Y-m-d")." -$i months");
+            $startDate = date("Y-m-01", $startTimeStamp) . " 00:00:00";
+            $toDate = date("Y-m-t", $startTimeStamp). " 23:59:59";
+            $yearMonth = date("Y-m", $startTimeStamp);
+            $data[$yearMonth] = $this->getNumberOfFiles($companyId, $startDate, $toDate);
+        }
+        
+        return $data;
+    }
+
 }

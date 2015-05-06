@@ -6,7 +6,7 @@ use Repositories\File\FileRepositoryInterface;
 class ReportsController extends \BaseController
 {	
 
-	public function __construct(FileRepositoryInterface $filerepo)
+	 public function __construct(FileRepositoryInterface $filerepo)
     {
         $this->filerepo = $filerepo;
 
@@ -124,5 +124,22 @@ class ReportsController extends \BaseController
     	
         return View::make('reports.datausage')
         			 ->with('companies', $companies);
+    }
+
+    public function showUsageChart($companyId)
+    {
+      
+      $company = Company::where('row_id', '=', $companyId)->first();
+     
+      $company->todate_data_usage = $this->filerepo->getDataUsage($company->row_id);
+
+    
+      $company->monthly_data_usage = $this->filerepo->getMonthlyDataUsage($company->row_id);
+      $company->monthly_number_of_files = $this->filerepo->getMonthlyNumberOfFiles($company->row_id);
+  
+      return View::make('reports.usagechart')
+                  ->with('company', $company);
+
+
     }
 }

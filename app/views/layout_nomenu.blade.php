@@ -61,8 +61,7 @@
     <!-- Morris Charts JavaScript -->
 	{{ HTML::script('js/plugins/morris/raphael.min.js') }}
 	{{ HTML::script('js/plugins/morris/morris.min.js') }}
-	{{ HTML::script('js/plugins/morris/morris-data.js') }}
-
+    @yield('loadjs') 
 </body>
 
 </html>
