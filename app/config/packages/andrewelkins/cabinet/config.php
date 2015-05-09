@@ -111,7 +111,7 @@ return array(
     */
 
     // Enabled image manipulation for uploaded images.
-    'image_manipulation' => 'true',
+    'image_manipulation' => 'false',
 
     // Must be in the upload list as well.
     // Must also be supported by invention. http://intervention.olivervogel.net/image/formats/image
@@ -120,9 +120,9 @@ return array(
 
     // Image resizing params. http://intervention.olivervogel.net/image/methods/resize
     'image_resize' => array(
-        array(300, 200), // 300x200 image
-        array(300, 200, true), // 300x200 image ratio constrained aspect ratio
-        array(null, 400, true), // auto width x 400 height constrained aspect ratio
+       // array(300, 200), // 300x200 image
+      //  array(300, 200, true), // 300x200 image ratio constrained aspect ratio
+      //  array(null, 400, true), // auto width x 400 height constrained aspect ratio
     ),
 
 );
