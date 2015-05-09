@@ -45,7 +45,7 @@ class HomeController extends BaseController
             return View::make('home.index')
                          ->with('statistics', $statistics);
         } else {
-            return Redirect::to('users/order');
+            return Redirect::to('users/storage');
         }
     }
 

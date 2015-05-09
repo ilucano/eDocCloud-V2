@@ -100,28 +100,7 @@
 			</ul>
 				
             <ul class="nav navbar-right top-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu message-dropdown">
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>Notification Feature</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Coming soon...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-
-                       
-                    </ul>
-                </li>
+                
                 
 				@if(Auth::User()->isAdmin()) 
 				<li class="dropdown">
@@ -268,6 +247,9 @@
                         </ul>
                     </li>
 					@endif
+                    <li>
+                         <a href="{{ URL::to('users/storage') }}"><i class="fa fa-fw fa-inbox"></i> My Folder</a>
+                    </li>
                 </ul>
             </div>  
             <!-- /.navbar-collapse -->

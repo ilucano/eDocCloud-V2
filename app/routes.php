@@ -234,6 +234,9 @@ Route::group(
 
 
                 Route::resource('storage', 'UsersStorageController');
+
+                Route::get('storage/download/{id}', array('uses' => 'UsersStorageController@doDownload'));
+
             }
         );
 

@@ -79,6 +79,8 @@ return array(
                                  'image/tiff',
                                  'image/bmp',
                                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                 'application/wps-office.xlsx',
+                                 'application/wps-office.doc',
                                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                                  'application/vnd.oasis.opendocument.text',

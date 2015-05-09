@@ -8,23 +8,35 @@ class UsersStorageController extends \BaseController {
      * @return Response
      */
     public function index()
-    {
-        return  View::make('users.storage.index');
+    {   
+        $uploads = Upload::where('user_id', '=', Auth::User()->id)
+                           ->where('parent_id', '=', 0)
+                           ->get();
+        // $uploads =  Upload::leftjoin('logins', 'uploads.user_id', '=', 'logins.id')
+        //     ->select(
+        //         array('uploads.id', 'uploads.filename', 'uploads.path', 'uploads.extension',
+        //             'uploads.size', 'uploads.mimetype', 'logins.id as user_id', 'logins.username as username')
+        //     );
+
+        return  View::make('users.storage.index')
+                      ->with('uploads', $uploads);
 
     }
 
-
     /**
-     * Show the form for creating a new resource.
+     * Displays the form for account creation
      *
-     * @return Response
      */
     public function create()
     {
-
+        //return View::make(Config::get('cabinet::upload_form'));
+        $typesAllowed = Config::get('cabinet::upload_file_extensions');
+        $maxFileSize = Config::get('cabinet::max_upload_file_size');
         
+        return View::make('users.storage.create')
+                     ->with('typesAllowed', $typesAllowed)
+                     ->with('maxFileSize', $maxFileSize);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -34,10 +46,25 @@ class UsersStorageController extends \BaseController {
     public function store()
     {
          
-        //
+        $file = Input::file('file');
 
-        //UP2::upload(null, Input::file('userfile'))->getMasterResult();
-        UP2::upload(new PersonalFolder, Input::file('userfile'))->getMasterResult();
+        $upload = new Upload;
+
+        try {
+            $upload->process($file);
+        } catch(Exception $exception){
+            // Something went wrong. Log it.
+            Log::error($exception);
+            // Return error
+            return Response::json($exception->getMessage(), 400);
+        }
+
+        // If it now has an id, it should have been successful.
+        if ( $upload->id ) {
+            return Response::json(array('status' => 'success', 'file' => $upload->toArray()), 200);
+        } else {
+            return Response::json('Error', 400);
+        }
     }
 
 
@@ -89,6 +116,37 @@ class UsersStorageController extends \BaseController {
     public function destroy($id)
     {
         //
+        try {
+            $upload = Upload::where('user_id', '=', Auth::User()->id)
+                              ->where('id', '=', $id)->delete();
+        
+            Session::flash('message', 'File deleted');
+            
+            return Redirect::to('users/storage');
+
+        } catch (Exception $e) {
+            echo "Error find file";
+        }
+
+    }
+
+
+    public function doDownload($id)
+    {  
+         try {
+            $upload = Upload::where('user_id', '=', Auth::User()->id)
+                              ->where('id', '=', $id)->first();
+            //echo "<pre>";
+            //print_r($upload);
+            $file = base_path() . $upload->path.$upload->filename;
+            
+            return Response::download($file);
+
+        } catch (Exception $e) {
+            echo "Error ". $e->getMessage();
+        }
+
+
     }
     
    

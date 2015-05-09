@@ -8,6 +8,7 @@
  <div class="row">
         <div class="col-lg-12">
             <h2 class="page-header">My Folder
+                 <div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('users/storage') }}"><i class="fa fa-caret-left fa-lg"></i> Back to My Folder</a></div>
             </h2>
 
 
@@ -25,7 +26,7 @@
                     Files Allowed - <strong>{{ implode(", ", $typesAllowed) }}</strong><br/>
                     Max File Size - {{ Helpers::bytesToMegaBytes($maxFileSize) }}
 </div>
-<form action="{{ URL::to('upload') }}" class="dropzone" id="cabinet-dropzone" accept-charset="UTF-8">
+<form action="{{ URL::to('users/storage') }}" class="dropzone" id="cabinet-dropzone" accept-charset="UTF-8">
     <input type="hidden" name="_token" value="{{{ Session::getToken() }}}">
     <div class="fallback">
         <input name="file" type="file" multiple />
