@@ -124,7 +124,7 @@ return array(
         'Services\Filemark\FilemarkServiceProvider',
         'Services\Activity\ActivityServiceProvider',
         'Services\MetaAttribute\MetaAttributeServiceProvider',
-        'Services\File\FileServiceProvider',
+        'Andrew13\Cabinet\CabinetServiceProvider',
     ),
 
     /*
@@ -192,7 +192,7 @@ return array(
         'View'            => 'Illuminate\Support\Facades\View',
         'Entrust'    => 'Zizaco\Entrust\EntrustFacade',
         'Activity' => 'Regulus\ActivityLog\Activity',
-
+        'Cabinet'    => 'Andrew13\Cabinet\CabinetFacade',
     ),
 
     'system_admin_company_id' => 1, //only ImagingXperts Users can be superadmin
