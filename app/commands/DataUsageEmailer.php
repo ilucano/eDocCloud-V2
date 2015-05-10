@@ -62,7 +62,7 @@ class DataUsageEmailer extends Command {
 				Mail::send('emails.datausage.emailer', $data, function($message) use ($companyAdmin)
 				{
 				   $message->from('admin@edoccloud.com', 'eDocCloud');
-				   $message->to('yatsum81@gmail.com', $companyAdmin->first_name . ' '. $companyAdmin->last_name)->subject('Your data usage report');
+				   $message->to($companyAdmin->email, $companyAdmin->first_name . ' '. $companyAdmin->last_name)->subject('Your data usage report');
 				}
 				);
 			} catch (Expception $e) {
