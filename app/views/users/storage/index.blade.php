@@ -23,7 +23,7 @@
     <div class="row">
 
         <div class="col-lg-6">
-             <div class="alert alert-warning">This is your personal folder. You can upload documents, images and zip files to this here.</div>
+             <div class="alert alert-warning">This is your personal folder. You can upload documents, images and zip files here.</div>
             <!-- message div -->
             @if (Session::has('error'))
                 <div class="alert alert-danger">{{ Session::get('error') }}</div>

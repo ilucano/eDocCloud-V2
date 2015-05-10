@@ -124,6 +124,7 @@ return array(
         'Services\Filemark\FilemarkServiceProvider',
         'Services\Activity\ActivityServiceProvider',
         'Services\MetaAttribute\MetaAttributeServiceProvider',
+        'Services\File\FileServiceProvider',
         'Andrew13\Cabinet\CabinetServiceProvider',
     ),
 
