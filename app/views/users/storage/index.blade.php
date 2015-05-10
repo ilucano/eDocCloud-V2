@@ -42,6 +42,7 @@
                 <thead>
                 <tr>
                     <th><i class="fa fa-times" title="Select to delete"></i> </th>
+                    <th><i class="fa fa-star fa-lg"></i></th>
                     <th class="span2">Filename</th>
                     <th class="span2">Size</th>
                     <th class="span2">Mime Type</th>
@@ -55,16 +56,15 @@
                             <td>
                                 {{ Form::checkbox('todelete', $upload->id, null, ['class' => 'checkbox-delete']) }}
                             </td>
-                            <td>{{ $upload->filename }}</td>
+                            <?php
+                                $starIcon = ($upload->favourite == 1) ? 'fa-star' : 'fa-star-o';
+                            ?>
+                            <td><span style="color: #fff;font-size: 0px;">{{ $upload->favourite }}</span> <a title="Add / Remove Favourite" href="{{ URL::to('users/storage/switchfav/' . $upload->id ) }}"><i class="fa {{ $starIcon }} fa-lg"></i></a></td>
+                            <td>{{ $upload->filename }} </td>
                             <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
                             <td>{{ $upload->mimetype }}</td>
                             <td>{{ Helpers::niceDateTime($upload->created_at) }}</td>
-                            <td style="white-space: nowrap">
-                                 <div class="pull-right">
-                                <a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a> 
-                                </div>
-                                
-                            </td>
+                            <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
                         </tr>
                     @endforeach
                 </tbody>

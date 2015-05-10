@@ -151,6 +151,23 @@ class UsersStorageController extends \BaseController {
 
 
     }
+
+    public function doSwitchFavourite($id)
+    {
+        try {
+            $upload = Upload::where('user_id', '=', Auth::User()->id)
+                              ->where('id', '=', $id)->first();
+            
+            $upload->favourite = ($upload->favourite == 1) ? 0 : 1;
+            $upload->save();
+
+            return Redirect::to('users/storage');
+
+        } catch (Exception $e) {
+            echo "Error ". $e->getMessage();
+        }
+
+    }
     
    
 }

@@ -237,6 +237,8 @@ Route::group(
 
                 Route::get('storage/download/{id}', array('uses' => 'UsersStorageController@doDownload'));
 
+                Route::get('storage/switchfav/{id}', array('uses' => 'UsersStorageController@doSwitchFavourite'));
+
             }
         );
 
