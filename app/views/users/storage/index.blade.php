@@ -41,6 +41,7 @@
             <table id="datatables" class="table table-bordered table-hover small-font">
                 <thead>
                 <tr>
+                    <th><i class="fa fa-times" title="Select to delete"></i> </th>
                     <th class="span2">Filename</th>
                     <th class="span2">Size</th>
                     <th class="span2">Mime Type</th>
@@ -51,6 +52,9 @@
                 <tbody>
                     @foreach ($uploads as $upload)
                         <tr>
+                            <td>
+                                {{ Form::checkbox('todelete', $upload->id, null, ['class' => 'checkbox-delete']) }}
+                            </td>
                             <td>{{ $upload->filename }}</td>
                             <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
                             <td>{{ $upload->mimetype }}</td>
@@ -59,16 +63,17 @@
                                  <div class="pull-right">
                                 <a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a> 
                                 </div>
-                                <div class="pull-left">{{ Form::open(['route' => ['users.storage.destroy', $upload->id], 'method' => 'delete']) }}
-                                {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger')) }}
-                                {{ Form::close() }}
-                                </div> 
-                               
+                                
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+                {{ Form::open(['route' => ['users.storage.destroy', $upload->id], 'method' => 'delete']) }}
+                {{ Form::hidden('deletelist', '',  array('id' => 'deletelist')) }}
+                {{ Form::submit('Delete Selected File', array('class' => 'btn btn-danger btn-sm', 'id' => 'delete-button', 'disabled' => 'disabled')) }}
+                {{ Form::close() }}
+        </div>
         </div>
     </div>
 
@@ -89,5 +94,44 @@
             );
 
          } );
+
+
+
+        $(document).ready(function() {
+
+            $(document).on('click', '.checkbox-delete', function(){
+                var id =  $(this).val();
+                var isChecked = $(this).prop('checked');
+
+                if ($("#deletelist").val() != '') {
+                    var selectedArray = $("#deletelist").val().split(',');
+                }
+                else {
+                    var selectedArray = [];
+                }
+
+                if (isChecked == true) {
+                    selectedArray.push(id);
+                }
+                else {
+
+                    var found = $.inArray(id, selectedArray);
+                    if (found >= 0) {
+                        // Element was found, remove it.
+                        selectedArray.splice(found, 1);
+                    }
+                }
+
+                $("#deletelist").val(selectedArray.join(','));
+                if(selectedArray.length >= 1) {
+                    $("#delete-button").val('Delete Selected ' + selectedArray.length  + ' File(s)');
+                    $("#delete-button").removeAttr("disabled");
+                }
+                else {
+                    $("#delete-button").val('Delete Selected File');
+                    $("#delete-button").attr("disabled", true);
+                }
+            });
+        });
     </script>
 @stop

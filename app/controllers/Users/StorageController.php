@@ -115,11 +115,14 @@ class UsersStorageController extends \BaseController {
      */
     public function destroy($id)
     {
-        //
+       
+    
+        $idArray = explode(",", Input::get('deletelist'));
+        
         try {
             $upload = Upload::where('user_id', '=', Auth::User()->id)
-                              ->where('id', '=', $id)->delete();
-        
+                              ->whereIn('id', $idArray)->delete();
+            
             Session::flash('message', 'File deleted');
             
             return Redirect::to('users/storage');
