@@ -15,8 +15,8 @@
                  @foreach ($company->monthly_data_usage as $key => $dataUsage)
                                     <tr>
                                         <td>{{ $key }}</td>
-                                        <td>{{ $company->monthly_number_of_files[$key] }}</td>
-                                        <td class="text-right">{{ Helpers::bytesToMegabytes($dataUsage) }}</td>
+                                        <td align="center">{{ $company->monthly_number_of_files[$key] }}</td>
+                                        <td align="right">{{ Helpers::bytesToMegabytes($dataUsage) }}</td>
                                     </tr>
                 @endforeach
 
