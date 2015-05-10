@@ -250,3 +250,8 @@ ul.alert-dropdown {
 .small-font, .small-font a, .small-font input, .small-font select {
     font-size: 13px;
 }
+
+/* set to square */
+* {
+  border-radius: 0 !important;
+}
