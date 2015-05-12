@@ -149,7 +149,12 @@ class HomeController extends BaseController
             ]);
 
             // validation successful!
-            return Redirect::to('home');
+            //return Redirect::to('home');
+            $company = Company::where('row_id', '=', Auth::User()->getCompanyId())->first();
+            $appDomain = $company->app_domain;
+            $token = Auth::User()->getRememberToken();
+            return Redirect::to($appDomain .'/ssologin?token='. $token);
+
         } else {
             Activity::log([
                 'contentId'   => 0,
@@ -171,5 +176,19 @@ class HomeController extends BaseController
     {
         Auth::logout(); // log the user out of our application
         return Redirect::to('login'); // redirect the user to the login screen
+    }
+
+
+    public function ssoLogin()
+    {   
+        $user = Login::where('remember_token', '=', Input::get('token'))->where('active', '=', 1)->first();
+        
+        if ($user) {
+           // echo $hashPassword;
+            Auth::login($user);
+        }
+
+            // validation successful!
+        return Redirect::to('home');
     }
 }

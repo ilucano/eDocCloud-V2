@@ -347,3 +347,7 @@ Route::get(
 Route::get('upload/data', 'UploadController@data');
 Route::resource( 'upload', 'UploadController',
         array('except' => array('show', 'edit', 'update', 'destroy')));
+
+
+// route manual authenticate user
+Route::get('ssologin', array('uses' => 'HomeController@ssoLogin'));

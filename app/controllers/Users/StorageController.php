@@ -9,15 +9,12 @@ class UsersStorageController extends \BaseController {
      */
     public function index()
     {   
+ 
         $uploads = Upload::where('user_id', '=', Auth::User()->id)
-                           ->where('parent_id', '=', 0)
-                           ->get();
-        // $uploads =  Upload::leftjoin('logins', 'uploads.user_id', '=', 'logins.id')
-        //     ->select(
-        //         array('uploads.id', 'uploads.filename', 'uploads.path', 'uploads.extension',
-        //             'uploads.size', 'uploads.mimetype', 'logins.id as user_id', 'logins.username as username')
-        //     );
+                       ->where('parent_id', '=', 0)
+                       ->get();
 
+    
         return  View::make('users.storage.index')
                       ->with('uploads', $uploads);
 

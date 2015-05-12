@@ -51,25 +51,27 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach ($uploads as $upload)
-                        <tr>
-                            <td>
-                                {{ Form::checkbox('todelete', $upload->id, null, ['class' => 'checkbox-delete']) }}
-                            </td>
-                            <?php
-                                $starIcon = ($upload->favourite == 1) ? 'fa-star' : 'fa-star-o';
-                            ?>
-                            <td><span style="color: #fff;font-size: 0px;">{{ $upload->favourite }}</span> <a title="Add / Remove Favourite" href="{{ URL::to('users/storage/switchfav/' . $upload->id ) }}"><i class="fa {{ $starIcon }} fa-lg"></i></a></td>
-                            <td>{{ $upload->filename }} </td>
-                            <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
-                            <td>{{ $upload->mimetype }}</td>
-                            <td>{{ Helpers::niceDateTime($upload->created_at) }}</td>
-                            <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
-                        </tr>
-                    @endforeach
+                  
+                        @foreach ($uploads as $upload)
+                            <tr>
+                                <td>
+                                    {{ Form::checkbox('todelete', $upload->id, null, ['class' => 'checkbox-delete']) }}
+                                </td>
+                                <?php
+                                    $starIcon = ($upload->favourite == 1) ? 'fa-star' : 'fa-star-o';
+                                ?>
+                                <td><span style="color: #fff;font-size: 0px;">{{ $upload->favourite }}</span> <a title="Add / Remove Favourite" href="{{ URL::to('users/storage/switchfav/' . $upload->id ) }}"><i class="fa {{ $starIcon }} fa-lg"></i></a></td>
+                                <td>{{ $upload->filename }} </td>
+                                <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
+                                <td>{{ $upload->mimetype }}</td>
+                                <td>{{ Helpers::niceDateTime($upload->created_at) }}</td>
+                                <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
+                            </tr>
+                        @endforeach
+             
                 </tbody>
             </table>
-                {{ Form::open(['route' => ['users.storage.destroy', $upload->id], 'method' => 'delete']) }}
+                {{ Form::open(['route' => ['users.storage.destroy'], 'method' => 'delete']) }}
                 {{ Form::hidden('deletelist', '',  array('id' => 'deletelist')) }}
                 {{ Form::submit('Delete Selected File', array('class' => 'btn btn-danger btn-sm', 'id' => 'delete-button', 'disabled' => 'disabled')) }}
                 {{ Form::close() }}
