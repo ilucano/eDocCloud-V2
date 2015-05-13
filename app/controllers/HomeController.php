@@ -103,7 +103,16 @@ class HomeController extends BaseController
     public function showLogin()
     {
         // show the form
-        return View::make('home.login');
+        // 
+        //echo Config::get('app.url');
+        //echo Config::get('app.login_app_domain');
+       // exit;
+        if ( (Config::get('app.url') == Config::get('app.login_app_domain')) && Config::get('app.login_app_domain') != '' ) {
+            return View::make('home.login');
+        }
+        else {
+            return Redirect::to(Config::get('app.login_app_domain') . '/login');
+        }
     }
 
     /*
@@ -175,6 +184,10 @@ class HomeController extends BaseController
     public function doLogout()
     {
         Auth::logout(); // log the user out of our application
+        if ( (Config::get('app.url') != Config::get('app.login_app_domain')) && Config::get('app.login_app_domain') != '' ) {
+            return Redirect::to(Config::get('app.login_app_domain') . '/logout');
+        }
+         
         return Redirect::to('login'); // redirect the user to the login screen
     }
 

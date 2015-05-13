@@ -200,4 +200,7 @@ return array(
 
     'archive_path' => '/opt/eDocCloud/files/',
 
+    'login_app_domain' => (getenv('LOGIN_APP_DOMAIN') ? getenv('LOGIN_APP_DOMAIN') : ''),
+
+
 );
