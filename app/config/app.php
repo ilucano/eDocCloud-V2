@@ -13,7 +13,7 @@ return array(
     |
     */
 
-    'debug' => false,
+    'debug' => (getenv('DEBUG_MODE') ? getenv('DEBUG_MODE') : false),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => (getenv('APP_URL') ? getenv('APP_URL') : 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------

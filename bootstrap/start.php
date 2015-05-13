@@ -34,8 +34,8 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('tune-Latitude-E6420'),
-	'development' => array('dev.imagingxperts.com'),
+	//'local' => array('tune-Latitude-E6420'),
+	//'development' => array('dev.imagingxperts.com'),
 
 ));
 
