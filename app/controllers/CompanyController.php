@@ -64,6 +64,7 @@ class CompanyController extends \BaseController {
 			'fk_terms' => 'integer',
 			'creditlimit' => 'integer',
 			'company_zip' => 'max:5',
+			'app_domain'       => 'required',
 			
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -86,6 +87,7 @@ class CompanyController extends \BaseController {
 		$company->company_email      = Input::get('company_email');
 		$company->fk_terms      = Input::get('fk_terms');
 		$company->creditlimit      = Input::get('creditlimit');
+		$company->app_domain      = Input::get('app_domain');
 		$company->save();
         
 		$logDetails = json_encode(['row_id' => $company->row_id]);
@@ -202,6 +204,7 @@ class CompanyController extends \BaseController {
 			'fk_terms' => 'integer',
 			'creditlimit' => 'integer',
 			'company_zip' => 'max:5',
+			'app_domain'       => 'required',
 			
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -224,6 +227,7 @@ class CompanyController extends \BaseController {
 		$company->company_email      = Input::get('company_email');
 		$company->fk_terms      = Input::get('fk_terms');
 		$company->creditlimit      = Input::get('creditlimit');
+		$company->app_domain      = Input::get('app_domain');
 		$company->save();
      
 	 

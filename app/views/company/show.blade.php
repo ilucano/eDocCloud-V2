@@ -51,7 +51,14 @@
 
 			</div>
 			
-			
+			<div class="form-group">
+				<label>Site Domain</label>
+				 <div class="form-group input-group">
+					<span class="input-group-addon"><i class="fa fa-globe"></i></span>
+					{{ Form::text('app_domain',$company->app_domain, array('class'=>'form-control', 'disabled'=>'disabled')) }}
+				 </div>
+			</div>
+
 		</div>
 		
 		<div class="col-lg-4">

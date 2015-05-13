@@ -33,12 +33,13 @@
 			@endif
 			
 
-			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover small-font table-striped" id="datatables">
 				<thead>
 					<tr>
 						<th><i class="fa fa-home"></i> Company</th>
 						<th> Contact</th>
 						<th><i class="fa fa-user"></i> Administrator</th>
+						<th><i class="fa fa-globe"></i> Site Domain</th>
 						<th>Action</th>		
 					</tr>
 				</thead>
@@ -62,8 +63,9 @@
 							@if($company->company_email) <abbr title="Email">E:</abbr> {{ $company->company_email }} @endif
 						</td>	
 					
-						<td valign="top">{{ $company->admin_name }} ({{ $company->admin_username }})</td>				 
-						<td>
+						<td valign="top">{{ $company->admin_name }} ({{ $company->admin_username }})</td>
+						<td valign="top">{{ $company->app_domain }}</td>		 
+						<td nowrap>
 							<div class="pull-right">
 								<a class="btn btn-sm btn-success" href="{{ URL::to('company/' . $company->row_id) }}">View</a>
 								<a class="btn btn-sm btn-info" href="{{ URL::to('company/' . $company->row_id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
