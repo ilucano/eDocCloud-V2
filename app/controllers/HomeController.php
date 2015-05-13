@@ -147,7 +147,7 @@ class HomeController extends BaseController
 
         $logDetails = json_encode(['username' => Input::get('username')]);
 
-        if (Auth::attempt($userdata)) {
+        if (Auth::attempt($userdata, true)) {
             Activity::log([
                 'contentId'   => Auth::User()->id,
                 'contentType' => 'user_login_success',
