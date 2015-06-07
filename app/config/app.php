@@ -194,6 +194,8 @@ return array(
         'Entrust'    => 'Zizaco\Entrust\EntrustFacade',
         'Activity' => 'Regulus\ActivityLog\Activity',
         'Cabinet'    => 'Andrew13\Cabinet\CabinetFacade',
+        'Uuid' => 'Webpatser\Uuid\Uuid',
+        'Curl'               => 'jyggen\Curl',
     ),
 
     'system_admin_company_id' => 1, //only ImagingXperts Users can be superadmin
@@ -201,6 +203,5 @@ return array(
     'archive_path' => '/opt/eDocCloud/files/',
 
     'login_app_domain' => (getenv('LOGIN_APP_DOMAIN') ? getenv('LOGIN_APP_DOMAIN') : ''),
-
 
 );

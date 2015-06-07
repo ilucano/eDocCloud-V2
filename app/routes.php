@@ -351,3 +351,25 @@ Route::resource( 'upload', 'UploadController',
 
 // route manual authenticate user
 Route::get('ssologin', array('uses' => 'HomeController@ssoLogin'));
+
+Route::get('/batchcompanyuuid', function ()
+{
+    $companies = Company::all();
+    
+    foreach ($companies as $company) {
+        if ($company->uuid == '') {
+            $company->uuid = Uuid::generate();
+            $company->save();
+        }
+    }
+    echo "done";
+
+});
+
+
+Route::get('/testcurl', function()
+{
+    $curl = Curl::get('http://example.com/');
+    echo "<pre>";
+    print_r($curl[0]->getContent());
+});

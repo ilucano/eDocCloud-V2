@@ -7,7 +7,9 @@
 		"laravel/framework": "4.2.*",
 		"zizaco/entrust": "1.2.*@dev",
 		"regulus/activity-log": "0.3.*",
-		"andrewelkins/cabinet": "1.1.x"
+		"andrewelkins/cabinet": "1.1.x",
+		"webpatser/laravel-uuid": "1.*",
+		"jyggen/curl": "3.0.1"
 	},
 	"autoload": {
 		"classmap": [
