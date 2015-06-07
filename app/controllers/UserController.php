@@ -187,7 +187,19 @@ class UserController extends \BaseController {
                 ->withErrors($validator)
                 ->withInput();
         }
- 
+ 		
+ 		//check if exist
+		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/loginuser/checkavailable/' . Input::get('username');
+
+		$response = Curl::get($apiUrl)[0]->getContent();
+		$response = json_decode($response, true);
+		if ($response['result'] == 'error') {
+			Session::flash('error', 'Username already taken by other');
+			
+			return Redirect::to('user');
+		}
+	 
+		
 		//create login
 		$login = new Login;
 		$login->username = Input::get('username');
@@ -211,7 +223,21 @@ class UserController extends \BaseController {
         
 		$user->save();
 		
+ 		//api update centralize server
+ 		$company = Company::where('row_id', '=', $user->fk_empresa)->first();
+
+ 		$apiData = [
+					'username' => $user->username,
+					'company_id' => $user->fk_empresa,
+					'company_uuid' => $company->uuid,
+					'user_id'	=> $user->row_id
+					];
+
+		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/loginuser/sync';
+
+		$response = Curl::post($apiUrl, $apiData);
  
+
 		$mailJobData = array('to' => Input::get('email'),
 							 'username' => Input::get('username'),
 							 'password' => Input::get('password'),
@@ -435,6 +461,21 @@ class UserController extends \BaseController {
 		{
 			Log::error($exception);
 		}
+
+		//api update centralize server
+ 		$company = Company::where('row_id', '=', $user->fk_empresa)->first();
+
+
+		$apiData = [
+					'username' => $user->username,
+					'company_id' => $user->fk_empresa,
+					'company_uuid' => $company->uuid,
+					'user_id'	=> $user->row_id
+					];
+
+		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/loginuser/sync';
+
+		$response = Curl::post($apiUrl, $apiData);
 
 		// redirect
 				

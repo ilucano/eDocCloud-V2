@@ -255,7 +255,7 @@ class CompanyController extends \BaseController {
 				'updated'     => true,
 		]);
 		 
-		 $apiData = [
+		$apiData = [
 					'uuid' => $company->uuid,
 					'company_id' => $company->row_id,
 					'company_name' => $company->company_name,
