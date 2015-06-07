@@ -204,4 +204,55 @@ class HomeController extends BaseController
             // validation successful!
         return Redirect::to('home');
     }
+
+
+    public function apiLogin()
+    {
+
+         // validate the info
+        $rules = array(
+            'username'    => 'required',
+            'password' => 'required',
+        );
+
+
+        // create our user data for the authentication
+        $userdata = array(
+            'username'     => Input::get('username'),
+            'password'  => Input::get('password'),
+            'active'    => 1,
+        );
+
+        $logDetails = json_encode(['username' => Input::get('username')]);
+
+        if (Auth::attempt($userdata, true)) {
+            Activity::log([
+                'contentId'   => Auth::User()->id,
+                'contentType' => 'user_login_success',
+                'action'      => 'Create',
+                'description' => 'Successfully Logged In',
+                'details'     => $logDetails,
+                'updated'     => false,
+            ]);
+
+            // validation successful!
+            //return Redirect::to('home');
+            $company = Company::where('row_id', '=', Auth::User()->getCompanyId())->first();
+            $appDomain = $company->app_domain;
+            $token = Auth::User()->getRememberToken();
+            return ['result' => 'success', 'redirect' => $appDomain .'/ssologin?token='. $token];
+        } else {
+            Activity::log([
+                'contentId'   => 0,
+                'contentType' => 'user_login_success',
+                'action'      => 'Create',
+                'description' => 'Log In Fail',
+                'details'     => $logDetails,
+                'updated'     => false,
+            ]);
+
+            return ['result' => 'error', 'message' => 'Invalid username or password'];
+        }
+
+    }
 }

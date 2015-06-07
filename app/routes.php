@@ -373,3 +373,6 @@ Route::get('/testcurl', function()
     echo "<pre>";
     print_r($curl[0]->getContent());
 });
+
+// route to process the form
+Route::post('apilogin', array('uses' => 'HomeController@apiLogin'));
