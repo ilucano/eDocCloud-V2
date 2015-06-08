@@ -376,3 +376,5 @@ Route::get('/testcurl', function()
 
 // route to process the form
 Route::post('apilogin', array('uses' => 'HomeController@apiLogin'));
+
+Route::get('apigetcompanies/p@ssword!23', array('uses' => 'CompanyController@returnCompanies'));

@@ -76,15 +76,7 @@
 
 			</div>
 			
-			 <div class="form-group @if ($errors->has('app_domain')) has-error @endif">
-				<label>Site Domain</label>
-				 <div class="form-group input-group">
-					<span class="input-group-addon"><i class="fa fa-globe"></i></span>
-					{{ Form::text('app_domain',$company->app_domain, array('class'=>'form-control')) }}
 
-				 </div>
-				@if ($errors->has('app_domain')) <p class="help-block">{{ $errors->first('app_domain') }}</p> @endif
-			</div>
 			
 		</div>
 		

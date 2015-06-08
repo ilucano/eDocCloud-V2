@@ -39,7 +39,7 @@
 						<th><i class="fa fa-home"></i> Company</th>
 						<th> Contact</th>
 						<th><i class="fa fa-user"></i> Administrator</th>
-						<th><i class="fa fa-globe"></i> Site Domain</th>
+						 
 						<th>Action</th>		
 					</tr>
 				</thead>
@@ -64,7 +64,7 @@
 						</td>	
 					
 						<td valign="top">{{ $company->admin_name }} ({{ $company->admin_username }})</td>
-						<td valign="top">{{ $company->app_domain }}</td>		 
+						 	 
 						<td nowrap>
 							<div class="pull-right">
 								<a class="btn btn-sm btn-success" href="{{ URL::to('company/' . $company->row_id) }}">View</a>

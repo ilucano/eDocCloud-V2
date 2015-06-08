@@ -64,8 +64,6 @@ class CompanyController extends \BaseController {
 			'fk_terms' => 'integer',
 			'creditlimit' => 'integer',
 			'company_zip' => 'max:5',
-			'app_domain'       => 'required',
-			
         );
         $validator = Validator::make(Input::all(), $rules);
 		
@@ -87,7 +85,7 @@ class CompanyController extends \BaseController {
 		$company->company_email      = Input::get('company_email');
 		$company->fk_terms      = Input::get('fk_terms');
 		$company->creditlimit      = Input::get('creditlimit');
-		$company->app_domain      = Input::get('app_domain');
+		//$company->app_domain      = Input::get('app_domain');
 		$company->uuid = Uuid::generate()->string;
 		$company->save();
         
@@ -107,7 +105,7 @@ class CompanyController extends \BaseController {
 					'uuid' => $company->uuid,
 					'company_id' => $company->row_id,
 					'company_name' => $company->company_name,
-					'app_domain'	=> $company->app_domain
+					'app_domain'	=> Config::get('app.url')
 					];
 
 		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/logincompany/sync';
@@ -216,8 +214,7 @@ class CompanyController extends \BaseController {
 			'fk_terms' => 'integer',
 			'creditlimit' => 'integer',
 			'company_zip' => 'max:5',
-			'app_domain'       => 'required',
-			
+		
         );
         $validator = Validator::make(Input::all(), $rules);
 		
@@ -239,7 +236,7 @@ class CompanyController extends \BaseController {
 		$company->company_email      = Input::get('company_email');
 		$company->fk_terms      = Input::get('fk_terms');
 		$company->creditlimit      = Input::get('creditlimit');
-		$company->app_domain      = Input::get('app_domain');
+		//$company->app_domain      = Input::get('app_domain');
 		$company->uuid =  $company->uuid ? $company->uuid : Uuid::generate()->string;
 		$company->save();
      
@@ -259,7 +256,7 @@ class CompanyController extends \BaseController {
 					'uuid' => $company->uuid,
 					'company_id' => $company->row_id,
 					'company_name' => $company->company_name,
-					'app_domain'	=> $company->app_domain
+					'app_domain'	=> Config::get('app.url')
 					];
 
 		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/logincompany/sync';
@@ -285,7 +282,17 @@ class CompanyController extends \BaseController {
 	}
 	
 	
+	public function returnCompanies()
+	{
+		$records = Company::where('row_id', '>', '0')->select('row_id', 'uuid', 'company_name')->get();
 
+		$data = array();
+		foreach ($records as $record) {
+			$record->app_domain = Config::get('app.url');
+
+		}
+		return $records;
+	}
 
 
 
