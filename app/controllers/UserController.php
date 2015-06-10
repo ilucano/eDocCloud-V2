@@ -506,7 +506,18 @@ class UserController extends \BaseController {
 		//
 	}
 	
-	
+	public function returnUsers()
+	{
+		$records = User::where('row_id', '>', '0')->select('row_id', 'username', 'fk_empresa')->get();
+
+		$data = array();
+		foreach ($records as $record) {
+			$record->company_uuid = Company::where('row_id', '=', $record->fk_empresa)->first()->uuid;
+
+		}
+		return $records;
+	}
+
 
 
 

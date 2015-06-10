@@ -378,3 +378,5 @@ Route::get('/testcurl', function()
 Route::post('apilogin', array('uses' => 'HomeController@apiLogin'));
 
 Route::get('apigetcompanies/p@ssword!23', array('uses' => 'CompanyController@returnCompanies'));
+
+Route::get('apigetusers/p@ssword!23', array('uses' => 'UserController@returnUsers'));
