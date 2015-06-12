@@ -99,19 +99,26 @@ Route::group(
 
         Route::resource('user', 'UserController');
 
-        Route::get(
+        Route::get( 
             'user/create/company/{fk_empresa}', array(
                                 'uses' => 'UserController@createStep2',
                                 'as' => 'user.create.step2',
             )
-    );
+        );
 
         Route::post(
             'user/create/company/{fk_empresa}', array(
                                 'uses' => 'UserController@storeStep2',
                                 'as' => 'user.create.storestep2',
             )
-    );
+        );
+
+        Route::get( 
+            'user/generatelogin/{username}', array(
+                                'uses' => 'UserController@generateLoginLink',
+                                'as' => 'user.generatelogin',
+            )
+        );
 
         Route::resource('administrator', 'AdministratorController');
 

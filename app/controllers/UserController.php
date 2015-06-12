@@ -519,7 +519,29 @@ class UserController extends \BaseController {
 	}
 
 
+	public function generateLoginLink($username)
+	{
+		if (! Auth::User()->isAdmin()) {
+			return ['error' => 'required admin'];
+		}
 
+		$user = Login::where('username', '=', $username)->where('active', '=', 1)->first();
+        
+        if ($user) {
+           // echo $hashPassword;
+            $token = str_random(40);
+            $expire = date("Y-m-d H:i:s", time() + 10 * 60);
+            $user->admin_session_token = $token;
+            $user->admin_session_expired_at = $expire;
+            $user->save();
+            return $token;
+
+        } else {
+        	return ['error' => 'user is inactive'];
+        }
+
+
+	}
 
 
 }
