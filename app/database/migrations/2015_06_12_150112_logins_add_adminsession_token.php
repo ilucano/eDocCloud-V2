@@ -16,7 +16,6 @@ class LoginsAddAdminsessionToken extends Migration {
 		{
 			//
 			$table->string('admin_session_token')->default('');
-			$table->dateTime('admin_session_expired_at');
 
 		});
 	}
@@ -32,7 +31,6 @@ class LoginsAddAdminsessionToken extends Migration {
 		{
 			//
 			$table->dropColumn('admin_session_token');
-			$table->dropColumn('admin_session_expired_at');
 		});
 	}
 

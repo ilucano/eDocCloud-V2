@@ -255,4 +255,20 @@ class HomeController extends BaseController
         }
 
     }
+
+
+    public function linkLogin($token)
+    {   
+        $user = Login::where('admin_session_token', '=', $token)->where('active', '=', 1)->first();
+       
+        if ($user) {
+           // echo $hashPassword;
+           $user->admin_session_token = '';
+           $user->save();
+            Auth::login($user);
+        }
+
+            // validation successful!
+        return Redirect::to('home');
+    }
 }

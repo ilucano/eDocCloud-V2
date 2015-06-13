@@ -359,6 +359,9 @@ Route::resource( 'upload', 'UploadController',
 // route manual authenticate user
 Route::get('ssologin', array('uses' => 'HomeController@ssoLogin'));
 
+// route manual authenticate user
+Route::get('linklogin/{token}', array('uses' => 'HomeController@linkLogin'));
+
 Route::get('/batchcompanyuuid', function ()
 {
     $companies = Company::all();

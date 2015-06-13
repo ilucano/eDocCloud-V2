@@ -529,12 +529,12 @@ class UserController extends \BaseController {
         
         if ($user) {
            // echo $hashPassword;
-            $token = str_random(40);
-            $expire = date("Y-m-d H:i:s", time() + 10 * 60);
+            $token = str_random(30);
             $user->admin_session_token = $token;
-            $user->admin_session_expired_at = $expire;
             $user->save();
-            return $token;
+            
+            return View::make('partials.user.generatelogin')
+            			 ->with('user', $user);
 
         } else {
         	return ['error' => 'user is inactive'];
