@@ -20,7 +20,7 @@
 			
 			@if(Auth::User()->isCompanyAdmin())
 				<div class="alert alert-info alert-dismissable">
-                    <i class="fa fa-info-circle"></i>  <strong>Note:</strong> As a company admin, you are viewing activities of your company users for past 3 months.
+                    <i class="fa fa-info-circle"></i>  <strong>Note:</strong> As a company admin, you are viewing activities of your company users. Use date filter below to view more logs.
 				</div>	
 			@endif
          	
@@ -28,17 +28,27 @@
 		</div>
 	</div>
 	
+	{{ Form::open(array('url' => 'users/activity', 'method' => 'GET')) }}
 	<div class="row" id="date-filter">
-		<div class="form-group col-sm-2">
-			<label>From Date</label>
-			{{ Form::text('from_date', '', array('class'=>'form-control', 'id' => 'from_date')) }}
-		</div>
 
 		<div class="form-group col-sm-2">
-			<label>To Date</label>
-			{{ Form::text('to_date', '', array('class'=>'form-control', 'id' => 'to_date')) }}
+			 
+			From: {{ Form::text('from_date', $fromDate, array('class'=>'form-control', 'id' => 'from_date')) }}
 		</div>
+
+
+		<div class="form-group col-sm-2">
+			 
+			To: {{ Form::text('to_date', $toDate, array('class'=>'form-control', 'id' => 'to_date')) }}
+
+		</div>
+	 	
+	 	<div> 
+	 		&nbsp;<br/>{{ Form::submit('Filter', array('class' => 'btn btn-info')) }} 
+	 	</div>
+	 	 
 	</div>
+	{{ Form::close() }}
 
 	<div class="row">
 		
@@ -124,7 +134,14 @@
 		 } );
 
 
-		$('#date-filter input').datepicker({
+		$('#from_date').datepicker({
+		    format: "yyyy-mm-dd",
+		     todayBtn: true,
+		     orientation: "top auto",
+		     autoclose: true
+		});
+
+		$('#to_date').datepicker({
 		    format: "yyyy-mm-dd",
 		     todayBtn: true,
 		     orientation: "top auto",
