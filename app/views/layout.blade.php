@@ -30,6 +30,8 @@
 		
 	<!-- jQuery Multiselect for bootstrap -->
 	 {{ HTML::style('css/plugins/bootstrap-multiselect.css') }}
+
+     {{ HTML::style('css/plugins/bootstrap-datepicker.css') }}
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -288,6 +290,8 @@
 	
 	<!-- Toggle checkbox for bootstrap -->
 	{{ HTML::script('js/plugins/bootstrap-checkbox/bootstrap-checkbox.js') }}
+
+    {{ HTML::script('js/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js') }}
 	
 	
 	@yield('loadjs') 

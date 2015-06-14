@@ -23,15 +23,28 @@
                     <i class="fa fa-info-circle"></i>  <strong>Note:</strong> As a company admin, you are viewing activities of your company users for past 3 months.
 				</div>	
 			@endif
-         
+         	
+
 		</div>
 	</div>
-		
- 
-	<div class="row">
 	
+	<div class="row" id="date-filter">
+		<div class="form-group col-sm-2">
+			<label>From Date</label>
+			{{ Form::text('from_date', '', array('class'=>'form-control', 'id' => 'from_date')) }}
+		</div>
+
+		<div class="form-group col-sm-2">
+			<label>To Date</label>
+			{{ Form::text('to_date', '', array('class'=>'form-control', 'id' => 'to_date')) }}
+		</div>
+	</div>
+
+	<div class="row">
+		
 		<div class="col-lg-12">
 
+			
 			@if (Session::has('error'))
 				<div class="alert alert-danger">{{ Session::get('error') }}</div>
 			@endif
@@ -109,5 +122,13 @@
 				}
 			);
 		 } );
+
+
+		$('#date-filter input').datepicker({
+		    format: "yyyy-mm-dd",
+		     todayBtn: true,
+		     orientation: "top auto",
+		     autoclose: true
+		});
 	</script>
 @stop
