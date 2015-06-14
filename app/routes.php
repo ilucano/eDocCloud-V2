@@ -28,7 +28,7 @@ Route::get('logout', array('uses' => 'HomeController@doLogout'));
 
 //begin routes required logged in
 Route::group(
-    array('before' => 'auth'), function () {
+    array('before' => 'auth|check_password_expiry'), function () {
 
         Route::get(
             '/', array(
@@ -377,11 +377,10 @@ Route::get('/batchcompanyuuid', function ()
 });
 
 
-Route::get('/testcurl', function()
+Route::get('/samtest', function()
 {
-    $curl = Curl::get('http://example.com/');
-    echo "<pre>";
-    print_r($curl[0]->getContent());
+   $cookie = Cookie::get('laravel_session');
+   print_r($cookie);
 });
 
 // route to process the form

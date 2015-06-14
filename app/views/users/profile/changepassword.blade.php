@@ -30,7 +30,11 @@
 		@if (Session::has('message'))
 				<div class="alert alert-info">{{ Session::get('message') }}</div>
 		@endif
-			
+		@if (Session::has('expired_reminder'))
+				<div class="alert alert-danger">Your password has expired. Please change password in order to proceed. </div>
+		@endif
+		
+
 		{{ Form::open(array('url' => 'users/profile/password')) }}
 		
 			<div class="form-group @if ($errors->has('password')) has-error @endif">

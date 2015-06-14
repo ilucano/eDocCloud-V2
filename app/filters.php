@@ -141,3 +141,26 @@ Route::filter('user_changepassword', function () {
 });
 
 /* End user routes */
+
+
+Route::filter('check_password_expiry', function () {
+    if (Auth::User() && Route::current()->getPath() != 'users/profile/password') {
+
+         
+        $lastChanged = max([Auth::User()->created_at, Auth::User()->password_changed_at]);
+        
+        try {
+            $policy = PasswordPolicy::first();
+            $expireDays = $policy->expire_days;
+ 
+            if ( (strtotime($lastChanged) + $expireDays * 24 * 3600) < time() ) {
+
+               return Redirect::to('users/profile/password')->with('expired_reminder', true);
+            }
+
+        } catch (Exception $e) {
+            Logging::error('check_password_expiry filter error: No password policy found');
+        }
+       
+    }
+});
