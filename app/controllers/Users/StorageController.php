@@ -1,6 +1,14 @@
 <?php
 
+use Repositories\MetaAttribute\MetaAttributeRepositoryInterface;
+
 class UsersStorageController extends \BaseController {
+
+
+    public function __construct(MetaAttributeRepositoryInterface $metaAttribute)
+    {
+        $this->meta_attribute = $metaAttribute;
+    }
 
     /**
      * Display a listing of the resource.
@@ -9,14 +17,38 @@ class UsersStorageController extends \BaseController {
      */
     public function index()
     {   
- 
+        
+        $companyId = Auth::User()->getCompanyId();
+
         $uploads = Upload::where('user_id', '=', Auth::User()->id)
                        ->where('parent_id', '=', 0)
                        ->get();
 
-    
+        foreach ($uploads as $upload) {
+
+            $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->row_id, 'upload');
+
+            if (count($metaAttributeValues) >= 1) {
+                foreach ($metaAttributeValues as $item) {
+                    $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
+                    if (count($options) >=1 ) {
+                            $upload->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
+                        } else {
+                             $upload->attributeValues[$item->attribute_id][] = $item->value;
+                        }
+                    }
+            }
+
+        }  
+
+        $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
+        
+        $companyAttributeHeaders  = $this->meta_attribute->getCompanyAttributeHeaders($companyId);
+
         return  View::make('users.storage.index')
-                      ->with('uploads', $uploads);
+                      ->with('uploads', $uploads)
+                      ->with('companyAttributeHeaders', $companyAttributeHeaders)
+                      ->with('attributeFilters', $attributeFilters);
 
     }
 

@@ -36,7 +36,7 @@
     </div>
 
      <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12" style="overflow: auto;">
 
             <table id="datatables" class="table table-bordered table-hover small-font">
                 <thead>
@@ -45,9 +45,13 @@
                     <th><i class="fa fa-star fa-lg"></i></th>
                     <th class="span2">Filename</th>
                     <th class="span2">Size</th>
+                    @foreach ($companyAttributeHeaders as $header)
+                                <th>{{ $header }}</th>
+                    @endforeach
                     <th class="span2">Mime Type</th>
                     <th class="span2">Created Date</th>
-                    <th class="span2" nowrap>Action</th>
+                  
+                    <th class="span2" colspan="2" nowrap>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -63,9 +67,19 @@
                                 <td><span style="color: #fff;font-size: 0px;">{{ $upload->favourite }}</span> <a title="Add / Remove Favourite" href="{{ URL::to('users/storage/switchfav/' . $upload->id ) }}"><i class="fa {{ $starIcon }} fa-lg"></i></a></td>
                                 <td>{{ $upload->filename }} </td>
                                 <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
+
+                                @foreach ($companyAttributeHeaders as $_attributeId => $header)
+                                    @if(isset($file->attributeValues[$_attributeId]))
+                                    <td>{{  implode(", ", $file->attributeValues[$_attributeId]) }}</td>
+                                    @else
+                                    <td> </td>
+                                    @endif
+                                @endforeach
+
                                 <td>{{ $upload->mimetype }}</td>
                                 <td>{{ Helpers::niceDateTime($upload->created_at) }}</td>
-                                <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
+                                <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/attributes/' . $upload->row_id . '/edit') }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a> </td>
+                                <td><a class="btn btn-sm btn-primary" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
                             </tr>
                         @endforeach
              
@@ -79,6 +93,24 @@
         </div>
     </div>
 
+
+        <!-- Default bootstrap modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 @stop
 
@@ -134,6 +166,12 @@
                     $("#delete-button").attr("disabled", true);
                 }
             });
+        });
+
+
+        $("#myModal").on("show.bs.modal", function(e) {
+            var link = $(e.relatedTarget);
+            $(this).find(".modal-content").load(link.attr("href"));
         });
     </script>
 @stop
