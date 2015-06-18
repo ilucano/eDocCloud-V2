@@ -6,4 +6,6 @@ class Upload extends CabinetUpload {
 
     protected $softDelete = true;
 
+    public $attributeValues;
+
 }

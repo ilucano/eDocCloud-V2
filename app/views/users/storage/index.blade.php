@@ -48,8 +48,8 @@
                     @foreach ($companyAttributeHeaders as $header)
                                 <th>{{ $header }}</th>
                     @endforeach
-                    <th class="span2">Mime Type</th>
-                    <th class="span2">Created Date</th>
+                  
+                    <th class="span2" nowrap>Created Date</th>
                   
                     <th class="span2" colspan="2" nowrap>Action</th>
                 </tr>
@@ -69,16 +69,15 @@
                                 <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
 
                                 @foreach ($companyAttributeHeaders as $_attributeId => $header)
-                                    @if(isset($file->attributeValues[$_attributeId]))
-                                    <td>{{  implode(", ", $file->attributeValues[$_attributeId]) }}</td>
+                                    @if(isset($upload->attributeValues[$_attributeId]))
+                                    <td>{{  implode(", ", $upload->attributeValues[$_attributeId]) }}</td>
                                     @else
                                     <td> </td>
                                     @endif
                                 @endforeach
 
-                                <td>{{ $upload->mimetype }}</td>
                                 <td>{{ Helpers::niceDateTime($upload->created_at) }}</td>
-                                <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/attributes/' . $upload->row_id . '/edit') }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a> </td>
+                                <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/attributes/' . $upload->id . '/edit') }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a> </td>
                                 <td><a class="btn btn-sm btn-primary" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
                             </tr>
                         @endforeach

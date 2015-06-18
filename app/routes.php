@@ -246,7 +246,16 @@ Route::group(
 
                 Route::get('storage/switchfav/{id}', array('uses' => 'UsersStorageController@doSwitchFavourite'));
 
-            }
+                Route::get('storage/attributes/{id}/edit', array('uses' => 'UsersStorageController@editAttributes'));
+
+                Route::put('file/attributes/{id}', array(
+                                                        'uses' => 'UsersStorageController@updateAttributes', 
+                                                         'as' => 'users.storage.attribute.update'
+                                                         )
+                                                    );
+
+
+            }   
         );
 
         /* end users section */

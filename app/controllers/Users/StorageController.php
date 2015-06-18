@@ -26,15 +26,20 @@ class UsersStorageController extends \BaseController {
 
         foreach ($uploads as $upload) {
 
-            $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->row_id, 'upload');
-
+            $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->id, 'upload');
             if (count($metaAttributeValues) >= 1) {
+
                 foreach ($metaAttributeValues as $item) {
                     $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
+                   
                     if (count($options) >=1 ) {
                             $upload->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
+                          
+                       
                         } else {
+
                              $upload->attributeValues[$item->attribute_id][] = $item->value;
+            
                         }
                     }
             }
@@ -197,6 +202,70 @@ class UsersStorageController extends \BaseController {
         }
 
     }
+
+
+      /**
+     * Update the specified resource in storage.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function editAttributes($id)
+    {   
+
+        $companyId = Auth::User()->getCompanyId();
+        
+        $upload = Upload::where('user_id', '=', Auth::User()->id)
+                       ->where('parent_id', '=', 0)
+                       ->whereId($id)
+                       ->first();
+
+
+        $attributeSets = $this->meta_attribute->getCompanyAttributes($companyId);
+        
+        foreach ($attributeSets as $attribute) {
+            $attribute->user_value  = $this->meta_attribute->getTargetAttributeValues($id, 'upload', $attribute->id);
+        }
+        
+        return View::make('users.storage.attributes.edit')
+                    ->with('upload', $upload)
+                    ->with('attributeSets', $attributeSets);
+
+    }
     
+
+    public function updateAttributes($id)
+    {
+        //make sure is owner of file
+        try {
+            
+            $companyId = Auth::User()->getCompanyId();
+    
+            $upload = Upload::where('user_id', '=', Auth::User()->id)
+                           ->where('parent_id', '=', 0)
+                           ->whereId($id)
+                           ->first();
+
+        } catch (Exception $e) {
+            exit('cannot retrieve upload');
+        }
+        
+        $id = $upload->id;
+
+        $input = Input::except('_method', '_token');
+
+        try {
+            $this->meta_attribute->updateTargetAttributeValues($id, 'upload', $input);
+
+            Session::flash('message', 'Storage file attributes successfully updated');
+
+            return Redirect::to('users/storage');
+
+        } catch (Exception $e) {
+             Session::flash('error', 'Error updating storage attributes');
+            return Redirect::to('users/storage');
+        }
+    }
    
 }
