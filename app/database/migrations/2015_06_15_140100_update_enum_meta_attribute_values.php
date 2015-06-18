@@ -15,7 +15,7 @@ class UpdateEnumMetaAttributeValues extends Migration {
 		Schema::table('meta_target_attribute_values', function(Blueprint $table)
 		{
 			//
-			DB::statement("ALTER TABLE `local_edoccloud`.`meta_target_attribute_values`   
+			DB::statement("ALTER TABLE `meta_target_attribute_values`   
   CHANGE `target_type` `target_type` ENUM('object','file','uploads') NOT NULL;");
 		});
 	}
