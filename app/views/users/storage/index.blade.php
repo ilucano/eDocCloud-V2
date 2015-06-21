@@ -172,5 +172,7 @@
             var link = $(e.relatedTarget);
             $(this).find(".modal-content").load(link.attr("href"));
         });
+
+        $("#wrapper").toggleClass("toggled");
     </script>
 @stop

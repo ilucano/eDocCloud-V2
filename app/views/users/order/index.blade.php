@@ -153,5 +153,7 @@
 				}
 			);
 		 } );
+
+		$("#wrapper").toggleClass("toggled");
 	</script>
 @stop

@@ -224,8 +224,9 @@
                 </li>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+
            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
+                <ul class="nav navbar-nav side-nav"  id="sidebar-wrapper">
 					 @if(Auth::User()->can('user_order'))
                     <li>
                          <a href="{{ URL::to('users/order') }}"><i class="fa fa-fw fa-ticket"></i> Orders</a>
@@ -252,13 +253,21 @@
                     <li>
                          <a href="{{ URL::to('users/storage') }}"><i class="fa fa-fw fa-inbox"></i> My Folder</a>
                     </li>
+
+                     <li>
+
+                     <a href="#" id="menu-toggle"><i class="fa fa-fw fa-list"></i> Toggle Menu</a>
+                     </li>
                 </ul>
-            </div>  
+
+            </div> 
+
             <!-- /.navbar-collapse -->
+
         </nav>
 
         <div id="page-wrapper">
-
+           
             <div class="container-fluid">
 				<!-- Content --> 
                 @yield('content') 
@@ -293,8 +302,16 @@
 
     {{ HTML::script('js/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js') }}
 	
-	
+	<script type="text/javascript">
+
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    
+    </script>
 	@yield('loadjs') 
+
 </body>
 
 </html>
