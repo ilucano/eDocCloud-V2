@@ -295,4 +295,5 @@ ul.alert-dropdown {
         margin-right: 0;
     }
 }
- 
+
+.top-buffer { margin-top:20px; }

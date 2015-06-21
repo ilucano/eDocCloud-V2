@@ -2,9 +2,8 @@
 
 use Repositories\MetaAttribute\MetaAttributeRepositoryInterface;
 
-class UsersStorageController extends \BaseController {
-
-
+class UsersStorageController extends \BaseController
+{
     public function __construct(MetaAttributeRepositoryInterface $metaAttribute)
     {
         $this->meta_attribute = $metaAttribute;
@@ -16,57 +15,52 @@ class UsersStorageController extends \BaseController {
      * @return Response
      */
     public function index()
-    {   
-        
+    {
         $companyId = Auth::User()->getCompanyId();
 
         $uploads = Upload::where('user_id', '=', Auth::User()->id)
                        ->where('parent_id', '=', 0)
                        ->get();
 
+        $folders = $this->getUserFolders();
+        $currentFolder =  Input::get('folder');
+      
         foreach ($uploads as $upload) {
-
             $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->id, 'upload');
             if (count($metaAttributeValues) >= 1) {
-
                 foreach ($metaAttributeValues as $item) {
                     $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
-                   
-                    if (count($options) >=1 ) {
-                            $upload->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
-                          
-                       
-                        } else {
 
-                             $upload->attributeValues[$item->attribute_id][] = $item->value;
-            
-                        }
+                    if (count($options) >= 1) {
+                        $upload->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
+                    } else {
+                        $upload->attributeValues[$item->attribute_id][] = $item->value;
                     }
+                }
             }
-
-        }  
+        }
 
         $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
-        
+
         $companyAttributeHeaders  = $this->meta_attribute->getCompanyAttributeHeaders($companyId);
 
         return  View::make('users.storage.index')
                       ->with('uploads', $uploads)
                       ->with('companyAttributeHeaders', $companyAttributeHeaders)
-                      ->with('attributeFilters', $attributeFilters);
-
+                      ->with('attributeFilters', $attributeFilters)
+                      ->with('folders', $folders)
+                      ->with('currentFolder', $currentFolder);
     }
 
     /**
-     * Displays the form for account creation
-     *
+     * Displays the form for account creation.
      */
     public function create()
     {
         //return View::make(Config::get('cabinet::upload_form'));
         $typesAllowed = Config::get('cabinet::upload_file_extensions');
         $maxFileSize = Config::get('cabinet::max_upload_file_size');
-        
+
         return View::make('users.storage.create')
                      ->with('typesAllowed', $typesAllowed)
                      ->with('maxFileSize', $maxFileSize);
@@ -79,14 +73,13 @@ class UsersStorageController extends \BaseController {
      */
     public function store()
     {
-         
         $file = Input::file('file');
 
-        $upload = new Upload;
+        $upload = new Upload();
 
         try {
             $upload->process($file);
-        } catch(Exception $exception){
+        } catch (Exception $exception) {
             // Something went wrong. Log it.
             Log::error($exception);
             // Return error
@@ -94,96 +87,83 @@ class UsersStorageController extends \BaseController {
         }
 
         // If it now has an id, it should have been successful.
-        if ( $upload->id ) {
+        if ($upload->id) {
             return Response::json(array('status' => 'success', 'file' => $upload->toArray()), 200);
         } else {
             return Response::json('Error', 400);
         }
     }
 
-
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return Response
      */
     public function show($id)
     {
-     
-
     }
-   
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return Response
      */
     public function edit($id)
     {
-        
     }
-
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return Response
      */
     public function update($id)
     {
-         //
-        
-      
+        //
     }
-
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return Response
      */
     public function destroy($id)
     {
-       
-    
-        $idArray = explode(",", Input::get('deletelist'));
-        
+        $idArray = explode(',', Input::get('deletelist'));
+
         try {
             $upload = Upload::where('user_id', '=', Auth::User()->id)
                               ->whereIn('id', $idArray)->delete();
-            
+
             Session::flash('message', 'File deleted');
-            
+
             return Redirect::to('users/storage');
-
         } catch (Exception $e) {
-            echo "Error find file";
+            echo 'Error find file';
         }
-
     }
 
-
     public function doDownload($id)
-    {  
-         try {
+    {
+        try {
             $upload = Upload::where('user_id', '=', Auth::User()->id)
                               ->where('id', '=', $id)->first();
             //echo "<pre>";
             //print_r($upload);
-            $file = base_path() . $upload->path.$upload->filename;
-            
+            $file = base_path().$upload->path.$upload->filename;
+
             return Response::download($file);
-
         } catch (Exception $e) {
-            echo "Error ". $e->getMessage();
+            echo 'Error '.$e->getMessage();
         }
-
-
     }
 
     public function doSwitchFavourite($id)
@@ -191,20 +171,17 @@ class UsersStorageController extends \BaseController {
         try {
             $upload = Upload::where('user_id', '=', Auth::User()->id)
                               ->where('id', '=', $id)->first();
-            
+
             $upload->favourite = ($upload->favourite == 1) ? 0 : 1;
             $upload->save();
 
             return Redirect::to('users/storage');
-
         } catch (Exception $e) {
-            echo "Error ". $e->getMessage();
+            echo 'Error '.$e->getMessage();
         }
-
     }
 
-
-      /**
+    /**
      * Update the specified resource in storage.
      *
      * @param int $id
@@ -212,45 +189,39 @@ class UsersStorageController extends \BaseController {
      * @return Response
      */
     public function editAttributes($id)
-    {   
-
+    {
         $companyId = Auth::User()->getCompanyId();
-        
+
         $upload = Upload::where('user_id', '=', Auth::User()->id)
                        ->where('parent_id', '=', 0)
                        ->whereId($id)
                        ->first();
 
-
         $attributeSets = $this->meta_attribute->getCompanyAttributes($companyId);
-        
+
         foreach ($attributeSets as $attribute) {
             $attribute->user_value  = $this->meta_attribute->getTargetAttributeValues($id, 'upload', $attribute->id);
         }
-        
+
         return View::make('users.storage.attributes.edit')
                     ->with('upload', $upload)
                     ->with('attributeSets', $attributeSets);
-
     }
-    
 
     public function updateAttributes($id)
     {
         //make sure is owner of file
         try {
-            
             $companyId = Auth::User()->getCompanyId();
-    
+
             $upload = Upload::where('user_id', '=', Auth::User()->id)
                            ->where('parent_id', '=', 0)
                            ->whereId($id)
                            ->first();
-
         } catch (Exception $e) {
             exit('cannot retrieve upload');
         }
-        
+
         $id = $upload->id;
 
         $input = Input::except('_method', '_token');
@@ -261,11 +232,38 @@ class UsersStorageController extends \BaseController {
             Session::flash('message', 'Storage file attributes successfully updated');
 
             return Redirect::to('users/storage');
-
         } catch (Exception $e) {
-             Session::flash('error', 'Error updating storage attributes');
+            Session::flash('error', 'Error updating storage attributes');
+
             return Redirect::to('users/storage');
         }
     }
-   
+
+    public function updateUserFilename($id)
+    {
+        //check if id owner
+
+        try {
+            $upload = Upload::where('user_id', '=', Auth::User()->id)
+                           ->where('parent_id', '=', 0)
+                           ->whereId($id)
+                           ->first();
+        } catch (Exception $e) {
+            exit('cannot retrieve upload');
+        }
+
+        if ($upload) {
+            $upload->user_filename = Input::get('value');
+            $upload->save();
+        }
+    }
+
+    public function getUserFolders()
+    {
+
+        $folders = DB::table('uploads')->where('user_id', '=', Auth::User()->id)
+                          ->where('parent_id', '=', 0)
+                          ->distinct()->lists('user_folder');
+        return $folders;
+    }
 }

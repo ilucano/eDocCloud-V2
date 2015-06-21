@@ -72,7 +72,6 @@ Route::group(
         );
 
         Route::resource('passwordpolicy', 'PasswordPolicyController');
-        
 
         Route::get(
             'reports/groupbystatus', array(
@@ -99,7 +98,7 @@ Route::group(
 
         Route::resource('user', 'UserController');
 
-        Route::get( 
+        Route::get(
             'user/create/company/{fk_empresa}', array(
                                 'uses' => 'UserController@createStep2',
                                 'as' => 'user.create.step2',
@@ -113,7 +112,7 @@ Route::group(
             )
         );
 
-        Route::get( 
+        Route::get(
             'user/generatelogin/{username}', array(
                                 'uses' => 'UserController@generateLoginLink',
                                 'as' => 'user.generatelogin',
@@ -213,8 +212,8 @@ Route::group(
                 Route::get('file/attributes/{id}/edit', array('uses' => 'UsersFileController@editAttributes'));
 
                 Route::put('file/attributes/{id}', array(
-                                                        'uses' => 'UsersFileController@updateAttributes', 
-                                                         'as' => 'users.file.attribute.update'
+                                                        'uses' => 'UsersFileController@updateAttributes',
+                                                         'as' => 'users.file.attribute.update',
                                                          )
                                                     );
 
@@ -230,15 +229,13 @@ Route::group(
 
                 Route::resource('activity', 'UsersActivityController');
 
-
                 Route::get('order/attributes/{id}/edit', array('uses' => 'UsersOrderController@editAttributes'));
 
                 Route::put('order/attributes/{id}', array(
-                                                        'uses' => 'UsersOrderController@updateAttributes', 
-                                                         'as' => 'users.order.attribute.update'
+                                                        'uses' => 'UsersOrderController@updateAttributes',
+                                                         'as' => 'users.order.attribute.update',
                                                          )
                                                     );
-
 
                 Route::resource('storage', 'UsersStorageController');
 
@@ -248,14 +245,15 @@ Route::group(
 
                 Route::get('storage/attributes/{id}/edit', array('uses' => 'UsersStorageController@editAttributes'));
 
+                Route::post('storage/filename/{id}', array('uses' => 'UsersStorageController@updateUserFilename'));
+
                 Route::put('file/attributes/{id}', array(
-                                                        'uses' => 'UsersStorageController@updateAttributes', 
-                                                         'as' => 'users.storage.attribute.update'
+                                                        'uses' => 'UsersStorageController@updateAttributes',
+                                                         'as' => 'users.storage.attribute.update',
                                                          )
                                                     );
 
-
-            }   
+            }
         );
 
         /* end users section */
@@ -361,9 +359,8 @@ Route::get(
 
 // Cabinet routes
 Route::get('upload/data', 'UploadController@data');
-Route::resource( 'upload', 'UploadController',
+Route::resource('upload', 'UploadController',
         array('except' => array('show', 'edit', 'update', 'destroy')));
-
 
 // route manual authenticate user
 Route::get('ssologin', array('uses' => 'HomeController@ssoLogin'));
@@ -371,23 +368,20 @@ Route::get('ssologin', array('uses' => 'HomeController@ssoLogin'));
 // route manual authenticate user
 Route::get('linklogin/{token}', array('uses' => 'HomeController@linkLogin'));
 
-Route::get('/batchcompanyuuid', function ()
-{
+Route::get('/batchcompanyuuid', function () {
     $companies = Company::all();
-    
+
     foreach ($companies as $company) {
         if ($company->uuid == '') {
             $company->uuid = Uuid::generate();
             $company->save();
         }
     }
-    echo "done";
+    echo 'done';
 
 });
 
-
-Route::get('/samtest', function()
-{
+Route::get('/samtest', function () {
    $cookie = Cookie::get('laravel_session');
    print_r($cookie);
 });

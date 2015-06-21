@@ -33,6 +33,8 @@
 
      {{ HTML::style('css/plugins/bootstrap-datepicker.css') }}
 	
+    {{ HTML::style('css/plugins/bootstrap-editable.css') }}
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -302,6 +304,10 @@
 
     {{ HTML::script('js/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js') }}
 	
+
+    {{ HTML::script('js/plugins/bootstrap-editable/bootstrap-editable.min.js') }} 
+     
+    
 	<script type="text/javascript">
 
     $("#menu-toggle").click(function(e) {

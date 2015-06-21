@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="row">
+   <div class="row">
         <div class="col-lg-12">
             <h2 class="page-header">My Folder
                  <div class="pull-right"><a class="btn btn-sm btn-success" href="{{ URL::to('users/storage/create') }}"><i class="fa fa-plus-circle fa-lg"></i> Upload File</a></div>
@@ -35,7 +35,9 @@
         </div>
     </div>
 
-     <div class="row">
+    <div class="clearfix visible-xs-block"></div>
+    <div class="row top-buffer">
+
         <div class="col-sm-12" style="overflow: auto;">
 
             <table id="datatables" class="table table-bordered table-hover small-font">
@@ -51,7 +53,8 @@
                   
                     <th class="span2" nowrap>Created Date</th>
                   
-                    <th class="span2" colspan="2" nowrap>Action</th>
+                    <th class="span2">Attributes</th>
+                    <th class="span2">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,7 +68,7 @@
                                     $starIcon = ($upload->favourite == 1) ? 'fa-star' : 'fa-star-o';
                                 ?>
                                 <td><span style="color: #fff;font-size: 0px;">{{ $upload->favourite }}</span> <a title="Add / Remove Favourite" href="{{ URL::to('users/storage/switchfav/' . $upload->id ) }}"><i class="fa {{ $starIcon }} fa-lg"></i></a></td>
-                                <td>{{ $upload->filename }} </td>
+                                <td><a href="#" class="editable" data-name="user_filename" data-type="text" data-pk="{{$upload->id}}" data-url="{{ URL::to('users/storage/filename/'.$upload->id) }}" data-title="Rename filename">{{ $upload->user_filename }} </a></td>
                                 <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
 
                                 @foreach ($companyAttributeHeaders as $_attributeId => $header)
@@ -121,7 +124,6 @@
 
             var datatable = $('#datatables').DataTable(
                 {
-                    "aaSorting": [],
                     stateSave: true
                 }
             );
@@ -174,5 +176,8 @@
         });
 
         $("#wrapper").toggleClass("toggled");
+
+        $.fn.editable.defaults.mode = 'inline';
+        $('.editable').editable();
     </script>
 @stop
