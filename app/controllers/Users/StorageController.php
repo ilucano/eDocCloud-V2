@@ -79,6 +79,8 @@ class UsersStorageController extends \BaseController
 
         try {
             $upload->process($file);
+           
+
         } catch (Exception $exception) {
             // Something went wrong. Log it.
             Log::error($exception);
@@ -88,6 +90,9 @@ class UsersStorageController extends \BaseController
 
         // If it now has an id, it should have been successful.
         if ($upload->id) {
+            $upload = Upload::find($upload->id);
+            $upload->user_filename = $upload->filename;
+            $upload->save();
             return Response::json(array('status' => 'success', 'file' => $upload->toArray()), 200);
         } else {
             return Response::json('Error', 400);
