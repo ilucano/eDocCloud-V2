@@ -247,6 +247,10 @@ Route::group(
 
                 Route::post('storage/filename/{id}', array('uses' => 'UsersStorageController@updateUserFilename'));
 
+                Route::post('storage/folder', array('uses' => 'UsersStorageController@storeFolder'));
+
+                Route::post('storage/setfolder/{id}', array('uses' => 'UsersStorageController@setFileFolder'));
+
                 Route::put('file/attributes/{id}', array(
                                                         'uses' => 'UsersStorageController@updateAttributes',
                                                          'as' => 'users.storage.attribute.update',

@@ -17,13 +17,20 @@ class UsersStorageController extends \BaseController
     public function index()
     {
         $companyId = Auth::User()->getCompanyId();
+        
+        $folders = $this->getUserFoldersDropdown();
+
+        $currentFolder =  Input::get('folder');
 
         $uploads = Upload::where('user_id', '=', Auth::User()->id)
-                       ->where('parent_id', '=', 0)
-                       ->get();
+                       ->where('parent_id', '=', 0);
 
-        $folders = $this->getUserFolders();
-        $currentFolder =  Input::get('folder');
+        if ($currentFolder) {
+            $uploads = $uploads->where('user_folder', $currentFolder);
+        }
+        
+        $uploads = $uploads->get();
+
       
         foreach ($uploads as $upload) {
             $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->id, 'upload');
@@ -266,9 +273,77 @@ class UsersStorageController extends \BaseController
     public function getUserFolders()
     {
 
-        $folders = DB::table('uploads')->where('user_id', '=', Auth::User()->id)
-                          ->where('parent_id', '=', 0)
-                          ->distinct()->lists('user_folder');
+        $folders = UploadFolder::where('user_id', '=', Auth::User()->id)
+                                 ->orderBy('folder_name')
+                                 ->get();
         return $folders;
     }
+
+    public function getUserFoldersDropdown()
+    {
+
+        $resultFolders = $this->getUserFolders();
+
+        $folders = ['' => ''];
+
+        foreach ($resultFolders as $folder) {
+            $folders[$folder->id] = $folder->folder_name;
+        }
+
+
+        return $folders;
+    }
+
+    public function storeFolder()
+    {
+
+        $rules = array(
+            'folder_name' => 'required',
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('users/storage')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $folderName = Input::get('folder_name');
+
+        $folder = UploadFolder::where('user_id', '=', Auth::User()->id)
+                               ->where('folder_name', '=', $folderName)
+                               ->first();
+        if ($folder) {
+            Session::flash('error', 'Folder already exists');
+            return Redirect::to('users/storage');
+        }
+
+        $folder = new UploadFolder;
+        $folder->folder_name = $folderName;
+        $folder->user_id = Auth::User()->id;
+        $folder->save();
+        return Redirect::to('users/storage');
+    }
+
+
+    public function setFileFolder($id)
+    {
+        //check if id owner
+
+        try {
+            $upload = Upload::where('user_id', '=', Auth::User()->id)
+                           ->where('parent_id', '=', 0)
+                           ->whereId($id)
+                           ->first();
+        } catch (Exception $e) {
+            exit('cannot retrieve upload');
+        }
+
+        if ($upload) {
+            $upload->user_folder = Input::get('value');
+            $upload->save();
+        }
+    }
+
 }

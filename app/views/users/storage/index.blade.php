@@ -34,7 +34,33 @@
             @endif
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-3">
+            {{ Form::open(array('url' => URL::to('users/storage'), 'method' => 'GET', 'id' => 'folder-form' )) }}
 
+                <div class="form-group">
+                    <label>Folder:</label>
+
+                    {{ Form::select('folder', $folders, $currentFolder, array('class' => 'form-control input-sm', 'id' => 'folder-select')) }}
+                     
+                </div>
+
+            {{ Form::close() }}
+
+            {{ Form::open(array('url' => URL::to('users/storage/folder'), 'method' => 'POST', 'class' => 'form-inline')) }}
+            <div class="form-group @if ($errors->has('folder_name')) has-error @endif">
+                 @if (Session::has('message'))
+                     <div class="alert alert-info">{{ Session::get('message') }}</div>
+                 @endif
+            
+                {{ Form::text('folder_name', '' , array('class' => 'form-control input-sm', 'placeholder' => 'New Folder')) }}
+            </div>
+
+            @if ($errors->has('folder_name')) <p class="help-block">{{ $errors->first('folder_name') }}</p> @endif
+            <button type="submit" class="btn btn-sm btn-warning">Create</button>
+            {{ Form::close() }}
+        </div>
+    </div>
     <div class="clearfix visible-xs-block"></div>
     <div class="row top-buffer">
 
@@ -46,6 +72,7 @@
                     <th><i class="fa fa-times" title="Select to delete"></i> </th>
                     <th><i class="fa fa-star fa-lg"></i></th>
                     <th class="span2">Filename</th>
+                    <th class="span2">Folder</th>
                     <th class="span2">Size</th>
                     @foreach ($companyAttributeHeaders as $header)
                                 <th>{{ $header }}</th>
@@ -69,6 +96,7 @@
                                 ?>
                                 <td><span style="color: #fff;font-size: 0px;">{{ $upload->favourite }}</span> <a title="Add / Remove Favourite" href="{{ URL::to('users/storage/switchfav/' . $upload->id ) }}"><i class="fa {{ $starIcon }} fa-lg"></i></a></td>
                                 <td><a href="#" class="editable" data-name="user_filename" data-type="text" data-pk="{{$upload->id}}" data-url="{{ URL::to('users/storage/filename/'.$upload->id) }}" data-title="Rename filename">{{ $upload->user_filename }} </a></td>
+                                <td><a href="#" id="folder_{{ $upload->id}}" class="folder-editable"data-type="select" data-value="{{ $upload->user_folder }}" data-pk="{{ $upload->id}}" data-url="{{ URL::to('users/storage/setfolder/'.$upload->id) }}" data-title="Select status"></a></td>
                                 <td>{{ Helpers::bytesToMegaBytes($upload->size) }}</td>
 
                                 @foreach ($companyAttributeHeaders as $_attributeId => $header)
@@ -179,5 +207,18 @@
 
         $.fn.editable.defaults.mode = 'inline';
         $('.editable').editable();
+
+
+        $('#folder-select').change(function()
+         {
+             $('#folder-form').submit();
+         });
+
+
+        $(function(){
+            $('.folder-editable').editable({
+                source: {{ json_encode($folders) }}
+            });
+        });
     </script>
 @stop
