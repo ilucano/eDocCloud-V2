@@ -21,6 +21,10 @@ class UsersFileController extends \BaseController
         $companyId = Auth::User()->getCompanyId();
         $permission = json_decode(Auth::User()->getUserData()->file_permission, true);
 
+        if ($permission == null) {
+            $permission = array();
+        }
+        
         $limit = 50;
 
         $searchFilters = Input::except('limit');
