@@ -244,7 +244,9 @@
                 }
 			});
 		});
+		
 
+		  $("#wrapper").toggleClass("toggled");
 	</script>
 
 

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row small-font">
     <div class="col-sm-8">
     @foreach ($attributeSets as $attribute)
         <?php $user_value = ''; ?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace repositories\file;
+namespace Repositories\File;
 
 use FileTable;
 use DB;

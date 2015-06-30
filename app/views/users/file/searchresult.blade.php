@@ -22,9 +22,7 @@
 			
 		</div>
 	</div>
-		
-	
-	<div class="row">
+
 	
 		<div class="col-lg-6">
 
@@ -50,9 +48,9 @@
 		
 
 		
-		<div class="col-lg-12">
+		<div class="col-lg-12" style="overflow: auto;">
 		
-			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed small-font" id="datatables">
 					<thead>
 						<tr>
 							<th><i class="fa fa-download" title="Select to download"></i> </th>
@@ -61,7 +59,11 @@
 							<th>Created</th>
 							<th>Updated</th>
 							<th>Pages</th>
-							<th>Size</th>	
+							<th>Size</th>
+							@foreach ($companyAttributeHeaders as $header)
+								<th>{{ $header }}</th>
+							@endforeach
+							<th>Attributes</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -79,7 +81,16 @@
 							<td>{{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td>{{ Helpers::niceDateTime($file->moddate) }} </td>
 							<td>{{ $file->pages }} </td>
-							<td>{{ Helpers::bytesToMegabytes( $file->filesize) }} </td>	
+							<td>{{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
+							@foreach ($companyAttributeHeaders as $_attributeId => $header)
+								@if(isset($file->attributeValues[$_attributeId]))
+								<td>{{  implode(", ", $file->attributeValues[$_attributeId]) }}</td>
+								@else
+								<td> </td>
+								@endif
+							@endforeach
+
+							<td class="text-center"><a class="btn btn-sm btn-default" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit/search/'.urlencode($query)) }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-gear fa-lg"></i></a> </td>
 							</tr>
 						@endforeach
 	 
@@ -91,9 +102,7 @@
 				{{ Form::close() }}	
 		</div>		
 
-	</div>
-   
-  
+
 
 	<div class="modal" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
@@ -105,6 +114,25 @@
 	
 	
 	
+	 <!-- Default bootstrap modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 	
 @stop
 
@@ -197,6 +225,11 @@
                 }
 			}); 	
 		});
+		
+
+		$("#wrapper").toggleClass("toggled");
+
+
 
 	</script>
 		

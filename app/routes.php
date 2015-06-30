@@ -209,7 +209,7 @@ Route::group(
 
                 Route::get('file/search', array('uses' => 'UsersFileController@showSearch'));
 
-                Route::get('file/attributes/{id}/edit', array('uses' => 'UsersFileController@editAttributes'));
+                Route::get('file/attributes/{id}/edit/{source?}/{query?}', array('uses' => 'UsersFileController@editAttributes'));
 
                 Route::put('file/attributes/{id}', array(
                                                         'uses' => 'UsersFileController@updateAttributes',
@@ -218,6 +218,7 @@ Route::group(
                                                     );
 
                 Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
+                Route::get('file/search', array('uses' => 'UsersFileController@doSearch'));
 
                 Route::resource('file', 'UsersFileController');
 
@@ -251,7 +252,7 @@ Route::group(
 
                 Route::post('storage/setfolder/{id}', array('uses' => 'UsersStorageController@setFileFolder'));
 
-                Route::put('file/attributes/{id}', array(
+                Route::put('storage/attributes/{id}', array(
                                                         'uses' => 'UsersStorageController@updateAttributes',
                                                          'as' => 'users.storage.attribute.update',
                                                          )

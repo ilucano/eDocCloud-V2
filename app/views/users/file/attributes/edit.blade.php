@@ -24,6 +24,8 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        {{ Form::hidden('source', $source) }}
+        {{ Form::hidden('query', $query) }}
         {{ Form::submit('Save Changes', array('class' => 'btn btn-primary')) }}
     </div>
     

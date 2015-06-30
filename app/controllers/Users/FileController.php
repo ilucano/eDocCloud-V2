@@ -24,7 +24,7 @@ class UsersFileController extends \BaseController
         if ($permission == null) {
             $permission = array();
         }
-        
+
         $limit = 50;
 
         $searchFilters = Input::except('limit');
@@ -45,14 +45,11 @@ class UsersFileController extends \BaseController
                     $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
                     if (count($options) >=1 ) {
                             $file->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
-                        } else {
-                             $file->attributeValues[$item->attribute_id][] = $item->value;
-                        }
+                    } else {
+                        $file->attributeValues[$item->attribute_id][] = $item->value;
                     }
+                }
             }
-
- 
-
         }
  
 
@@ -174,7 +171,7 @@ class UsersFileController extends \BaseController
     }
 
     public function doSearch()
-    {
+    {   
         $rules = array(
             'query' => 'required|min:4',
         );
@@ -186,6 +183,8 @@ class UsersFileController extends \BaseController
                 ->withErrors($validator)
                 ->withInput();
         }
+
+        $companyId = Auth::User()->getCompanyId();
 
         $query = Input::get('query');
 
@@ -220,6 +219,22 @@ class UsersFileController extends \BaseController
 
         $files = DB::select(DB::raw($sqlQuery));
 
+
+        foreach ($files as $file) {
+            $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($file->row_id, 'file');
+
+            if (count($metaAttributeValues) >= 1) {
+                foreach ($metaAttributeValues as $item) {
+                    $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
+                    if (count($options) >=1) {
+                            $file->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
+                    } else {
+                            $file->attributeValues[$item->attribute_id][] = $item->value;
+                    }
+                }
+            }
+        }
+
         $filemarkDropdown = array('' => '(No Label)');
 
         try {
@@ -232,6 +247,11 @@ class UsersFileController extends \BaseController
             }
         } catch (Exception $e) {
         }
+
+
+        $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
+        
+        $companyAttributeHeaders  = $this->meta_attribute->getCompanyAttributeHeaders($companyId);
 
         $logDetails = json_encode(['query' => Input::get('query')]);
 
@@ -247,7 +267,9 @@ class UsersFileController extends \BaseController
         return View::make('users.file.searchresult')
                     ->with('files', $files)
                     ->with('filemarkDropdown', $filemarkDropdown)
-                    ->with('query', $query);
+                    ->with('query', $query)
+                    ->with('attributeFilters', $attributeFilters)
+                    ->with('companyAttributeHeaders', $companyAttributeHeaders);
     }
 
     private function getFileMarkDropdown(array $permission)
@@ -273,11 +295,14 @@ class UsersFileController extends \BaseController
      * Update the specified resource in storage.
      *
      * @param int $id
-     *
+     * @param string $source
+     * @param string $query
      * @return Response
      */
-    public function editAttributes($id)
+    public function editAttributes($id, $source = null, $query = null)
     {
+        //$source = Input::get('source');
+        //$query = Input::get('query');
         
         $companyId = Auth::User()->getCompanyId();
 
@@ -293,7 +318,9 @@ class UsersFileController extends \BaseController
         
         return View::make('users.file.attributes.edit')
                     ->with('file', $file)
-                    ->with('attributeSets', $attributeSets);
+                    ->with('attributeSets', $attributeSets)
+                    ->with('source', $source)
+                    ->with('query', $query);
 
     }
 
@@ -313,16 +340,26 @@ class UsersFileController extends \BaseController
 
         $input = Input::except('_method', '_token');
 
+        $source = $input['source'];
+        $query = $input['query'];
+
+        if ($source == 'search') {
+            $redirectRoute = 'users/file/search?query='.$input['query'];
+        } else {
+            $redirectRoute = 'users/file';
+        }
+
         try {
             $this->meta_attribute->updateTargetAttributeValues($id, 'file', $input);
 
             Session::flash('message', 'File attributes successfully updated');
 
-            return Redirect::to('users/file');
+
+            return Redirect::to($redirectRoute);
 
         } catch (Exception $e) {
              Session::flash('error', 'Error updating file attributes');
-            return Redirect::to('users/file');
+            return Redirect::to($redirectRoute);
         }
     }
 }
