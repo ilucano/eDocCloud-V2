@@ -43,7 +43,7 @@
 				   <span class="caret"></span>
 				</button>
 			</p>
-			<div class="collapse @if ($filterExpand) @endif" id="collapseExample">
+			<div class="collapse @if ($filterExpand) in @endif" id="collapseExample">
 			  <div class="well small-font">
 			  		{{ Form::open(array('route' => 'users.file.index', 'method' => 'get')) }}
 			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))

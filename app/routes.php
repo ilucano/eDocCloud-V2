@@ -218,7 +218,7 @@ Route::group(
                                                     );
 
                 Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
-                Route::get('file/search', array('uses' => 'UsersFileController@doSearch'));
+                Route::get('file/query', array('uses' => 'UsersFileController@doSearch'));
 
                 Route::resource('file', 'UsersFileController');
 

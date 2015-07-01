@@ -166,8 +166,24 @@ class UsersFileController extends \BaseController
      * Display search form.
      */
     public function showSearch()
-    {
-        return View::make('users.file.search');
+    {   
+        $companyId = Auth::User()->getCompanyId();
+
+        $limit = 50;
+
+        $searchFilters = Input::except('limit');
+
+        if (Input::get('limit')) {
+            $limit =  Input::get('limit');
+        }
+       
+        $filterExpand =  (count($searchFilters) >= 1) ? true: false;
+
+        $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
+
+        return View::make('users.file.search')
+                    ->with('attributeFilters', $attributeFilters)
+                    ->with('filterExpand', $filterExpand);
     }
 
     public function doSearch()
@@ -184,9 +200,47 @@ class UsersFileController extends \BaseController
                 ->withInput();
         }
 
+
         $companyId = Auth::User()->getCompanyId();
 
         $query = Input::get('query');
+
+        //attribute filter
+        $filter_attribute_files = '';
+
+        $filters = Input::except('limit','query');
+
+        if ($filters) {
+            $joinTables = array();
+            $andString = array();
+
+            foreach ($filters as $attribute_id => $value) {
+                if (!$value) {
+                    continue;
+                }
+                $joinTables[] = " JOIN meta_target_attribute_values AS table_{$attribute_id} ON `master`.target_id  =  table_{$attribute_id}.target_id ";
+                $andString[]  = " AND table_{$attribute_id}.attribute_id = '".addslashes($attribute_id)."' AND table_{$attribute_id}.value = '".addslashes($value)."' ";
+            }
+
+            if (count($joinTables) >= 1) {
+                $attributeSql = 'SELECT DISTINCT(`master`.target_id) FROM  `meta_target_attribute_values`  as `master` ';
+                $attributeSql .= implode(' ', $joinTables);
+                $attributeSql .= ' WHERE 1 ';
+                $attributeSql .= implode(' ', $andString);
+
+                $filteredFiles = DB::select(DB::raw($attributeSql));
+
+                $arrayFilteredFile = array();
+
+                foreach ($filteredFiles as $filteredFile) {
+                    $arrayFilteredFile[] = $filteredFile->target_id;
+                }
+
+                if (count($arrayFilteredFile) >= 1) {
+                    $filter_attribute_files = ' AND row_id IN ('.implode(', ', $arrayFilteredFile).')';
+                }
+            }
+        }
 
         $matchExactAllTerms = addslashes($query);
 
@@ -213,7 +267,7 @@ class UsersFileController extends \BaseController
         $matchAndAllTerms = addslashes(implode(' ', $arrayTextMatchAll));
 
         $mainMatchQuery = " MATCH(texto) AGAINST('".$matchAndAllTerms."' IN BOOLEAN MODE) AS Score1, MATCH(texto) AGAINST('".
-        $matchExactAllTerms."' IN BOOLEAN MODE) AS Score2 FROM files WHERE MATCH(texto) AGAINST ('".$matchAndAllTerms."' IN BOOLEAN MODE) AND fk_empresa = ".Auth::User()->getCompanyId().$filter_file_permission;
+        $matchExactAllTerms."' IN BOOLEAN MODE) AS Score2 FROM files WHERE MATCH(texto) AGAINST ('".$matchAndAllTerms."' IN BOOLEAN MODE) AND fk_empresa = ".Auth::User()->getCompanyId().$filter_file_permission . $filter_attribute_files;
 
         $sqlQuery = 'SELECT row_id, creadate, pages, filesize, moddate, filename, file_mark_id, '.$mainMatchQuery.' ORDER BY Score2 Desc, Score1 desc;';
 
@@ -249,6 +303,9 @@ class UsersFileController extends \BaseController
         }
 
 
+
+        $filterExpand =  ($filter_attribute_files) ? true: false;
+      
         $attributeFilters = $this->meta_attribute->getCompanyFilterableAttributes($companyId);
         
         $companyAttributeHeaders  = $this->meta_attribute->getCompanyAttributeHeaders($companyId);
@@ -269,6 +326,7 @@ class UsersFileController extends \BaseController
                     ->with('filemarkDropdown', $filemarkDropdown)
                     ->with('query', $query)
                     ->with('attributeFilters', $attributeFilters)
+                    ->with('filterExpand', $filterExpand)
                     ->with('companyAttributeHeaders', $companyAttributeHeaders);
     }
 
@@ -344,7 +402,7 @@ class UsersFileController extends \BaseController
         $query = $input['query'];
 
         if ($source == 'search') {
-            $redirectRoute = 'users/file/search?query='.$input['query'];
+            $redirectRoute = 'users/file/query?query='.$input['query'];
         } else {
             $redirectRoute = 'users/file';
         }
