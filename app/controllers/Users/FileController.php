@@ -252,6 +252,7 @@ class UsersFileController extends \BaseController
             }
         }
 
+        $user_file_mark_id_allowed = '';
         $filePermission = Auth::User()->getUserData()->file_permission;
 
         $array_file_permission = json_decode($filePermission, true);

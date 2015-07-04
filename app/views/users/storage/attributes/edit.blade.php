@@ -1,9 +1,4 @@
 
-@extends('layout_nomenu')
-
-@section('content')
-
-
     {{ Form::model($upload, array('route' => array('users.storage.attribute.update', $upload->id), 'method' => 'PUT')) }}
 
 
@@ -29,6 +24,4 @@
     </div>
     
     {{ Form::close() }}
-
-@stop
 

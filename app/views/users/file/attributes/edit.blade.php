@@ -1,7 +1,3 @@
-@extends('layout_nomenu')
-
-@section('content')
-
 
     {{ Form::model($file, array('route' => array('users.file.attribute.update', $file->row_id), 'method' => 'PUT')) }}
 
@@ -30,6 +26,4 @@
     </div>
     
     {{ Form::close() }}
-
-@stop
 

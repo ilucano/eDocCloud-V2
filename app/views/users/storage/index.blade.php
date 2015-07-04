@@ -49,9 +49,7 @@
 
             {{ Form::open(array('url' => URL::to('users/storage/folder'), 'method' => 'POST', 'class' => 'form-inline')) }}
             <div class="form-group @if ($errors->has('folder_name')) has-error @endif">
-                 @if (Session::has('message'))
-                     <div class="alert alert-info">{{ Session::get('message') }}</div>
-                 @endif
+                 
             
                 {{ Form::text('folder_name', '' , array('class' => 'form-control input-sm', 'placeholder' => 'New Folder')) }}
             </div>
@@ -108,7 +106,7 @@
                                 @endforeach
 
                                 <td>{{ Helpers::niceDateTime($upload->created_at) }}</td>
-                                <td><a class="btn btn-sm btn-info" href="{{ URL::to('users/storage/attributes/' . $upload->id . '/edit') }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a> </td>
+                                <td class="text-center"><a class="btn btn-sm btn-default" href="{{ URL::to('users/storage/attributes/' . $upload->id . '/edit') }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-gear fa-lg"> </i> </a> </td>
                                 <td><a class="btn btn-sm btn-primary" href="{{ URL::to('users/storage/download/' . $upload->id ) }}"> <i class="fa fa-download fa-lg"></i> Download</a></td>
                             </tr>
                         @endforeach

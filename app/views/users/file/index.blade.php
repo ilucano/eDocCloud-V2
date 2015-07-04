@@ -74,7 +74,7 @@
 							@foreach ($companyAttributeHeaders as $header)
 								<th>{{ $header }}</th>
 							@endforeach
-							<th>Action</th>
+							<th>Attributes</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -99,7 +99,7 @@
 								<td> </td>
 								@endif
 							@endforeach
-							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
+							<td class="text-center"> <a class="btn btn-sm  btn-default" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-gear fa-lg"></i>  </td>
 							</tr>
 						@endforeach
 
@@ -134,7 +134,7 @@
 	</style>
 		
 
-		<div class="modal fade" id="attributeModal">
+		<div class="modal fade" id="attributeModal" tabindex="-1" role="dialog" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -245,8 +245,9 @@
 			});
 		});
 		
+		
+		$("#wrapper").toggleClass("toggled");
 
-		  $("#wrapper").toggleClass("toggled");
 	</script>
 
 
