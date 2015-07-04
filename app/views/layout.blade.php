@@ -258,7 +258,7 @@
 
                      <li>
 
-                     <a href="#" id="menu-toggle"><i class="fa fa-fw fa-list"></i> Toggle Menu</a>
+                     <a href="#" id="menu-toggle"><i class="fa fa-fw fa-angle-double-right"></i> Toggle Menu</a>
                      </li>
                 </ul>
 
