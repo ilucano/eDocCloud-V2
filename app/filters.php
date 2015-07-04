@@ -140,6 +140,14 @@ Route::filter('user_changepassword', function () {
     }
 });
 
+Route::filter('user_myfolder', function () {
+    if (!Auth::User()->can('user_myfolder')) {
+        // Checks the current user
+
+        return Redirect::to('system/denied');
+    }
+});
+
 /* End user routes */
 
 

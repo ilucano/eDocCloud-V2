@@ -15,7 +15,8 @@ class UsersStorageController extends \BaseController
      * @return Response
      */
     public function index()
-    {
+    {   
+
         $companyId = Auth::User()->getCompanyId();
         
         $folders = $this->getUserFoldersDropdown();
@@ -78,7 +79,7 @@ class UsersStorageController extends \BaseController
         }
 
         $uploads = $uploads->get();
- 
+
         foreach ($uploads as $upload) {
             $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->id, 'upload');
             if (count($metaAttributeValues) >= 1) {
