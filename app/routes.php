@@ -150,7 +150,7 @@ Route::group(
         // Route::when('companyadmin/user*', 'admin_user'); //admin_user permission check (app/filters.php)
         // Route::when('companyadmin/role*', 'admin_role'); //permission check (app/filters.php)
         // Route::when('companyadmin/filemark*', 'admin_filemark'); //permission check (app/filters.php)
-
+        
         Route::group(
             array('prefix' => 'companyadmin'),
             function () {
@@ -182,6 +182,7 @@ Route::group(
         Route::when('users/file/search*', 'user_search');
         Route::when('users/file*', 'user_file');
         Route::when('users/profile/password', 'user_changepassword');
+        Route::when('users/storage', 'user_myfolder');
 
         Route::group(
             array('prefix' => 'users'),

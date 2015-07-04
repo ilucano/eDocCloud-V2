@@ -89,13 +89,17 @@
                         </li>
 						@endif
 
+                        @if(Auth::User()->can('admin_metadata') || Auth::User()->isAdmin())
                         <li>
                             <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square-o"></i> Metadata Setup</a>
                         </li>
-						
-                         <li>
+						@endif
+
+                        @if(Auth::User()->can('admin_datausage') || Auth::User()->isAdmin())
+                        <li>
                             <a href="{{ URL::to('companyadmin/reports/usagechart') }}"><i class="fa fa-fw fa-bar-chart"></i> Data Usage</a>
                         </li>
+                        @endif
                     </ul>
 					@endif
 						
@@ -252,10 +256,11 @@
                         </ul>
                     </li>
 					@endif
+                    @if(Auth::User()->can('user_myfolder'))
                     <li>
                          <a href="{{ URL::to('users/storage') }}"><i class="fa fa-fw fa-inbox"></i> My Folder</a>
                     </li>
-
+                    @endif
                      <li>
 
                      <a href="#" id="menu-toggle"><i class="fa fa-fw fa-angle-double-right"></i> Toggle Menu</a>
