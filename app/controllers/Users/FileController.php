@@ -225,7 +225,7 @@ class UsersFileController extends \BaseController
             if (count($joinTables) >= 1) {
                 $attributeSql = 'SELECT DISTINCT(`master`.target_id) FROM  `meta_target_attribute_values`  as `master` ';
                 $attributeSql .= implode(' ', $joinTables);
-                $attributeSql .= ' WHERE 1 ';
+                $attributeSql .= " WHERE `master`.target_type = 'file' ";
                 $attributeSql .= implode(' ', $andString);
 
                 $filteredFiles = DB::select(DB::raw($attributeSql));

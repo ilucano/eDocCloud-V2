@@ -57,7 +57,40 @@
             @if ($errors->has('folder_name')) <p class="help-block">{{ $errors->first('folder_name') }}</p> @endif
             <button type="submit" class="btn btn-sm btn-warning">Create</button>
             {{ Form::close() }}
-        </div>
+        </div>  
+
+        <div class='clearfix'></div>
+       
+        <div class="col-lg-8 top-buffer">
+            <!-- search filter -->
+            <p>
+                <button class="btn btn-sm btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  Filters
+                   <span class="caret"></span>
+                </button>
+            </p>
+            <div class="collapse @if ($filterExpand) in @endif" id="collapseExample">
+              <div class="well small-font">
+                    {{ Form::open(array('route' => 'users.storage.index', 'method' => 'get')) }}
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label for="query">Filename or Folder</label>
+                                
+                                {{ Form::text('query', $query, array('class' => 'form-control col-sm-8')) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
+                    <a class="btn btn-sm btn-info" href="{{ URL::to('users/storage') }}"> Clear</a>
+                    {{ Form::submit('Search', array('class' => 'btn btn-sm btn-primary')) }}
+                    {{ Form::close() }}
+              </div>
+            </div>
+        </div>    
+ 
     </div>
     <div class="clearfix visible-xs-block"></div>
     <div class="row top-buffer">

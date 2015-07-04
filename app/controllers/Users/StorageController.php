@@ -25,13 +25,60 @@ class UsersStorageController extends \BaseController
         $uploads = Upload::where('user_id', '=', Auth::User()->id)
                        ->where('parent_id', '=', 0);
 
+
+        $searhQuery = Input::get('query');
+
+        //attribute filter
+        $arrayFilteredFile = array();
+        
+        $filters = Input::except('limit','query');
+
+        if ($filters) {
+            $joinTables = array();
+            $andString = array();
+
+            foreach ($filters as $attribute_id => $value) {
+                if (!$value) {
+                    continue;
+                }
+                $joinTables[] = " JOIN meta_target_attribute_values AS table_{$attribute_id} ON `master`.target_id  =  table_{$attribute_id}.target_id ";
+                $andString[]  = " AND table_{$attribute_id}.attribute_id = '".addslashes($attribute_id)."' AND table_{$attribute_id}.value = '".addslashes($value)."' ";
+            }
+
+            if (count($joinTables) >= 1) {
+                $attributeSql = 'SELECT DISTINCT(`master`.target_id) FROM  `meta_target_attribute_values`  as `master` ';
+                $attributeSql .= implode(' ', $joinTables);
+                $attributeSql .= " WHERE `master`.target_type = 'upload' ";
+                $attributeSql .= implode(' ', $andString);
+
+                $filteredFiles = DB::select(DB::raw($attributeSql));
+                $arrayFilteredFile[] = 0;
+                foreach ($filteredFiles as $filteredFile) {
+                    $arrayFilteredFile[] = $filteredFile->target_id;
+                }
+            }
+        }
+
+
         if ($currentFolder) {
             $uploads = $uploads->where('user_folder', $currentFolder);
         }
-        
-        $uploads = $uploads->get();
 
-      
+        if ($searhQuery) {
+            $folderIds= $this->getFolderIdByQuery($searhQuery);
+
+            $uploads = $uploads->where(function ($query) use ($searhQuery, $folderIds) {
+                             $query->where('user_filename', 'like', '%'.$searhQuery.'%')
+                                   ->orWhereIn('user_folder', $folderIds);
+                       });
+        }
+        
+        if (count($arrayFilteredFile) >= 1) {
+            $uploads =  $uploads->whereIn('id', $arrayFilteredFile);
+        }
+
+        $uploads = $uploads->get();
+ 
         foreach ($uploads as $upload) {
             $metaAttributeValues = $this->meta_attribute->getTargetAttributeValues($upload->id, 'upload');
             if (count($metaAttributeValues) >= 1) {
@@ -56,9 +103,24 @@ class UsersStorageController extends \BaseController
                       ->with('companyAttributeHeaders', $companyAttributeHeaders)
                       ->with('attributeFilters', $attributeFilters)
                       ->with('folders', $folders)
-                      ->with('currentFolder', $currentFolder);
+                      ->with('currentFolder', $currentFolder)
+                      ->with('query', $searhQuery)
+                      ->with('filterExpand', (count($filters) >= 1 || $searhQuery) ? true: false);
     }
 
+
+    public function getFolderIdByQuery($string)
+    {
+        $results = array(); //invalid folder name by default
+
+        if ($string) {
+            $results = UploadFolder::where('folder_name', 'like', '%'.$string.'%')
+                                    ->where('user_id', '=', Auth::User()->id)
+                                    ->get(['id'])->toArray();
+        }
+
+        return $results;
+    }
     /**
      * Displays the form for account creation.
      */
