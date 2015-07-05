@@ -14,4 +14,6 @@ interface FileRepositoryInterface
     public function getMonthlyDataUsage($companyId = null, $limit = 12);
 
     public function getMonthlyNumberOfFiles($companyId = null, $limit = 12);
+
+    public function setOrderBoxChartForFile($file);
 }

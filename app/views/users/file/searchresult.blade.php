@@ -79,6 +79,7 @@
 						<tr>
 							<th><i class="fa fa-download" title="Select to download"></i> </th>
 							<th>Filename</th>
+							<th>Order > Box > Chart</th>
 							<th>Mark</th>
 							<th>Created</th>
 							<th>Updated</th>
@@ -101,6 +102,27 @@
 							<td>	
 								<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
 						    </td>
+
+						    <td nowrap>
+						    	@if ($file->chart && $file->box && $file->order) 
+									<ol class="breadcrumb">	 
+										<li>
+											<a  href="{{ URL::to('users/order/'. $file->order->row_id) }}"> {{ $file->order->f_code }} / {{ $file->order->f_name }} </a>
+						                </li>
+											
+										<li>
+											<a href="{{ URL::to('users/chart/'. $file->box->row_id. '/'.$file->order->row_id) }}"> {{ $file->box->f_code }} /  {{ $file->box->f_name }} </a>
+										</li>
+						                
+										<li>
+											<a href="{{ URL::to('users/chart/'. $file->box->row_id. '/'.$file->order->row_id) .'/'. $file->chart->row_id }}">{{ $file->chart->f_name }} </a>
+										</li>
+
+				
+									</ol>
+								@endif
+						    </td>
+						    
 							<td> {{ Form::select('file_mark_id', $filemarkDropdown, $file->file_mark_id, array('class'=>'form-control bootstrap-dropdown', 'data-file-id'=>$file->row_id )) }}</td>
 							<td>{{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td>{{ Helpers::niceDateTime($file->moddate) }} </td>

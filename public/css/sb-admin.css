@@ -251,6 +251,11 @@ ul.alert-dropdown {
     font-size: 13px;
 }
 
+/* smaller font for long table */
+.x-small-font, .x-small-font a, .x-small-font input, .x-small-font select {
+    font-size: 12px;
+}
+
 /* set to square */
 * {
   border-radius: 0 !important;

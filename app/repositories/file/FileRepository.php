@@ -3,6 +3,7 @@
 namespace Repositories\File;
 
 use FileTable;
+use Object;
 use DB;
 
 class FileRepository implements FileRepositoryInterface
@@ -42,7 +43,7 @@ class FileRepository implements FileRepositoryInterface
             if (count($joinTables) >= 1) {
                 $attributeSql = 'SELECT DISTINCT(`master`.target_id) FROM  `meta_target_attribute_values`  as `master` ';
                 $attributeSql .= implode(' ', $joinTables);
-                $attributeSql .= ' WHERE 1 ';
+                $attributeSql .= " WHERE `master`.target_type = 'file'";
                 $attributeSql .= implode(' ', $andString);
 
                 $filteredFiles = DB::select(DB::raw($attributeSql));
@@ -63,7 +64,7 @@ class FileRepository implements FileRepositoryInterface
 
         $mainMatchQuery = "WHERE 1 $match_company $filter_file_permission $filter_attribute_files";
 
-        $sqlQuery = 'SELECT row_id, creadate, pages, filesize, moddate, filename, file_mark_id FROM files '.$mainMatchQuery.' ORDER BY creadate DESC LIMIT '.$start.', '.$limit;
+        $sqlQuery = 'SELECT row_id, creadate, pages, filesize, moddate, filename, file_mark_id, parent_id FROM files '.$mainMatchQuery.' ORDER BY creadate DESC LIMIT '.$start.', '.$limit;
 
         $files = DB::select(DB::raw($sqlQuery));
 
@@ -166,5 +167,37 @@ class FileRepository implements FileRepositoryInterface
         }
 
         return $data;
+    }
+
+
+
+    public function setOrderBoxChartForFile($file)
+    {
+        $file->chart = null;
+        $file->box = null;
+        $file->order = null;
+        try {
+            $file->chart = Object::where('row_id', '=', $file->parent_id)->first();
+        } catch (Exception $e) {
+            return;
+        }
+
+
+        if ($file->chart) {
+            try {
+                $file->box = Object::where('row_id', '=', $file->chart->fk_parent)->first();
+            } catch (Exception $e) {
+                return;
+            }
+        }
+
+        if ($file->box) {
+            try {
+                $file->order = Object::where('row_id', '=', $file->box->fk_parent)->first();
+            } catch (Exception $e) {
+                return;
+            }
+        }
+
     }
 }

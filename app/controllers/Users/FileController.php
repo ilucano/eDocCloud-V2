@@ -43,15 +43,19 @@ class UsersFileController extends \BaseController
             if (count($metaAttributeValues) >= 1) {
                 foreach ($metaAttributeValues as $item) {
                     $options = $this->meta_attribute->getAttributeOptions($item->attribute_id);
-                    if (count($options) >=1 ) {
+                    if (count($options) >=1) {
                             $file->attributeValues[$item->attribute_id][] = $this->meta_attribute->getAttributeOptionLabel($item->value);
                     } else {
                         $file->attributeValues[$item->attribute_id][] = $item->value;
                     }
                 }
             }
-        }
+
+            $this->repo->setOrderBoxChartForFile($file);
  
+        }
+    
+        
 
         $filemarkDropdown = $this->getFileMarkDropdown($permission);
 
@@ -270,7 +274,7 @@ class UsersFileController extends \BaseController
         $mainMatchQuery = " MATCH(texto) AGAINST('".$matchAndAllTerms."' IN BOOLEAN MODE) AS Score1, MATCH(texto) AGAINST('".
         $matchExactAllTerms."' IN BOOLEAN MODE) AS Score2 FROM files WHERE MATCH(texto) AGAINST ('".$matchAndAllTerms."' IN BOOLEAN MODE) AND fk_empresa = ".Auth::User()->getCompanyId().$filter_file_permission . $filter_attribute_files;
 
-        $sqlQuery = 'SELECT row_id, creadate, pages, filesize, moddate, filename, file_mark_id, '.$mainMatchQuery.' ORDER BY Score2 Desc, Score1 desc;';
+        $sqlQuery = 'SELECT row_id, creadate, pages, filesize, moddate, filename, file_mark_id, parent_id, '.$mainMatchQuery.' ORDER BY Score2 Desc, Score1 desc;';
 
         $files = DB::select(DB::raw($sqlQuery));
 
@@ -288,6 +292,8 @@ class UsersFileController extends \BaseController
                     }
                 }
             }
+
+            $this->repo->setOrderBoxChartForFile($file);
         }
 
         $filemarkDropdown = array('' => '(No Label)');
