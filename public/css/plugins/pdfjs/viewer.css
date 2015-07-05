@@ -1844,3 +1844,13 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     display: none;
   }
 }
+
+#toolbarViewerRight {
+  mar
+}
+
+#toolbarViewerRight:after {
+  content: "  Powered by eDocCloud::";
+  font-size: 10px;
+  color: #eee;
+}
