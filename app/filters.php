@@ -191,8 +191,8 @@ Route::filter('check_password_expiry', function () {
     if (Auth::guest()) {
         return Redirect::guest('login');
     }
-    
-    if (Auth::User() && Route::current()->getPath() != 'users/profile/password') {
+
+    if (Auth::User() && Auth::User()->can('user_changepassword') && Route::current()->getPath() != 'users/profile/password' &&  Route::current()->getPath() != 'system/denied') {
 
          
         $lastChanged = max([Auth::User()->created_at, Auth::User()->password_changed_at]);
