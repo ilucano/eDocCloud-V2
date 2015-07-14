@@ -142,6 +142,8 @@ Route::group(
             }
         );
 
+        Route::resource('priceplan', 'PricePlanController');
+        
         Route::resource('role', 'RoleController');
         /* end super admin section */
 

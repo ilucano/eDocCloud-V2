@@ -7,6 +7,6 @@ class PricePlanServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind('Repositories\MetaAttribute\PricePlanRepositoryInterface', 'Repositories\MetaAttribute\PricePlanRepository');
+        $this->app->bind('Repositories\PricePlan\PricePlanRepositoryInterface', 'Repositories\PricePlan\PricePlanRepository');
     }
 }

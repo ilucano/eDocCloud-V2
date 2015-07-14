@@ -1,10 +1,10 @@
 <?php namespace Repositories\PricePlan;
 
-class MetaAttributeRepository implements PricePlanRepositoryInterface
+class PricePlanRepository implements PricePlanRepositoryInterface
 {
     public function getPricePlans()
     {
-
+        return ['test'];
     }
 
     public function getPricePlanById($id)
