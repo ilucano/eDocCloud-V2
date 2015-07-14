@@ -126,6 +126,7 @@ return array(
         'Services\MetaAttribute\MetaAttributeServiceProvider',
         'Services\File\FileServiceProvider',
         'Andrew13\Cabinet\CabinetServiceProvider',
+        'Services\PricePlan\PricePlanServiceProvider',
     ),
 
     /*
