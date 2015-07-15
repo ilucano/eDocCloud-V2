@@ -28,6 +28,10 @@ class PricePlanController extends \BaseController
     public function create()
     {
         //
+        $details = 'test';
+        $var2 = ['abc', '123'];
+        return View::make('priceplan.create', compact(['details', 'var2']));
+
     }
 
     /**
