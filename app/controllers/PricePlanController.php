@@ -28,10 +28,8 @@ class PricePlanController extends \BaseController
     public function create()
     {
         //
-        $details = 'test';
-        $var2 = ['abc', '123'];
-        return View::make('priceplan.create', compact(['details', 'var2']));
 
+        return View::make('priceplan.create', compact(['details', 'var2']));
     }
 
     /**
@@ -42,6 +40,50 @@ class PricePlanController extends \BaseController
     public function store()
     {
         //
+
+        $rules = array(
+           'plan_name'             => 'required|unique:price_plans',                        // just a normal required validation
+           'plan_code'            => 'required|unique:price_plans',     // required and must be unique in the ducks table
+           'base_price'         => 'required|numeric',
+           'free_users' => 'required|integer',
+           'free_gb' => 'required|integer',
+           'free_own_scans' => 'required|integer',
+           'free_plan_scans' => 'required|integer',
+
+        );
+
+        foreach (Input::get('user_to') as $key => $val) {
+            $rules['user_to.'.$key] = 'integer';
+            $rules['price_per_user.'.$key] = 'required|integer';
+        }
+
+        foreach (Input::get('gb_to') as $key => $val) {
+            $rules['gb_to.'.$key] = 'integer';
+            $rules['price_per_gb.'.$key] = 'required|integer';
+        }
+
+        foreach (Input::get('own_scan_to') as $key => $val) {
+            $rules['own_scan_to.'.$key] = 'integer';
+            $rules['price_per_own_scan.'.$key] = 'required|integer';
+        }
+
+        foreach (Input::get('plan_scan_to') as $key => $val) {
+            $rules['plan_scan_to.'.$key] = 'integer';
+            $rules['price_per_plan_scan.'.$key] = 'required|integer';
+        }
+
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        // check if the validator failed -----------------------
+        if ($validator->fails()) {
+            // get the error messages from the validator
+            $messages = $validator->messages();
+
+            // redirect our user back to the form with the errors from the validator
+            return Redirect::route('priceplan.create')
+                ->withErrors($validator);
+        }
     }
 
     /**
