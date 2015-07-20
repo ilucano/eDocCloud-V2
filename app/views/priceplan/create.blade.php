@@ -31,7 +31,7 @@
                 @endif
             
             </div>
-        </div>
+        </div> 
 
         {{ Form::open(['route' => 'priceplan.store']) }}
 
@@ -41,7 +41,7 @@
 
             <div class="col-lg-5">
                 <div class="form-group @if ($errors->has('plan_name')) has-error @endif">
-                    <label>Plan Name</label>
+                    <label>Price Plan Name</label>
                     {{ Form::text('plan_name', Input::old('plan_name'), array('class'=>'form-control')) }}
                     
                     @if ($errors->has('plan_name')) <p class="help-block">{{ $errors->first('plan_name') }}</p> @endif         
@@ -89,40 +89,39 @@
 
         <div class="row">
             <div class="col-lg-8">
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('user_to.0')) has-error @endif">
                     <label>Up to </label>
-                        {{ Form::text('user_to[]', Input::old('user_to'), array('class'=>'form-control')) }}
+                        {{ Form::text('user_to[]', null, array('class'=>'form-control', 'id' => 'user_to_0')) }}
                      <label> Users </label>
-                        {{ Form::text('price_per_user[]', Input::old('price_per_user.0'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
+                        {{ Form::text('price_per_user[]', null, array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_user_0')) }}
                      <label> USD each user </label>
                 </div>
 
-                <div class="form-group form-inline">
+            
+                <div class="form-group form-inline @if ($errors->has('user_to.1')) has-error @endif">
                     <label>Up to </label>
-                    
-                        {{ Form::text('user_to[]', Input::old('user_to.1'), array('class'=>'form-control')) }}
+                        {{ Form::text('user_to[]', Input::old('user_to')[1], array('class'=>'form-control', 'id' => 'user_to_1')) }}
                      <label> Users </label>
-                        {{ Form::text('price_per_user[]', Input::old('price_per_user.1'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
+                        {{ Form::text('price_per_user[]', Input::old('price_per_user')[1], array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_user_1')) }}
                      <label> USD each user </label>
                 </div>
 
-                <div class="form-group form-inline">
-                    <label>Up to </label>
-                    
-                        {{ Form::text('user_to[]', Input::old('user_to.2'), array('class'=>'form-control')) }}
+                <div class="form-group form-inline @if ($errors->has('user_to.2')) has-error @endif">
+                     <label>Up to </label>
+                        {{ Form::text('user_to[]', Input::old('user_to')[2], array('class'=>'form-control', 'id' => 'user_to_2')) }}
                      <label> Users </label>
-                        {{ Form::text('price_per_user[]', Input::old('price_per_user.2'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
+                        {{ Form::text('price_per_user[]', Input::old('price_per_user')[2], array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_user_2')) }}
                      <label> USD each user </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('user_to.3')) has-error @endif">
                     <label>Up to </label>
-                    
-                        {{ Form::text('user_to[]', Input::old('user_to.3'), array('class'=>'form-control')) }}
-                     <label> Users </label>
-                        {{ Form::text('price_per_user[]', Input::old('price_per_user.3'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each user </label>
+                        {{ Form::text('user_to[]', Input::old('user_to')[3], array('class'=>'form-control', 'id' => 'user_to_3')) }}
+                    <label> Users </label>
+                        {{ Form::text('price_per_user[]', Input::old('price_per_user')[3], array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_user_3')) }}
+                    <label> USD each user </label>
                 </div>
+
             </div>
         </div>
 
@@ -144,40 +143,40 @@
         <div class="row">
             <div class="col-lg-8">
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('gb_to.0')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('gb_to[]', Input::old('gb_to.0'), array('class'=>'form-control')) }}
-                     <label> GB </label>
-                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.0'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each GB </label>
+                        {{ Form::text('gb_to[]', Input::old('gb_to.0'), array('class'=>'form-control', 'id' => 'gb_to_0')) }}
+                    <label> GB </label>
+                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.0'), array('class'=>'form-control', 'id' => 'price_per_gb_0', 'placeholder' => '0.00')) }}
+                    <label> USD each GB </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('gb_to.1')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('gb_to[]', Input::old('gb_to.1'), array('class'=>'form-control')) }}
-                     <label> GB </label>
-                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.1'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each GB </label>
+                        {{ Form::text('gb_to[]', Input::old('gb_to.1'), array('class'=>'form-control', 'id' => 'gb_to_1')) }}
+                    <label> GB </label>
+                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.1'), array('class'=>'form-control', 'id' => 'price_per_gb_1', 'placeholder' => '0.00')) }}
+                    <label> USD each GB </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('gb_to.2')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('gb_to[]', Input::old('gb_to.2'), array('class'=>'form-control')) }}
-                     <label> GB </label>
-                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.2'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each GB </label>
+                        {{ Form::text('gb_to[]', Input::old('gb_to.2'), array('class'=>'form-control', 'id' => 'gb_to_2')) }}
+                    <label> GB </label>
+                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.2'), array('class'=>'form-control', 'id' => 'price_per_gb_2', 'placeholder' => '0.00')) }}
+                    <label> USD each GB </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('gb_to.3')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('gb_to[]', Input::old('gb_to.3'), array('class'=>'form-control')) }}
-                     <label> GB </label>
-                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.3'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each GB </label>
+                        {{ Form::text('gb_to[]', Input::old('gb_to.3'), array('class'=>'form-control', 'id' => 'gb_to_3')) }}
+                    <label> GB </label>
+                        {{ Form::text('price_per_gb[]', Input::old('price_per_gb.3'), array('class'=>'form-control', 'id' => 'price_per_gb_3', 'placeholder' => '0.00')) }}
+                    <label> USD each GB </label>
                 </div>
 
             </div>
@@ -200,40 +199,40 @@
         <div class="row">
             <div class="col-lg-8">
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('own_scan_to.0')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.0'), array('class'=>'form-control')) }}
-                     <label> Own Scans </label>
-                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.0'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each own scan page </label>
+                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.0'), array('class'=>'form-control', 'id' => 'own_scan_to_0')) }}
+                    <label> Own Scans </label>
+                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.0'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_own_scan_0')) }}
+                    <label> USD each own scan page </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('own_scan_to.1')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.1'), array('class'=>'form-control')) }}
-                     <label> Own Scans </label>
-                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.1'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each own scan page </label>
+                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.1'), array('class'=>'form-control', 'id' => 'own_scan_to_1')) }}
+                    <label> Own Scans </label>
+                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.1'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_own_scan_1')) }}
+                    <label> USD each own scan page </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('own_scan_to.2')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.2'), array('class'=>'form-control')) }}
-                     <label> Own Scans </label>
-                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.2'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each own scan page </label>
+                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.2'), array('class'=>'form-control', 'id' => 'own_scan_to_2')) }}
+                    <label> Own Scans </label>
+                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.2'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_own_scan_2')) }}
+                    <label> USD each own scan page </label>
                 </div>
 
-                <div class="form-group form-inline">
-                    <label>Up to </label>
+                <div class="form-group form-inline @if ($errors->has('own_scan_to.3')) has-error @endif">
+                   <label>Up to </label>
                     
-                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.3'), array('class'=>'form-control')) }}
-                     <label> Own Scans </label>
-                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.3'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each own scan page </label>
+                        {{ Form::text('own_scan_to[]', Input::old('own_scan_to.3'), array('class'=>'form-control', 'id' => 'own_scan_to_3')) }}
+                    <label> Own Scans </label>
+                        {{ Form::text('price_per_own_scan[]', Input::old('price_per_own_scan.3'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_own_scan_3')) }}
+                    <label> USD each own scan page </label>
                 </div>
 
             </div>
@@ -255,46 +254,45 @@
         
         <div class="row">
             <div class="col-lg-8">
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('plan_scan_to.0')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.0'), array('class'=>'form-control')) }}
-                     <label> Scans </label>
-                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.0'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each scan page </label>
+                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.0'), array('class'=>'form-control', 'id' => 'plan_scan_to_0')) }}
+                    <label> Scans </label>
+                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.0'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_plan_scan_0')) }}
+                    <label> USD each scan page </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('plan_scan_to.1')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.1'), array('class'=>'form-control')) }}
-                     <label> Scans </label>
-                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.1'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each scan page </label>
+                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.1'), array('class'=>'form-control', 'id' => 'plan_scan_to_1')) }}
+                    <label> Scans </label>
+                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.1'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_plan_scan_1')) }}
+                    <label> USD each scan page </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('plan_scan_to.2')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.2'), array('class'=>'form-control')) }}
-                     <label> Scans </label>
-                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.2'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each scan page </label>
+                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.2'), array('class'=>'form-control', 'id' => 'plan_scan_to_2')) }}
+                    <label> Scans </label>
+                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.2'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_plan_scan_2')) }}
+                    <label> USD each scan page </label>
                 </div>
 
-                <div class="form-group form-inline">
+                <div class="form-group form-inline @if ($errors->has('plan_scan_to.3')) has-error @endif">
                     <label>Up to </label>
                     
-                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.3'), array('class'=>'form-control')) }}
-                     <label> Scans </label>
-                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.3'), array('class'=>'form-control', 'placeholder' => '0.00')) }}
-                     <label> USD each scan page </label>
+                        {{ Form::text('plan_scan_to[]', Input::old('plan_scan_to.3'), array('class'=>'form-control', 'id' => 'plan_scan_to_3')) }}
+                    <label> Scans </label>
+                        {{ Form::text('price_per_plan_scan[]', Input::old('price_per_plan_scan.3'), array('class'=>'form-control', 'placeholder' => '0.00', 'id' => 'price_per_plan_scan_3')) }}
+                    <label> USD each scan page </label>
                 </div>
             </div>
         </div>
-
         <div class="clearfix"></div>
-        <div class="col-lg-4">
+        <div class="col-lg-6">
                     <div class="form-group pull-left">
                     
                     <a class="btn btn-sm btn-info" href="{{ URL::route('priceplan.index') }}"> Cancel</a>
@@ -306,6 +304,7 @@
                     </div>
         </div>
         {{ Form::close() }}
+
 @stop
 
 

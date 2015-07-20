@@ -54,22 +54,22 @@ class PricePlanController extends \BaseController
 
         foreach (Input::get('user_to') as $key => $val) {
             $rules['user_to.'.$key] = 'integer';
-            $rules['price_per_user.'.$key] = 'required|integer';
+            $rules['price_per_user.'.$key] = 'required|numeric';
         }
 
         foreach (Input::get('gb_to') as $key => $val) {
             $rules['gb_to.'.$key] = 'integer';
-            $rules['price_per_gb.'.$key] = 'required|integer';
+            $rules['price_per_gb.'.$key] = 'required|numeric';
         }
 
         foreach (Input::get('own_scan_to') as $key => $val) {
             $rules['own_scan_to.'.$key] = 'integer';
-            $rules['price_per_own_scan.'.$key] = 'required|integer';
+            $rules['price_per_own_scan.'.$key] = 'required|numeric';
         }
 
         foreach (Input::get('plan_scan_to') as $key => $val) {
             $rules['plan_scan_to.'.$key] = 'integer';
-            $rules['price_per_plan_scan.'.$key] = 'required|integer';
+            $rules['price_per_plan_scan.'.$key] = 'required|numeric';
         }
 
 
@@ -82,8 +82,12 @@ class PricePlanController extends \BaseController
 
             // redirect our user back to the form with the errors from the validator
             return Redirect::route('priceplan.create')
-                ->withErrors($validator);
+                ->withErrors($validator)
+                ->withInput(Input::except('user_to', 'price_per_user', 'gb_to', 'price_per_gb', 'own_scan_to', 'price_per_own_scan', 'plan_scan_to', 'price_per_plan_scan'));
         }
+
+        $this->repo->createPricePlan(Input::all());
+
     }
 
     /**
