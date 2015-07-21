@@ -16,8 +16,9 @@ class PricePlanController extends \BaseController
      */
     public function index()
     {
-        //
-        print_r($this->repo->getPricePlans());
+        $pricePlans = $this->repo->getPricePlans();
+
+        return View::make('priceplan.index', compact(['pricePlans']));
     }
 
     /**
@@ -53,23 +54,31 @@ class PricePlanController extends \BaseController
         );
 
         foreach (Input::get('user_to') as $key => $val) {
-            $rules['user_to.'.$key] = 'integer';
-            $rules['price_per_user.'.$key] = 'required|numeric';
+            if ($val) {
+                $rules['user_to.'.$key] = 'integer';
+                $rules['price_per_user.'.$key] = 'required|numeric';
+            }
         }
 
         foreach (Input::get('gb_to') as $key => $val) {
-            $rules['gb_to.'.$key] = 'integer';
-            $rules['price_per_gb.'.$key] = 'required|numeric';
+            if ($val) {
+                $rules['gb_to.'.$key] = 'integer';
+                $rules['price_per_gb.'.$key] = 'required|numeric';
+            }
         }
 
         foreach (Input::get('own_scan_to') as $key => $val) {
-            $rules['own_scan_to.'.$key] = 'integer';
-            $rules['price_per_own_scan.'.$key] = 'required|numeric';
+            if ($val) {
+                $rules['own_scan_to.'.$key] = 'integer';
+                $rules['price_per_own_scan.'.$key] = 'required|numeric';
+            }
         }
 
         foreach (Input::get('plan_scan_to') as $key => $val) {
-            $rules['plan_scan_to.'.$key] = 'integer';
-            $rules['price_per_plan_scan.'.$key] = 'required|numeric';
+            if ($val) {
+                $rules['plan_scan_to.'.$key] = 'integer';
+                $rules['price_per_plan_scan.'.$key] = 'required|numeric';
+            }
         }
 
 

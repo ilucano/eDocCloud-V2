@@ -29,7 +29,17 @@
                 @if (Session::has('message'))
                     <div class="alert alert-info">{{ Session::get('message') }}</div>
                 @endif
-            
+                
+
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div> 
 
@@ -197,7 +207,7 @@
         </div>
         
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-10">
 
                 <div class="form-group form-inline @if ($errors->has('own_scan_to.0')) has-error @endif">
                     <label>Up to </label>
