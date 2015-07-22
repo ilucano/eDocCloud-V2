@@ -16,7 +16,12 @@ class PricePlanRepository implements PricePlanRepositoryInterface
     public function getPricePlanById($id)
     {
 
-
+        $pricePlan = $this->queryPricePlan($id);
+        $pricePlan->plan_user_tiers = $this->queryPricePlanUserTiers($id);
+        $pricePlan->plan_storage_tiers = $this->queryPricePlanStorageTiers($id);
+        $pricePlan->plan_own_scan_tiers = $this->queryPricePlanOwnScanTiers($id);
+        $pricePlan->plan_plan_scan_tiers = $this->queryPricePlanPlanScanTiers($id);
+        return $pricePlan;
     }
 
 
@@ -110,5 +115,39 @@ class PricePlanRepository implements PricePlanRepositoryInterface
                 $record->save();
             }
         }
+    }
+
+    private function queryPricePlan($id)
+    {
+        return PricePlan::find($id);
+    }
+
+    private function queryPricePlanUserTiers($pricePlanId)
+    {
+        return PricePlanUserTier::where('plan_id', '=', $pricePlanId)
+                                  ->orderBy('user_to')
+                                  ->get();
+    }
+
+
+    private function queryPricePlanStorageTiers($pricePlanId)
+    {
+        return PricePlanStorageTier::where('plan_id', '=', $pricePlanId)
+                                  ->orderBy('gb_to')
+                                  ->get();
+    }
+
+    private function queryPricePlanOwnScanTiers($pricePlanId)
+    {
+        return PricePlanOwnScanTier::where('plan_id', '=', $pricePlanId)
+                                  ->orderBy('own_scan_to')
+                                  ->get();
+    }
+
+    private function queryPricePlanPlanScanTiers($pricePlanId)
+    {
+        return PricePlanPlanScanTier::where('plan_id', '=', $pricePlanId)
+                                  ->orderBy('plan_scan_to')
+                                  ->get();
     }
 }

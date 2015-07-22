@@ -6,7 +6,7 @@
         <div class="col-lg-12">
             <h2 class="page-header">Site Admin 
             <small>Price Plan Template</small>
-            <div class="pull-right"><a class="btn btn-sm btn-info" href="#"><i class="fa fa-plus-circle fa-lg"></i> Create New Plan</a></div>
+            <div class="pull-right"><a class="btn btn-sm btn-info" href="{{ URL::route('priceplan.create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create New Plan</a></div>
             </h2>
             
             <ol class="breadcrumb">
@@ -83,7 +83,7 @@
                         </td>             
                         <td style="white-space: nowrap;">
                             <div class="pull-left">
-                                <a class="btn btn-sm btn-info" href="#"><i class="fa fa-edit fa-lg"></i> Edit</a>
+                                <a class="btn btn-sm btn-info" href="{{ URL::route('priceplan.edit', ['priceplan' => $plan->id]) }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
                             </div>
                         </td>
                      

@@ -121,6 +121,8 @@ class PricePlanController extends \BaseController
     public function edit($id)
     {
         //
+        $pricePlan = $this->repo->getPricePlanById($id);
+        return $pricePlan;
     }
 
     /**
