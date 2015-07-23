@@ -122,7 +122,8 @@ class PricePlanController extends \BaseController
     {
         //
         $pricePlan = $this->repo->getPricePlanById($id);
-        return $pricePlan;
+        return View::make('priceplan.edit', compact(['pricePlan']));
+
     }
 
     /**
@@ -135,6 +136,69 @@ class PricePlanController extends \BaseController
     public function update($id)
     {
         //
+        $rules = array(
+           'plan_name'             => 'required|unique:price_plans,plan_name,'. $id,                        // just a normal required validation
+           'plan_code'            => 'required|unique:price_plans,plan_code,'. $id,    // required and must be unique in the ducks table
+           'base_price'         => 'required|numeric',
+           'free_users' => 'required|integer',
+           'free_gb' => 'required|numeric',
+           'free_own_scans' => 'required|integer',
+           'free_plan_scans' => 'required|integer',
+
+        );
+
+        foreach (Input::get('user_to') as $key => $val) {
+            if ($val) {
+                $rules['user_to.'.$key] = 'integer';
+                $rules['price_per_user.'.$key] = 'required|numeric';
+            }
+        }
+
+        foreach (Input::get('gb_to') as $key => $val) {
+            if ($val) {
+                $rules['gb_to.'.$key] = 'numeric';
+                $rules['price_per_gb.'.$key] = 'required|numeric';
+            }
+        }
+
+        foreach (Input::get('own_scan_to') as $key => $val) {
+            if ($val) {
+                $rules['own_scan_to.'.$key] = 'integer';
+                $rules['price_per_own_scan.'.$key] = 'required|numeric';
+            }
+        }
+
+        foreach (Input::get('plan_scan_to') as $key => $val) {
+            if ($val) {
+                $rules['plan_scan_to.'.$key] = 'integer';
+                $rules['price_per_plan_scan.'.$key] = 'required|numeric';
+            }
+        }
+
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        // check if the validator failed -----------------------
+        if ($validator->fails()) {
+            // get the error messages from the validator
+            $messages = $validator->messages();
+
+            // redirect our user back to the form with the errors from the validator
+            return Redirect::route('priceplan.edit', ['priceplan' => $id])
+                ->withErrors($validator)
+                ->withInput(Input::except('user_to', 'price_per_user', 'gb_to', 'price_per_gb', 'own_scan_to', 'price_per_own_scan', 'plan_scan_to', 'price_per_plan_scan'));
+        }
+
+
+        $result = $this->repo->updatePricePlan($id, Input::all());
+        
+        if ($result == true) {
+            Session::flash('message', 'Price plan successfuly updated');
+            return Redirect::route('priceplan.edit', ['priceplan' => $id]);
+        } else {
+            Session::flash('error', 'Error updating price plan');
+            return Redirect::route('priceplan.edit', ['priceplan' => $id]);
+        }
     }
 
     /**

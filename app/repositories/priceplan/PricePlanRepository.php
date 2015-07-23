@@ -150,4 +150,67 @@ class PricePlanRepository implements PricePlanRepositoryInterface
                                   ->orderBy('plan_scan_to')
                                   ->get();
     }
+
+
+    public function updatePricePlan($id, array $data)
+    {   
+        try {
+            $pricePlan = PricePlan::find($id);
+
+            $pricePlan->plan_code = $data['plan_code'];
+            $pricePlan->plan_name = $data['plan_name'];
+            $pricePlan->base_price = $data['base_price'];
+            $pricePlan->free_users = $data['free_users'];
+            $pricePlan->free_gb = $data['free_gb'];
+            $pricePlan->free_own_scans = $data['free_own_scans'];
+            $pricePlan->free_plan_scans = $data['free_plan_scans'];
+
+            $pricePlan->save();
+
+            $this->deletePricePlanUserTiers($id);
+            $this->insertPricePlanUserTiers($data, $id);
+            
+            $this->deletePriceStorageTiers($id);
+            $this->insertPriceStorageTiers($data, $id);
+
+            $this->deletePricePlanOwnScanTiers($id);
+            $this->insertPricePlanOwnScanTiers($data, $id);
+
+            $this->deletePricePlanPlanScanTiers($id);
+            $this->insertPricePlanPlanScanTiers($data, $id);
+            
+            return true;
+
+        } catch (Exception $e) {
+            return false;
+        }
+
+
+
+    }
+
+    private function deletePricePlanUserTiers($id)
+    {
+        $records = PricePlanUserTier::where('plan_id', '=', $id);
+        $records->delete();
+    }
+
+    private function deletePriceStorageTiers($id)
+    {
+        $records = PricePlanStorageTier::where('plan_id', '=', $id);
+        $records->delete();
+    }
+
+
+    private function deletePricePlanOwnScanTiers($id)
+    {
+        $records = PricePlanOwnScanTier::where('plan_id', '=', $id);
+        $records->delete();
+    }
+
+    private function deletePricePlanPlanScanTiers($id)
+    {
+        $records = PricePlanPlanScanTier::where('plan_id', '=', $id);
+        $records->delete();
+    }
 }
