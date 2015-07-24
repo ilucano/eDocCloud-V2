@@ -5,6 +5,7 @@ use PricePlanUserTier;
 use PricePlanStorageTier;
 use PricePlanOwnScanTier;
 use PricePlanPlanScanTier;
+use Company;
 
 class PricePlanRepository implements PricePlanRepositoryInterface
 {
@@ -212,5 +213,24 @@ class PricePlanRepository implements PricePlanRepositoryInterface
     {
         $records = PricePlanPlanScanTier::where('plan_id', '=', $id);
         $records->delete();
+    }
+
+
+    public function getCompanyWithoutPlan()
+    {   
+        $companiesHasPlan = PricePlan::whereNotNull('company_id')
+                                     ->get(['company_id'])->toArray();
+
+        $filterArray = array();
+        foreach ($companiesHasPlan as $company)
+        {
+            $filterArray[] = $company['company_id'];
+        }
+
+
+        $companies = Company::whereNotIn('row_id', $filterArray)
+                              ->orderBy('company_name')
+                              ->get();
+        return $companies;
     }
 }

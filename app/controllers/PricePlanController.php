@@ -17,8 +17,15 @@ class PricePlanController extends \BaseController
     public function index()
     {
         $pricePlans = $this->repo->getPricePlans();
+        $companiesNoPlan = $this->repo->getCompanyWithoutPlan();
 
-        return View::make('priceplan.index', compact(['pricePlans']));
+        $companyDropdown = array();
+        foreach ($companiesNoPlan as $company)
+        {
+            $companyDropdown[$company->row_id] = $company->company_name;
+
+        }
+        return View::make('priceplan.index', compact(['pricePlans', 'companyDropdown']));
     }
 
     /**

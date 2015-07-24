@@ -12,4 +12,6 @@ interface PricePlanRepositoryInterface
     public function createPricePlan(array $data);
 
     public function updatePricePlan($id, array $data);
+
+    public function getCompanyWithoutPlan();
 }

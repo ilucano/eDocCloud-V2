@@ -98,7 +98,7 @@
         {{ Form::hidden('assignplan', '',  array('id' => 'assignplan')) }}
 
          <label>Select plan and assign to company: </label>
-         {{ Form::select('age', ['Under 18', '19 to 30', 'Over 30'], null, ['class'=> 'form-control']) }}
+         {{ Form::select('company_id', $companyDropdown, null, ['class'=> 'form-control']) }}
 
           {{ Form::submit('Assign and Customize >', array('class' => 'btn btn-success btn-sm', 'id' => 'assign-button', 'disabled' => 'disabled')) }}
         {{ Form::close() }}
