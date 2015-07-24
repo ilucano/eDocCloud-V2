@@ -212,4 +212,10 @@ class PricePlanController extends \BaseController
     {
         //
     }
+
+
+    public function assignPlan()
+    {
+        print_r(Input::all());
+    }
 }

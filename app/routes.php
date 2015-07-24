@@ -142,8 +142,12 @@ Route::group(
             }
         );
 
+        Route::post('priceplan/assignplan', ['uses' => 'PricePlanController@assignPlan', 'as' => 'priceplan.assignplan']);
+
+
         Route::resource('priceplan', 'PricePlanController');
         
+
         Route::resource('role', 'RoleController');
         /* end super admin section */
 
