@@ -336,4 +336,16 @@ class PricePlanRepository implements PricePlanRepositoryInterface
     {
         return PricePlan::where('is_template', '=', 1)->get();
     }
+
+    public function getCompanyPricePlans()
+    {
+        $plans = PricePlan::whereNotNull('company_id')->get();
+
+        foreach ($plans as $plan) {
+            $company = Company::where('row_id', '=', $plan->company_id)->first();
+            $plan->company_name = $company->company_name;
+        }
+
+        return $plans;
+    }
 }

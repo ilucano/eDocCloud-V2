@@ -17,4 +17,6 @@ interface PricePlanRepositoryInterface
     public function assignPlanToCompany($id, $companyId);
 
     public function getTemplatePricePlans();
+
+    public function getCompanyPricePlans();
 }
