@@ -30,6 +30,15 @@
         <div class="alert alert-info">{{ Session::get('message') }}</div>
     @endif
     
+     @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped" id="datatables">
         <thead>

@@ -222,8 +222,7 @@ class PricePlanRepository implements PricePlanRepositoryInterface
                                      ->get(['company_id'])->toArray();
 
         $filterArray = array();
-        foreach ($companiesHasPlan as $company)
-        {
+        foreach ($companiesHasPlan as $company) {
             $filterArray[] = $company['company_id'];
         }
 
@@ -232,5 +231,10 @@ class PricePlanRepository implements PricePlanRepositoryInterface
                               ->orderBy('company_name')
                               ->get();
         return $companies;
+    }
+
+    public function copyPlanToCompany($id, $companyId)
+    {
+        echo "ok..copy company plan";
     }
 }

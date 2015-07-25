@@ -20,8 +20,7 @@ class PricePlanController extends \BaseController
         $companiesNoPlan = $this->repo->getCompanyWithoutPlan();
 
         $companyDropdown = array();
-        foreach ($companiesNoPlan as $company)
-        {
+        foreach ($companiesNoPlan as $company) {
             $companyDropdown[$company->row_id] = $company->company_name;
 
         }
@@ -223,6 +222,27 @@ class PricePlanController extends \BaseController
 
     public function assignPlan()
     {
-        print_r(Input::all());
+        $rules = array(
+           'assignplan' => 'required|integer',
+           'company_id' => 'required|integer',
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        // check if the validator failed -----------------------
+        if ($validator->fails()) {
+            // get the error messages from the validator
+            $messages = $validator->messages();
+
+            // redirect our user back to the form with the errors from the validator
+            return Redirect::route('priceplan.index')
+                ->withErrors($validator);
+        
+        }
+
+        $planId = Input::get('assignplan');
+        $companyId =  Input::get('company_id');
+
+        $this->repo->copyPlanToCompany($planId, $companyId);
     }
 }

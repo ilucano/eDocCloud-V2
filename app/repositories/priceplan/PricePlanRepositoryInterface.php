@@ -14,4 +14,6 @@ interface PricePlanRepositoryInterface
     public function updatePricePlan($id, array $data);
 
     public function getCompanyWithoutPlan();
+
+    public function copyPlanToCompany($id, $companyId);
 }
