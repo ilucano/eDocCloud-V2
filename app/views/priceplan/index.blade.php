@@ -5,17 +5,10 @@
  
 <div class="col-lg-12">
     <h2 class="page-header">Site Admin 
-    <small>Companies Price Plan and Template</small>
+    <small>Price Plan Templates</small>
     <div class="pull-right"><a class="btn btn-sm btn-info" href="{{ URL::route('priceplan.create') }}"><i class="fa fa-plus-circle fa-lg"></i> Create New Plan Template</a></div>
     </h2>
      
-    <ol class="breadcrumb">
-        
-        <li>
-            <i class="fa fa-dollars"></i> Price Plan Templates
-        </li>
-    </ol>
-    
 </div>
 
 

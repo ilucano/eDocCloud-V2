@@ -158,8 +158,8 @@ class PricePlanRepository implements PricePlanRepositoryInterface
         try {
             $pricePlan = PricePlan::find($id);
 
-            $pricePlan->plan_code = $data['plan_code'];
-            $pricePlan->plan_name = $data['plan_name'];
+            $pricePlan->plan_code = isset($data['plan_code']) ? $data['plan_code']: '';
+            $pricePlan->plan_name = isset($data['plan_name']) ? $data['plan_name']: '';
             $pricePlan->base_price = $data['base_price'];
             $pricePlan->free_users = $data['free_users'];
             $pricePlan->free_gb = $data['free_gb'];
@@ -235,19 +235,90 @@ class PricePlanRepository implements PricePlanRepositoryInterface
 
     public function assignPlanToCompany($id, $companyId)
     {
-        $originalPlan = $this->queryPricePlan($id)->toArray();
+        try {
+            $originalPlan = $this->queryPricePlan($id)->toArray();
 
-        $newPlanId = $this->copyPlanToCompany($originalPlan, $companyId);
+            $newPlanId = $this->copyPlanToCompany($originalPlan, $companyId);
 
-        echo $newPlanId;
-        exit;
+            $userTiers = $this->queryPricePlanUserTiers($id)->toArray();
+            $data = $this->convertUserTiersToFormData($userTiers);
+            $this->insertPricePlanUserTiers($data, $newPlanId);
+
+            $storageTiers = $this->queryPricePlanStorageTiers($id)->toArray();
+            $data = $this->convertStorageTiersToFormData($storageTiers);
+            $this->insertPriceStorageTiers($data, $newPlanId);
+
+            $ownScanTiers = $this->queryPricePlanOwnScanTiers($id)->toArray();
+            $data = $this->convertOwnScanTiersToFormData($ownScanTiers);
+            $this->insertPricePlanOwnScanTiers($data, $newPlanId);
+
+            $planScanTiers = $this->queryPricePlanPlanScanTiers($id)->toArray();
+            $data = $this->convertPlanScanTiersToFormData($planScanTiers);
+            $this->insertPricePlanPlanScanTiers($data, $newPlanId);
+
+            return $newPlanId;
+        } catch (Exception $e) {
+            return false;
+        }
+
+    }
+
+    private function convertUserTiersToFormData($array)
+    {
+        $data = array();
+
+        foreach ($array as $key => $item) {
+            $data['user_to'][$key] = $item['user_to'];
+            $data['price_per_user'][$key] = $item['price_per_user'];
+        }
+
+        return $data;
+    }
+
+    private function convertStorageTiersToFormData($array)
+    {
+        $data = array();
+
+        foreach ($array as $key => $item) {
+            $data['gb_to'][$key] = $item['gb_to'];
+            $data['price_per_gb'][$key] = $item['price_per_gb'];
+        }
+
+        return $data;
+
+    }
+
+    private function convertOwnScanTiersToFormData($array)
+    {
+        $data = array();
+
+        foreach ($array as $key => $item) {
+            $data['own_scan_to'][$key] = $item['own_scan_to'];
+            $data['price_per_own_scan'][$key] = $item['price_per_own_scan'];
+        }
+
+        return $data;
+
+    }
+
+    private function convertPlanScanTiersToFormData($array)
+    {
+        $data = array();
+
+        foreach ($array as $key => $item) {
+            $data['plan_scan_to'][$key] = $item['plan_scan_to'];
+            $data['price_per_plan_scan'][$key] = $item['price_per_plan_scan'];
+        }
+
+        return $data;
+
     }
 
     private function copyPlanToCompany(array $originalPlan, $companyId)
     {
         $pricePlan = new PricePlan;
-        $pricePlan->plan_code = $originalPlan['plan_code'];
-        $pricePlan->plan_name = $originalPlan['plan_name'];
+        $pricePlan->plan_code = '';
+        $pricePlan->plan_name = '';
         $pricePlan->base_price = $originalPlan['base_price'];
         $pricePlan->free_users = $originalPlan['free_users'];
         $pricePlan->free_gb = $originalPlan['free_gb'];

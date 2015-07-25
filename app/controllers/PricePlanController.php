@@ -128,7 +128,12 @@ class PricePlanController extends \BaseController
     {
         //
         $pricePlan = $this->repo->getPricePlanById($id);
-        return View::make('priceplan.edit', compact(['pricePlan']));
+        $company = '';
+        if ($pricePlan->company_id) {
+            $company = Company::where('row_id', '=', $pricePlan->company_id)->first();
+        }
+        
+        return View::make('priceplan.edit', compact(['pricePlan', 'company']));
 
     }
 
@@ -142,9 +147,10 @@ class PricePlanController extends \BaseController
     public function update($id)
     {
         //
+        
+        $pricePlan = $this->repo->getPricePlanById($id);
+
         $rules = array(
-           'plan_name'             => 'required|unique:price_plans,plan_name,'. $id,                        // just a normal required validation
-           'plan_code'            => 'required|unique:price_plans,plan_code,'. $id,    // required and must be unique in the ducks table
            'base_price'         => 'required|numeric',
            'free_users' => 'required|integer',
            'free_gb' => 'required|numeric',
@@ -152,6 +158,11 @@ class PricePlanController extends \BaseController
            'free_plan_scans' => 'required|integer',
 
         );
+
+        if ($pricePlan->is_template == 1) {
+            $rules['plan_name'] = 'required|unique:price_plans,plan_name,'. $id;
+            $rules['plan_code'] = 'required|unique:price_plans,plan_code,'. $id;
+        }
 
         foreach (Input::get('user_to') as $key => $val) {
             if ($val) {
@@ -243,6 +254,14 @@ class PricePlanController extends \BaseController
         $planId = Input::get('assignplan');
         $companyId =  Input::get('company_id');
 
-        $this->repo->assignPlanToCompany($planId, $companyId);
+        $newPricePlanId = $this->repo->assignPlanToCompany($planId, $companyId);
+
+        if ($newPricePlanId) {
+            Session::flash('message', 'Price plan successfuly assigned to company.<br/>You can review and make changes here.');
+            return Redirect::route('priceplan.edit', ['priceplan' => $newPricePlanId]);
+        } else {
+            Session::flash('error', 'Error assign price plan');
+            return Redirect::route('priceplan.index');
+        }
     }
 }

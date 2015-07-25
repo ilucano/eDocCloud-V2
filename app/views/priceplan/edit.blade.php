@@ -6,7 +6,7 @@
             
 
             <h2 class="page-header">Site Admin 
-            <small>Edit Price Plan Template</small>
+            <small>Edit Price Plan</small>
             </h2>
                 
             <ol class="breadcrumb">
@@ -15,7 +15,7 @@
                 </li>
                     
                 <li class="active">
-                    <i class="fa fa-users"></i> <a href="{{ URL::route('priceplan.index') }}">Price Plan Template</a>
+                    <i class="fa fa-users"></i> <a href="{{ URL::route('priceplan.index') }}">Price Plan</a>
                 </li>
  
                 <li class="active">
@@ -26,6 +26,15 @@
 
         <div class="row">
             <div class="col-lg-8">
+
+                @if ($pricePlan->is_template == 1)
+                     <div class="alert alert-info">This is price template. Update template will not affect plan previous  assigned to company.</div>
+                @endif
+
+                @if ($company)
+                     <div class="alert alert-success"><i class="fa fa-star"></i> This plan is assigned to <strong>{{ $company->company_name }} </strong></div>
+                @endif
+                
                 @if (Session::has('message'))
                     <div class="alert alert-info">{{ Session::get('message') }}</div>
                 @endif
@@ -54,22 +63,26 @@
         <div class="row">
 
             <div class="col-lg-5">
-                <div class="form-group @if ($errors->has('plan_name')) has-error @endif">
-                    <label>Price Plan Name</label>
-                    {{ Form::text('plan_name', $pricePlan->plan_name, array('class'=>'form-control')) }}
-                    
-                    @if ($errors->has('plan_name')) <p class="help-block">{{ $errors->first('plan_name') }}</p> @endif         
-                </div>
- 
-                <div class="form-group @if ($errors->has('plan_code')) has-error @endif">
-                     
-                    <label>Plan Code</label>
-                   
-                        {{ Form::text('plan_code', $pricePlan->plan_code, array('class'=>'form-control')) }}
-                   
-                    @if ($errors->has('plan_code')) <p class="help-block">{{ $errors->first('plan_code') }}</p> @endif
+
+                @if ($pricePlan->is_template == 1)
+                    <div class="form-group @if ($errors->has('plan_name')) has-error @endif">
+                        <label>Price Plan Name</label>
+
+                        {{ Form::text('plan_name', $pricePlan->plan_name, array('class'=>'form-control')) }}
                         
-                </div>
+                        @if ($errors->has('plan_name')) <p class="help-block">{{ $errors->first('plan_name') }}</p> @endif         
+                    </div>
+     
+                    <div class="form-group @if ($errors->has('plan_code')) has-error @endif">
+                         
+                        <label>Plan Code</label>
+                       
+                            {{ Form::text('plan_code', $pricePlan->plan_code, array('class'=>'form-control')) }}
+                       
+                        @if ($errors->has('plan_code')) <p class="help-block">{{ $errors->first('plan_code') }}</p> @endif
+                            
+                    </div>
+                @endif
 
                  <div class="form-group @if ($errors->has('base_price')) has-error @endif">
                      
