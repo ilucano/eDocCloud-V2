@@ -2,7 +2,6 @@
 
 interface PricePlanRepositoryInterface
 {
-
     public function getPricePlans();
 
     public function getPricePlanById($id);
@@ -15,5 +14,7 @@ interface PricePlanRepositoryInterface
 
     public function getCompanyWithoutPlan();
 
-    public function copyPlanToCompany($id, $companyId);
+    public function assignPlanToCompany($id, $companyId);
+
+    public function getTemplatePricePlans();
 }

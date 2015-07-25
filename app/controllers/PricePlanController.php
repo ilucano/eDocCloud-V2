@@ -16,7 +16,7 @@ class PricePlanController extends \BaseController
      */
     public function index()
     {
-        $pricePlans = $this->repo->getPricePlans();
+        $pricePlans = $this->repo->getTemplatePricePlans();
         $companiesNoPlan = $this->repo->getCompanyWithoutPlan();
 
         $companyDropdown = array();
@@ -243,6 +243,6 @@ class PricePlanController extends \BaseController
         $planId = Input::get('assignplan');
         $companyId =  Input::get('company_id');
 
-        $this->repo->copyPlanToCompany($planId, $companyId);
+        $this->repo->assignPlanToCompany($planId, $companyId);
     }
 }

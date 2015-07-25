@@ -154,7 +154,7 @@ class PricePlanRepository implements PricePlanRepositoryInterface
 
 
     public function updatePricePlan($id, array $data)
-    {   
+    {
         try {
             $pricePlan = PricePlan::find($id);
 
@@ -217,7 +217,7 @@ class PricePlanRepository implements PricePlanRepositoryInterface
 
 
     public function getCompanyWithoutPlan()
-    {   
+    {
         $companiesHasPlan = PricePlan::whereNotNull('company_id')
                                      ->get(['company_id'])->toArray();
 
@@ -233,8 +233,36 @@ class PricePlanRepository implements PricePlanRepositoryInterface
         return $companies;
     }
 
-    public function copyPlanToCompany($id, $companyId)
+    public function assignPlanToCompany($id, $companyId)
     {
-        echo "ok..copy company plan";
+        $originalPlan = $this->queryPricePlan($id)->toArray();
+
+        $newPlanId = $this->copyPlanToCompany($originalPlan, $companyId);
+
+        echo $newPlanId;
+        exit;
+    }
+
+    private function copyPlanToCompany(array $originalPlan, $companyId)
+    {
+        $pricePlan = new PricePlan;
+        $pricePlan->plan_code = $originalPlan['plan_code'];
+        $pricePlan->plan_name = $originalPlan['plan_name'];
+        $pricePlan->base_price = $originalPlan['base_price'];
+        $pricePlan->free_users = $originalPlan['free_users'];
+        $pricePlan->free_gb = $originalPlan['free_gb'];
+        $pricePlan->free_own_scans = $originalPlan['free_own_scans'];
+        $pricePlan->free_plan_scans = $originalPlan['free_plan_scans'];
+        $pricePlan->is_template = 0;
+        $pricePlan->copy_from_template = $originalPlan['id'];
+        $pricePlan->company_id = $companyId;
+        $pricePlan->save();
+
+        return $pricePlan->id;
+    }
+
+    public function getTemplatePricePlans()
+    {
+        return PricePlan::where('is_template', '=', 1)->get();
     }
 }
