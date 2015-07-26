@@ -35,15 +35,21 @@ class PricePlanRepository implements PricePlanRepositoryInterface
     public function createPricePlan(array $data)
     {
        
-        $pricePlanId = $this->insertPricePlan($data);
+        try {
+            $pricePlanId = $this->insertPricePlan($data);
 
-        if ($pricePlanId) {
-            $this->insertPricePlanUserTiers($data, $pricePlanId);
-            $this->insertPriceStorageTiers($data, $pricePlanId);
-            $this->insertPricePlanOwnScanTiers($data, $pricePlanId);
-            $this->insertPricePlanPlanScanTiers($data, $pricePlanId);
+            if ($pricePlanId) {
+                $this->insertPricePlanUserTiers($data, $pricePlanId);
+                $this->insertPriceStorageTiers($data, $pricePlanId);
+                $this->insertPricePlanOwnScanTiers($data, $pricePlanId);
+                $this->insertPricePlanPlanScanTiers($data, $pricePlanId);
 
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
         }
+
 
     }
 

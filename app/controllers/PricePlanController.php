@@ -103,7 +103,16 @@ class PricePlanController extends \BaseController
                 ->withInput(Input::except('user_to', 'price_per_user', 'gb_to', 'price_per_gb', 'own_scan_to', 'price_per_own_scan', 'plan_scan_to', 'price_per_plan_scan'));
         }
 
-        $this->repo->createPricePlan(Input::all());
+        $result = $this->repo->createPricePlan(Input::all());
+
+        if ($result) {
+            Session::flash('message', 'Price plan successfuly created');
+            return Redirect::route('priceplan.index');
+        } else {
+            Session::flash('error', 'Error creating price plan');
+            return Redirect::route('priceplan.index');
+
+        }
 
     }
 
