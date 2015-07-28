@@ -11,4 +11,5 @@
 |
 */
 Artisan::resolve('DataUsageEmailer');
+Artisan::resolve('GenerateDailyUsageReport');
 //Artisan::add(new DataUsageEmailer(new FileRepositoryInterface()));
