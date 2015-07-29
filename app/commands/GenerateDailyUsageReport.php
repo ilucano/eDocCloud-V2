@@ -41,7 +41,9 @@ class GenerateDailyUsageReport extends Command
     public function fire()
     {
         //
-        print_r($this->priceplanrepo->getPricePlans());
+        print_r($this->option('date-range'));
+
+        //print_r($this->priceplanrepo->getPricePlans());
     }
 
     /**
@@ -64,7 +66,7 @@ class GenerateDailyUsageReport extends Command
     protected function getOptions()
     {
         return array(
-            array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+            array('date-range', null, InputOption::VALUE_OPTIONAL, 'Date Range, e.g. 2015-06-10_2015-06-13 . Date are inclusive', null),
         );
     }
 }
