@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Repositories\File\FileRepositoryInterface;
 use Repositories\PricePlan\PricePlanRepositoryInterface;
 use Carbon\Carbon;
+use \Company as Company;
 
 class GenerateDailyUsageReport extends Command
 {
@@ -25,7 +26,7 @@ class GenerateDailyUsageReport extends Command
 
     protected $daterange;
 
-    protected $companylist;
+    protected $companylist = array();
 
     protected $datelist = array();
 
@@ -73,6 +74,15 @@ class GenerateDailyUsageReport extends Command
         foreach ($this->datelist as $reportDate) {
             echo $reportDate;
         }
+
+        if ($this->option('company-ids')) {
+            $this->companylist = $this->getCompanyIds(explode(',', $this->option('company-ids')));
+        } else {
+            $this->companylist = $this->getCompanyIds();
+        }
+
+        print_r($this->companylist);
+
     }
 
     /**
@@ -96,7 +106,22 @@ class GenerateDailyUsageReport extends Command
     {
         return array(
             array('date-range', null, InputOption::VALUE_OPTIONAL, 'Date Range, e.g. 2015-06-10_2015-06-13 . Date are inclusive', null),
-            array('company-id', null, InputOption::VALUE_OPTIONAL, 'Specify company by ID. e.g. 3', null),
+            array('company-ids', null, InputOption::VALUE_OPTIONAL, 'Specify company by IDs, separate by comma. e.g. 3,4,6,10', null),
         );
+    }
+
+    /**
+     * [getCompanyIds description]
+     * @return [type] [description]
+     */
+    private function getCompanyIds($companyIds = array())
+    {
+
+        if (count($companyIds) >= 1) {
+            return Company::whereIn('row_id', $companyIds)->lists('row_id');
+        } else {
+            return Company::lists('row_id');
+        }
+
     }
 }
