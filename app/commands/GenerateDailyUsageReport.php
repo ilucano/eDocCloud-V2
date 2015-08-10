@@ -7,6 +7,8 @@ use Repositories\File\FileRepositoryInterface;
 use Repositories\PricePlan\PricePlanRepositoryInterface;
 use Carbon\Carbon;
 use \Company as Company;
+use \User as User;
+use \Helpers;
 
 class GenerateDailyUsageReport extends Command
 {
@@ -71,9 +73,7 @@ class GenerateDailyUsageReport extends Command
             $dateToCheck = Carbon::createFromFormat('Y-m-d', $dateToCheck)->addDay(1)->toDateString();
         }
 
-        foreach ($this->datelist as $reportDate) {
-            echo $reportDate;
-        }
+
 
         if ($this->option('company-ids')) {
             $this->companylist = $this->getCompanyIds(explode(',', $this->option('company-ids')));
@@ -81,8 +81,16 @@ class GenerateDailyUsageReport extends Command
             $this->companylist = $this->getCompanyIds();
         }
 
-        print_r($this->companylist);
+        foreach ($this->companylist as $companyId) {
+            $this->info('Generate daily stats for company id ' . $companyId);
 
+            foreach ($this->datelist as $reportDate) {
+                $this->generateDailyReport($companyId, $reportDate);
+            }
+
+            $this->info('');
+        }
+ 
     }
 
     /**
@@ -123,5 +131,55 @@ class GenerateDailyUsageReport extends Command
             return Company::lists('row_id');
         }
 
+    }
+
+
+    public function generateDailyReport($companyId, $reportDate)
+    {
+        $this->info("generateDailyReport: $companyId $reportDate");
+
+        if ($companyId == '' || $reportDate == '') {
+            return;
+        }
+
+        $dailyReport = new MonthlyUsageReport;
+        
+        $dailyReport->company_id = $companyId;
+        $dailyReport->report_date = $reportDate;
+
+        $dailyReport->daily_new_users = $this->getDailyNewUsers($companyId, $reportDate);
+
+        $dailyReport->current_number_of_users  = $this->getCurrentNumberOfUsers($companyId, $reportDate);
+
+        print_r($dailyReport);
+    }
+
+    private function getDailyNewUsers($companyId, $reportDate)
+    {
+        $this->info("getDailyNewUsers: $companyId $reportDate");
+        $userCount = DB::table('users')->join('logins', 'users.username', '=', 'logins.username')
+                                       ->where('users.fk_empresa', '=', $companyId)
+                                       ->where('logins.active', '=', 1)
+                                       ->whereRaw("DATE(logins.created_at) = '$reportDate'")->count();
+
+        print_r(Helpers::getLastQuery());
+        $this->info($userCount);
+
+        return $userCount;
+    }
+
+
+    private function getCurrentNumberOfUsers($companyId, $reportDate)
+    {
+        $this->info("getCurrentNumberOfUsers: $companyId $reportDate");
+        $userCount = DB::table('users')->join('logins', 'users.username', '=', 'logins.username')
+                                       ->where('users.fk_empresa', '=', $companyId)
+                                       ->where('logins.active', '=', 1)
+                                       ->whereRaw("DATE(logins.created_at) <= '$reportDate'")->count();
+
+        print_r(Helpers::getLastQuery());
+        $this->info($userCount);
+
+        return $userCount;
     }
 }
