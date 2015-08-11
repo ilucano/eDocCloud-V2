@@ -121,7 +121,7 @@ class FileRepository implements FileRepositoryInterface
         return $total;
     }
 
-    public function getNumberOfFiles($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null)
+    public function getNumberOfFiles($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null, $scanType = null)
     {
         if ($toDate == '') {
             $toDate = date('Y-m-d H:i:s');
@@ -134,6 +134,10 @@ class FileRepository implements FileRepositoryInterface
             $total = $total->where('fk_empresa', '=', $companyId);
         }
 
+        if ($scanType) {
+            $total = $total->where('scan_type', '=', $scanType);
+        }
+        
         $total = $total->count('row_id');
 
         return $total;

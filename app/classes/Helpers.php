@@ -33,14 +33,14 @@ class Helpers
         return $last_query;
     }
 
-    public static function bytesToMegabytes($bytes)
+    public static function bytesToMegabytes($bytes, $postfix = 'MB')
     {
-        return number_format($bytes / 1024 / 1024, 2).'MB';
+        return number_format($bytes / 1024 / 1024, 2).$postfix;
     }
 
-    public static function bytesToGigabytes($bytes)
+    public static function bytesToGigabytes($bytes, $postfix = 'GB')
     {
-        return number_format($bytes / 1024 / 1024 / 1024, 2).'GB';
+        return number_format($bytes / 1024 / 1024 / 1024, 2).$postfix;
     }
 
     /**

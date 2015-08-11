@@ -9,7 +9,7 @@ interface FileRepositoryInterface
 
     public function getDataUsage($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null);
 
-    public function getNumberOfFiles($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null);
+    public function getNumberOfFiles($companyId = null, $fromDate = '1970-01-01 00:00:00', $toDate = null, $scanType = null);
 
     public function getMonthlyDataUsage($companyId = null, $limit = 12);
 
