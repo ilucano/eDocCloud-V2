@@ -10,4 +10,6 @@
 | the console gets access to each of the command object instances.
 |
 */
-
+Artisan::resolve('DataUsageEmailer');
+Artisan::resolve('GenerateDailyUsageReport');
+//Artisan::add(new DataUsageEmailer(new FileRepositoryInterface()));

@@ -28,7 +28,7 @@ Route::get('logout', array('uses' => 'HomeController@doLogout'));
 
 //begin routes required logged in
 Route::group(
-    array('before' => 'auth'), function () {
+    array('before' => 'auth|check_password_expiry'), function () {
 
         Route::get(
             '/', array(
@@ -69,17 +69,30 @@ Route::group(
                                 'uses' => 'ReportsController@showAllBoxes',
                                 'as' => 'reports.allboxes',
             )
-    );
+        );
 
         Route::resource('passwordpolicy', 'PasswordPolicyController');
-        
 
         Route::get(
             'reports/groupbystatus', array(
                                 'uses' => 'ReportsController@showGroupByStatus',
                                 'as' => 'reports.groupbystatus',
             )
-    );
+         );
+
+        Route::get(
+            'reports/datausage', array(
+                                'uses' => 'ReportsController@showDataUsage',
+                                'as' => 'reports.datausage',
+            )
+         );
+
+        Route::get(
+            'reports/usagechart/{fk_empresa}', array(
+                                'uses' => 'ReportsController@showUsageChart',
+                                'as' => 'reports.usagechart',
+            )
+         );
 
         Route::resource('company', 'CompanyController');
 
@@ -90,14 +103,21 @@ Route::group(
                                 'uses' => 'UserController@createStep2',
                                 'as' => 'user.create.step2',
             )
-    );
+        );
 
         Route::post(
             'user/create/company/{fk_empresa}', array(
                                 'uses' => 'UserController@storeStep2',
                                 'as' => 'user.create.storestep2',
             )
-    );
+        );
+
+        Route::get(
+            'user/generatelogin/{username}', array(
+                                'uses' => 'UserController@generateLoginLink',
+                                'as' => 'user.generatelogin',
+            )
+        );
 
         Route::resource('administrator', 'AdministratorController');
 
@@ -122,6 +142,12 @@ Route::group(
             }
         );
 
+        Route::post('priceplan/assignplan', ['uses' => 'PricePlanController@assignPlan', 'as' => 'priceplan.assignplan']);
+
+
+        Route::resource('priceplan', 'PricePlanController');
+        
+
         Route::resource('role', 'RoleController');
         /* end super admin section */
 
@@ -130,7 +156,7 @@ Route::group(
         // Route::when('companyadmin/user*', 'admin_user'); //admin_user permission check (app/filters.php)
         // Route::when('companyadmin/role*', 'admin_role'); //permission check (app/filters.php)
         // Route::when('companyadmin/filemark*', 'admin_filemark'); //permission check (app/filters.php)
-
+        
         Route::group(
             array('prefix' => 'companyadmin'),
             function () {
@@ -142,6 +168,13 @@ Route::group(
                 Route::resource('metaattribute', 'CompanyAdminMetaAttributeController');
                 Route::resource('metatargetattributevalue', 'CompanyAdminMetaTargetAttributeValueController');
                 Route::resource('metaattributeoption', 'CompanyAdminMetaAttributeOptionController');
+
+                Route::get(
+                'reports/usagechart', array(
+                                    'uses' => 'CompanyAdminReportsController@showUsageChart',
+                                    'as' => 'companyadminreports.usagechart',
+                )
+         );
 
             }
         );
@@ -155,6 +188,7 @@ Route::group(
         Route::when('users/file/search*', 'user_search');
         Route::when('users/file*', 'user_file');
         Route::when('users/profile/password', 'user_changepassword');
+        Route::when('users/storage', 'user_myfolder');
 
         Route::group(
             array('prefix' => 'users'),
@@ -182,15 +216,16 @@ Route::group(
 
                 Route::get('file/search', array('uses' => 'UsersFileController@showSearch'));
 
-                Route::get('file/attributes/{id}/edit', array('uses' => 'UsersFileController@editAttributes'));
+                Route::get('file/attributes/{id}/edit/{source?}/{query?}', array('uses' => 'UsersFileController@editAttributes'));
 
                 Route::put('file/attributes/{id}', array(
-                                                        'uses' => 'UsersFileController@updateAttributes', 
-                                                         'as' => 'users.file.attribute.update'
+                                                        'uses' => 'UsersFileController@updateAttributes',
+                                                         'as' => 'users.file.attribute.update',
                                                          )
                                                     );
 
                 Route::post('file/search', array('uses' => 'UsersFileController@doSearch'));
+                Route::get('file/query', array('uses' => 'UsersFileController@doSearch'));
 
                 Route::resource('file', 'UsersFileController');
 
@@ -202,16 +237,33 @@ Route::group(
 
                 Route::resource('activity', 'UsersActivityController');
 
-
                 Route::get('order/attributes/{id}/edit', array('uses' => 'UsersOrderController@editAttributes'));
 
                 Route::put('order/attributes/{id}', array(
-                                                        'uses' => 'UsersOrderController@updateAttributes', 
-                                                         'as' => 'users.order.attribute.update'
+                                                        'uses' => 'UsersOrderController@updateAttributes',
+                                                         'as' => 'users.order.attribute.update',
                                                          )
                                                     );
 
+                Route::resource('storage', 'UsersStorageController');
 
+                Route::get('storage/download/{id}', array('uses' => 'UsersStorageController@doDownload'));
+
+                Route::get('storage/switchfav/{id}', array('uses' => 'UsersStorageController@doSwitchFavourite'));
+
+                Route::get('storage/attributes/{id}/edit', array('uses' => 'UsersStorageController@editAttributes'));
+
+                Route::post('storage/filename/{id}', array('uses' => 'UsersStorageController@updateUserFilename'));
+
+                Route::post('storage/folder', array('uses' => 'UsersStorageController@storeFolder'));
+
+                Route::post('storage/setfolder/{id}', array('uses' => 'UsersStorageController@setFileFolder'));
+
+                Route::put('storage/attributes/{id}', array(
+                                                        'uses' => 'UsersStorageController@updateAttributes',
+                                                         'as' => 'users.storage.attribute.update',
+                                                         )
+                                                    );
 
             }
         );
@@ -315,3 +367,40 @@ Route::get(
 
     }
 );
+// Adding auth checks for the upload functionality is highly recommended.
+
+// Cabinet routes
+Route::get('upload/data', 'UploadController@data');
+Route::resource('upload', 'UploadController',
+        array('except' => array('show', 'edit', 'update', 'destroy')));
+
+// route manual authenticate user
+Route::get('ssologin', array('uses' => 'HomeController@ssoLogin'));
+
+// route manual authenticate user
+Route::get('linklogin/{token}', array('uses' => 'HomeController@linkLogin'));
+
+Route::get('/batchcompanyuuid', function () {
+    $companies = Company::all();
+
+    foreach ($companies as $company) {
+        if ($company->uuid == '') {
+            $company->uuid = Uuid::generate();
+            $company->save();
+        }
+    }
+    echo 'done';
+
+});
+
+Route::get('/samtest', function () {
+   $cookie = Cookie::get('laravel_session');
+   print_r($cookie);
+});
+
+// route to process the form
+Route::post('apilogin', array('uses' => 'HomeController@apiLogin'));
+
+Route::get('apigetcompanies/p@ssword!23', array('uses' => 'CompanyController@returnCompanies'));
+
+Route::get('apigetusers/p@ssword!23', array('uses' => 'UserController@returnUsers'));

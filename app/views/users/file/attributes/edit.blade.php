@@ -1,7 +1,3 @@
-@extends('layout_nomenu')
-
-@section('content')
-
 
     {{ Form::model($file, array('route' => array('users.file.attribute.update', $file->row_id), 'method' => 'PUT')) }}
 
@@ -24,10 +20,10 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        {{ Form::hidden('source', $source) }}
+        {{ Form::hidden('query', $query) }}
         {{ Form::submit('Save Changes', array('class' => 'btn btn-primary')) }}
     </div>
     
     {{ Form::close() }}
-
-@stop
 

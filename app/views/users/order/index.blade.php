@@ -68,6 +68,7 @@
 						@foreach ($companyAttributeHeaders as $header)
 								<th>{{ $header }}</th>
 						@endforeach
+						<th>Attributes</th>
 						<th>Action</th>	
 					</tr>
 				</thead>
@@ -88,12 +89,12 @@
 							<td> </td>
 							@endif
 						@endforeach
+						<td class="text-center">
+							<a class="btn btn-sm btn-default" href="{{ URL::to('users/order/attributes/' . $object->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-gear fa-lg"></i> </a>
+						</td>
 						<td style="white-space: no-wrap;" nowrap>
-						 
-									<a class="btn btn-sm btn-success" href="{{ URL::to('users/order/' . $object->row_id) }}"><i class="fa fa-caret-right fa-lg"></i> View</a> 
-
-									<a class="btn btn-sm btn-info" href="{{ URL::to('users/order/attributes/' . $object->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>
-				 		
+					 
+								<a class="btn btn-sm btn-success" href="{{ URL::to('users/order/' . $object->row_id) }}"><i class="fa fa-caret-right fa-lg"></i> View</a> 
 					    </td>
 					 
 					</tr>
@@ -153,5 +154,7 @@
 				}
 			);
 		 } );
+
+		$("#wrapper").toggleClass("toggled");
 	</script>
 @stop

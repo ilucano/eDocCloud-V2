@@ -8,7 +8,7 @@ class UsersActivityController extends \BaseController {
 	 * @return Response
 	 */
 	public function index()
-	{
+	{	
 		
 		$users = array();
 		
@@ -35,7 +35,11 @@ class UsersActivityController extends \BaseController {
 			$users[] = Auth::User()->id;
 		}
 		
-		$activityLogs = $this->getAcitivityLog($users);
+
+		$fromDate = Input::get('from_date') ? Input::get('from_date') :  date("Y-m-d", time() - (24*60*60*90));
+		$toDate = Input::get('to_date') ? Input::get('to_date') : date("Y-m-d");;
+
+		$activityLogs = $this->getAcitivityLog($users, $fromDate, $toDate);
 	   
 		
 		foreach($activityLogs as $activityLog)
@@ -75,7 +79,9 @@ class UsersActivityController extends \BaseController {
 	 
 		
         return View::make('users.activity.index')
-					 ->with('activityLogs', $activityLogs);
+					 ->with('activityLogs', $activityLogs)
+					 ->with('fromDate', $fromDate)
+					 ->with('toDate', $toDate);
 
 	}
 	
@@ -246,11 +252,12 @@ class UsersActivityController extends \BaseController {
 	 * @return object results
 	 */ 
     	
-	private function getAcitivityLog($users)
+	private function getAcitivityLog($users, $fromDate, $toDate)
 	{
-		//get results in last 60 days
+		
 		$results = Activity::whereIn('user_id', $users)
-				              ->where('created_at', '>=', date("Y-m-d H:i:s", time() - (24*60*60*90)))
+				              ->where('created_at', '>=', $fromDate . ' 00:00:00')
+				              ->where('created_at', '<=',$toDate . '23:59:59')
 							  ->orderBy('created_at', 'desc')
 							  ->get();
 		

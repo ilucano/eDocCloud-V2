@@ -90,7 +90,7 @@ class UsersProfileController extends \BaseController {
 	
 	
     public function showChangePassword()
-	{
+	{	
 		return View::make('users.profile.changepassword');
 	}
 	
@@ -151,6 +151,7 @@ class UsersProfileController extends \BaseController {
 		$user =	Login::findOrFail(Auth::User()->id);
 		
 		$user->password = Hash::make(Input::get('password'));
+		$user->password_changed_at = date("Y-m-d H:i:s");
         $user->save();
  
 		$logDetails = json_encode(['row_id' => Auth::User()->getUserData()->row_id]);

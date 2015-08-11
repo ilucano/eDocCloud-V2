@@ -27,7 +27,7 @@
 				</li>
                 
 				<li>
-					<i class="fa fa-folder-open-o" class="active"></i> Show Files 
+					<i class="fa fa-folder-open-o" class="active"></i> @if($chart->f_code) {{ $chart->f_code }} / @endif @if($chart->f_name) {{ $chart->f_name }} @endif 
 				</li>
 
 				

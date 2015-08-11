@@ -4,10 +4,12 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	"require": {
-		"laravel/framework": "4.1.*",
+		"laravel/framework": "4.2.*",
 		"zizaco/entrust": "1.2.*@dev",
 		"regulus/activity-log": "0.3.*",
-		"pda/pheanstalk": "2.0.*"
+		"andrewelkins/cabinet": "1.1.x",
+		"webpatser/laravel-uuid": "1.*",
+		"jyggen/curl": "3.0.1"
 	},
 	"autoload": {
 		"classmap": [

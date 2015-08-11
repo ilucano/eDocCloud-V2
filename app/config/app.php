@@ -13,7 +13,7 @@ return array(
     |
     */
 
-    'debug' => false,
+    'debug' => (getenv('DEBUG_MODE') ? getenv('DEBUG_MODE') : false),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => (getenv('APP_URL') ? getenv('APP_URL') : 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -125,6 +125,8 @@ return array(
         'Services\Activity\ActivityServiceProvider',
         'Services\MetaAttribute\MetaAttributeServiceProvider',
         'Services\File\FileServiceProvider',
+        'Andrew13\Cabinet\CabinetServiceProvider',
+        'Services\PricePlan\PricePlanServiceProvider',
     ),
 
     /*
@@ -192,11 +194,15 @@ return array(
         'View'            => 'Illuminate\Support\Facades\View',
         'Entrust'    => 'Zizaco\Entrust\EntrustFacade',
         'Activity' => 'Regulus\ActivityLog\Activity',
-
+        'Cabinet'    => 'Andrew13\Cabinet\CabinetFacade',
+        'Uuid' => 'Webpatser\Uuid\Uuid',
+        'Curl'               => 'jyggen\Curl',
     ),
 
     'system_admin_company_id' => 1, //only ImagingXperts Users can be superadmin
 
     'archive_path' => '/opt/eDocCloud/files/',
+
+    'login_app_domain' => (getenv('LOGIN_APP_DOMAIN') ? getenv('LOGIN_APP_DOMAIN') : ''),
 
 );

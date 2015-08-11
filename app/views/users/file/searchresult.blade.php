@@ -22,9 +22,7 @@
 			
 		</div>
 	</div>
-		
-	
-	<div class="row">
+
 	
 		<div class="col-lg-6">
 
@@ -36,7 +34,7 @@
 				<div class="alert alert-info">{{ Session::get('message') }}</div>
 			@endif
 			
-			{{ Form::open(array('url' => 'users/file/search')) }}
+			{{ Form::open(array('url' => 'users/file/query', 'method' => 'get')) }}
 			
 			<div class="form-group input-group @if ($errors->has('query')) has-error @endif">
 			    {{ Form::text('query', $query, array('class'=>'form-control', 'placeholder'=>'Enter filename or text to search')) }}
@@ -44,24 +42,53 @@
                 <span class="input-group-btn"><button class="btn btn-success" type="submit"><i class="fa fa-search"></i></button></span>
 				  
 			</div>
-            @if ($errors->has('query')) <p class="help-block">{{ $errors->first('query') }}</p> @endif  
+            @if ($errors->has('query')) <p class="help-block">{{ $errors->first('query') }}</p> @endif
+
+
+            <div class='clearfix'></div>
+ 
+			<!-- search filter -->
+			<p>
+				<button class="btn btn-sm btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				  Filters
+				   <span class="caret"></span>
+				</button>
+			</p>
+			<div class="collapse @if ($filterExpand) in @endif" id="collapseExample">
+			  <div class="well small-font">
+			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
+			  		
+			  		<div class="form-group">
+			  			Display Results: {{ Form::select('limit', ['50'=> '50', '200' => '200', '500' => '500', '1000' => '1000',  '99999999' =>  '> 1000'], Input::get('limit')) }}
+			  		</div>
+			  		
+			  </div>
+			</div>
+
 		   {{ Form::close() }}
+
+
 		</div>
 		
 
 		
-		<div class="col-lg-12">
+		<div class="col-lg-12" style="overflow: auto;">
 		
-			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="display table table-condensed small-font" id="datatables">
 					<thead>
 						<tr>
 							<th><i class="fa fa-download" title="Select to download"></i> </th>
 							<th>Filename</th>
+							<th>Order > Box > Chart</th>
 							<th>Mark</th>
 							<th>Created</th>
 							<th>Updated</th>
 							<th>Pages</th>
-							<th>Size</th>	
+							<th>Size</th>
+							@foreach ($companyAttributeHeaders as $header)
+								<th>{{ $header }}</th>
+							@endforeach
+							<th>Attributes</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -75,11 +102,41 @@
 							<td>	
 								<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
 						    </td>
+
+						    <td nowrap>
+						    	@if ($file->chart && $file->box && $file->order) 
+									<ol class="breadcrumb">	 
+										<li>
+											<a  href="{{ URL::to('users/order/'. $file->order->row_id) }}"> {{ $file->order->f_code }} / {{ $file->order->f_name }} </a>
+						                </li>
+											
+										<li>
+											<a href="{{ URL::to('users/chart/'. $file->box->row_id. '/'.$file->order->row_id) }}"> {{ $file->box->f_code }} /  {{ $file->box->f_name }} </a>
+										</li>
+						                
+										<li>
+											<a href="{{ URL::to('users/chart/'. $file->box->row_id. '/'.$file->order->row_id) .'/'. $file->chart->row_id }}">{{ $file->chart->f_name }} </a>
+										</li>
+
+				
+									</ol>
+								@endif
+						    </td>
+						    
 							<td> {{ Form::select('file_mark_id', $filemarkDropdown, $file->file_mark_id, array('class'=>'form-control bootstrap-dropdown', 'data-file-id'=>$file->row_id )) }}</td>
 							<td>{{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td>{{ Helpers::niceDateTime($file->moddate) }} </td>
 							<td>{{ $file->pages }} </td>
-							<td>{{ Helpers::bytesToMegabytes( $file->filesize) }} </td>	
+							<td>{{ Helpers::bytesToMegabytes( $file->filesize) }} </td>
+							@foreach ($companyAttributeHeaders as $_attributeId => $header)
+								@if(isset($file->attributeValues[$_attributeId]))
+								<td>{{  implode(", ", $file->attributeValues[$_attributeId]) }}</td>
+								@else
+								<td> </td>
+								@endif
+							@endforeach
+
+							<td class="text-center"><a class="btn btn-sm btn-default" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit/search/'.urlencode($query)) }}" data-toggle="modal" data-target="#myModal"> <i class="fa fa-gear fa-lg"></i></a> </td>
 							</tr>
 						@endforeach
 	 
@@ -91,9 +148,7 @@
 				{{ Form::close() }}	
 		</div>		
 
-	</div>
-   
-  
+
 
 	<div class="modal" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
@@ -105,6 +160,25 @@
 	
 	
 	
+	 <!-- Default bootstrap modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 	
 @stop
 
@@ -197,6 +271,16 @@
                 }
 			}); 	
 		});
+		
+
+		$("#myModal").on("show.bs.modal", function(e) {
+            var link = $(e.relatedTarget);
+            $(this).find(".modal-content").load(link.attr("href"));
+        });
+
+		$("#wrapper").toggleClass("toggled");
+
+
 
 	</script>
 		

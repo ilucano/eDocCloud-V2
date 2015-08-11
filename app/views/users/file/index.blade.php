@@ -43,7 +43,7 @@
 				   <span class="caret"></span>
 				</button>
 			</p>
-			<div class="collapse @if ($filterExpand) @endif" id="collapseExample">
+			<div class="collapse @if ($filterExpand) in @endif" id="collapseExample">
 			  <div class="well small-font">
 			  		{{ Form::open(array('route' => 'users.file.index', 'method' => 'get')) }}
 			  		@include('partials.metaattribute.filter', array('attributeSets' => $attributeFilters))
@@ -67,6 +67,7 @@
 						<tr>
 							<th><i class="fa fa-download" title="Select to download"></i> </th>
 							<th>Filename</th>
+							<th>Order > Box > Chart</th>
 							<th>Mark</th>
 							<th>Created</th>
 							<th>Pages</th>
@@ -74,7 +75,7 @@
 							@foreach ($companyAttributeHeaders as $header)
 								<th>{{ $header }}</th>
 							@endforeach
-							<th>Action</th>
+							<th>Attributes</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -88,6 +89,27 @@
 							<td>
 								<a class="btn btn-link" target="_blank" href="{{ URL::to('pdfviewer') }}?file={{ URL::to('attachment/file/' . $file->row_id) }}">{{ $file->filename }} </a>
 						    </td>
+
+						    <td nowrap>
+						    	@if ($file->chart && $file->box && $file->order) 
+									<ol class="breadcrumb">	 
+										<li>
+											<a  href="{{ URL::to('users/order/'. $file->order->row_id) }}"> {{ $file->order->f_code }} / {{ $file->order->f_name }} </a>
+						                </li>
+											
+										<li>
+											<a href="{{ URL::to('users/chart/'. $file->box->row_id. '/'.$file->order->row_id) }}"> {{ $file->box->f_code }} /  {{ $file->box->f_name }} </a>
+										</li>
+						                
+										<li>
+											<a href="{{ URL::to('users/chart/'. $file->box->row_id. '/'.$file->order->row_id) .'/'. $file->chart->row_id }}">{{ $file->chart->f_name }} </a>
+										</li>
+
+				
+									</ol>
+								@endif
+						    </td>
+
 							<td> {{ Form::select('file_mark_id', $filemarkDropdown, $file->file_mark_id, array('class'=>'form-control bootstrap-dropdown', 'data-file-id'=>$file->row_id )) }}</td>
 							<td> {{ Helpers::niceDateTime($file->creadate) }} </td>
 							<td> {{ $file->pages }} </td>
@@ -99,7 +121,7 @@
 								<td> </td>
 								@endif
 							@endforeach
-							<td> <a class="btn btn-sm btn-info" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-edit fa-lg"></i> Attributes </a>  </td>
+							<td class="text-center"> <a class="btn btn-sm  btn-default" href="{{ URL::to('users/file/attributes/' . $file->row_id . '/edit') }}" data-toggle="modal" data-target="#attributeModal"> <i class="fa fa-gear fa-lg"></i>  </td>
 							</tr>
 						@endforeach
 
@@ -134,7 +156,7 @@
 	</style>
 		
 
-		<div class="modal fade" id="attributeModal">
+		<div class="modal fade" id="attributeModal" tabindex="-1" role="dialog" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -244,6 +266,9 @@
                 }
 			});
 		});
+		
+		
+		$("#wrapper").toggleClass("toggled");
 
 	</script>
 

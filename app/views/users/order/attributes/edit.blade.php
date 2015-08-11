@@ -1,7 +1,3 @@
-@extends('layout_nomenu')
-
-@section('content')
-
 
     {{ Form::model($object, array('route' => array('users.order.attribute.update', $object->row_id), 'method' => 'PUT')) }}
 
@@ -29,5 +25,4 @@
     
     {{ Form::close() }}
 
-@stop
-
+ 

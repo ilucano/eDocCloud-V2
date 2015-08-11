@@ -1,0 +1,8 @@
+RedirectMatch 404 /\.git
+RedirectMatch 404 app\/storage\/logs\/
+Options -Indexes
+
+<FilesMatch "composer\.json|composer\.lock|CONTRIBUTING\.md|cron\.txt|readme\.md|\.env">
+Order Allow,Deny
+Deny from all
+</FilesMatch>

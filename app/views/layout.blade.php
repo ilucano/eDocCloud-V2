@@ -30,7 +30,11 @@
 		
 	<!-- jQuery Multiselect for bootstrap -->
 	 {{ HTML::style('css/plugins/bootstrap-multiselect.css') }}
+
+     {{ HTML::style('css/plugins/bootstrap-datepicker.css') }}
 	
+    {{ HTML::style('css/plugins/bootstrap-editable.css') }}
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -85,10 +89,17 @@
                         </li>
 						@endif
 
+                        @if(Auth::User()->can('admin_metadata') || Auth::User()->isAdmin())
                         <li>
-                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square"></i> Metadata Setup</a>
+                            <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square-o"></i> Metadata Setup</a>
                         </li>
-						 
+						@endif
+
+                        @if(Auth::User()->can('admin_datausage') || Auth::User()->isAdmin())
+                        <li>
+                            <a href="{{ URL::to('companyadmin/reports/usagechart') }}"><i class="fa fa-fw fa-bar-chart"></i> Data Usage</a>
+                        </li>
+                        @endif
                     </ul>
 					@endif
 						
@@ -97,28 +108,7 @@
 			</ul>
 				
             <ul class="nav navbar-right top-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu message-dropdown">
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>Notification Feature</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Coming soon...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-
-                       
-                    </ul>
-                </li>
+                
                 
 				@if(Auth::User()->isAdmin()) 
 				<li class="dropdown">
@@ -159,6 +149,10 @@
                         </li>
 						<li>
                             <a href="{{ URL::to('reports/groupbystatus') }}"> Group By Status</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ URL::to('reports/datausage') }}"> Data Usage</a>
                         </li>
 						 
                     </ul>
@@ -208,9 +202,14 @@
                             <a href="{{ URL::to('admin/activity') }}"> All Users Activities</a>
                         </li>
 
-                         <li>
+                        <li>
                             <a href="{{ URL::to('passwordpolicy') }}"> Password Policy</a>
                         </li>
+
+                        <li>
+                            <a href="{{ URL::route('priceplan.index') }}"> Price Plans</a>
+                        </li>
+
                     </ul>
 						
 				 </li>
@@ -234,8 +233,9 @@
                 </li>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+
            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
+                <ul class="nav navbar-nav side-nav"  id="sidebar-wrapper">
 					 @if(Auth::User()->can('user_order'))
                     <li>
                          <a href="{{ URL::to('users/order') }}"><i class="fa fa-fw fa-ticket"></i> Orders</a>
@@ -259,13 +259,25 @@
                         </ul>
                     </li>
 					@endif
+                    @if(Auth::User()->can('user_myfolder'))
+                    <li>
+                         <a href="{{ URL::to('users/storage') }}"><i class="fa fa-fw fa-inbox"></i> My Folder</a>
+                    </li>
+                    @endif
+                     <li>
+
+                     <a href="#" id="menu-toggle"><i class="fa fa-fw fa-angle-double-right"></i> Toggle Menu</a>
+                     </li>
                 </ul>
-            </div>  
+
+            </div> 
+
             <!-- /.navbar-collapse -->
+
         </nav>
 
         <div id="page-wrapper">
-
+           
             <div class="container-fluid">
 				<!-- Content --> 
                 @yield('content') 
@@ -285,6 +297,8 @@
     <!-- Bootstrap Core JavaScript -->
 	{{ HTML::script('js/bootstrap.min.js') }}
 
+    {{ HTML::script('js/plugins/morris/raphael.min.js') }}
+    {{ HTML::script('js/plugins/morris/morris.min.js') }}
 
 	<!-- jQuery Data Table -->
 	{{ HTML::script('js/plugins/datatable/jquery.dataTables.min.js') }}
@@ -295,9 +309,23 @@
 	
 	<!-- Toggle checkbox for bootstrap -->
 	{{ HTML::script('js/plugins/bootstrap-checkbox/bootstrap-checkbox.js') }}
+
+    {{ HTML::script('js/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js') }}
 	
-	
+
+    {{ HTML::script('js/plugins/bootstrap-editable/bootstrap-editable.min.js') }} 
+     
+    
+	<script type="text/javascript">
+
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    
+    </script>
 	@yield('loadjs') 
+
 </body>
 
 </html>

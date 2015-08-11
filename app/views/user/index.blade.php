@@ -33,7 +33,7 @@
 			@endif
 			
 
-			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped" id="datatables">
+			<table cellpadding="0" cellspacing="0" border="0" class="table table-hover table-striped small-font" id="datatables">
 				<thead>
 					<tr>
 						<th><i class="fa fa-user"></i> Username</th>
@@ -80,6 +80,9 @@
 							<div class="pull-right">
 								<a class="btn btn-sm btn-success" href="{{ URL::to('user/' . $user->row_id) }}">View</a>
 								<a class="btn btn-sm btn-info" href="{{ URL::to('user/' . $user->row_id . '/edit') }}"><i class="fa fa-edit fa-lg"></i> Edit</a>
+
+								<a class="btn btn-sm btn-warning" data-toggle="modal"
+   data-target="#myModal" href="{{ URL::to('user/generatelogin/' . $user->username) }}"><i class="fa fa-sign-in fa-lg"></i> Login as User</a>
 							</div>
 						</td>
 					 
@@ -91,9 +94,24 @@
 			</table>
 
 		</div>
-			
- 
 
+		<!-- Default bootstrap modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+		      </div>
+		      <div class="modal-body">
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 @stop
 
 
@@ -106,5 +124,15 @@
 			
 			);
 		 } );
+
+
+		$("#myModal").on("show.bs.modal", function(e) {
+		    var link = $(e.relatedTarget);
+		    $(this).find(".modal-content").load(link.attr("href"));
+		});
+
 	</script>
+
+
+
 @stop

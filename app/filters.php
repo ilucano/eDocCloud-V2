@@ -79,6 +79,11 @@ Route::filter('csrf', function () {
  */
 
 Route::filter('admin_user', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
     if (! Auth::User()->can('admin_user') || ! Auth::User()->isCompanyAdmin()) {
         // Checks the current user
 
@@ -87,6 +92,11 @@ Route::filter('admin_user', function () {
 });
 
 Route::filter('admin_role', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
     if (! Auth::User()->can('admin_role') || ! Auth::User()->isCompanyAdmin()) {
         // Checks the current user
 
@@ -109,6 +119,11 @@ Route::filter('admin_filemark', function () {
  /* Begin user routes */
 
 Route::filter('user_order', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
     if (!Auth::User()->can('user_order')) {
         // Checks the current user
 
@@ -117,6 +132,11 @@ Route::filter('user_order', function () {
 });
 
 Route::filter('user_search', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
     if (!Auth::User()->can('user_search')) {
         // Checks the current user
 
@@ -125,6 +145,11 @@ Route::filter('user_search', function () {
 });
 
 Route::filter('user_file', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
     if (!Auth::User()->can('user_file')) {
         // Checks the current user
 
@@ -133,6 +158,11 @@ Route::filter('user_file', function () {
 });
 
 Route::filter('user_changepassword', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
     if (!Auth::User()->can('user_changepassword')) {
         // Checks the current user
 
@@ -140,4 +170,45 @@ Route::filter('user_changepassword', function () {
     }
 });
 
+Route::filter('user_myfolder', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
+    if (!Auth::User()->can('user_myfolder')) {
+        // Checks the current user
+
+        return Redirect::to('system/denied');
+    }
+});
+
 /* End user routes */
+
+
+Route::filter('check_password_expiry', function () {
+
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
+    if (Auth::User() && Auth::User()->can('user_changepassword') && Route::current()->getPath() != 'users/profile/password' &&  Route::current()->getPath() != 'system/denied') {
+
+         
+        $lastChanged = max([Auth::User()->created_at, Auth::User()->password_changed_at]);
+        
+        try {
+            $policy = PasswordPolicy::first();
+            $expireDays = $policy->expire_days;
+ 
+            if ( (strtotime($lastChanged) + $expireDays * 24 * 3600) < time() ) {
+
+               return Redirect::to('users/profile/password')->with('expired_reminder', true);
+            }
+
+        } catch (Exception $e) {
+            Logging::error('check_password_expiry filter error: No password policy found');
+        }
+       
+    }
+});

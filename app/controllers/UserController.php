@@ -187,7 +187,19 @@ class UserController extends \BaseController {
                 ->withErrors($validator)
                 ->withInput();
         }
- 
+ 		
+ 		//check if exist
+		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/loginuser/checkavailable/' . Input::get('username');
+
+		$response = Curl::get($apiUrl)[0]->getContent();
+		$response = json_decode($response, true);
+		if ($response['result'] == 'error') {
+			Session::flash('error', 'Username already taken by other');
+			
+			return Redirect::to('user');
+		}
+	 
+		
 		//create login
 		$login = new Login;
 		$login->username = Input::get('username');
@@ -211,7 +223,21 @@ class UserController extends \BaseController {
         
 		$user->save();
 		
+ 		//api update centralize server
+ 		$company = Company::where('row_id', '=', $user->fk_empresa)->first();
+
+ 		$apiData = [
+					'username' => $user->username,
+					'company_id' => $user->fk_empresa,
+					'company_uuid' => $company->uuid,
+					'user_id'	=> $user->row_id
+					];
+
+		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/loginuser/sync';
+
+		$response = Curl::post($apiUrl, $apiData);
  
+
 		$mailJobData = array('to' => Input::get('email'),
 							 'username' => Input::get('username'),
 							 'password' => Input::get('password'),
@@ -436,6 +462,21 @@ class UserController extends \BaseController {
 			Log::error($exception);
 		}
 
+		//api update centralize server
+ 		$company = Company::where('row_id', '=', $user->fk_empresa)->first();
+
+
+		$apiData = [
+					'username' => $user->username,
+					'company_id' => $user->fk_empresa,
+					'company_uuid' => $company->uuid,
+					'user_id'	=> $user->row_id
+					];
+
+		$apiUrl = Config::get('app.login_app_domain') .'/api/v1/loginuser/sync';
+
+		$response = Curl::post($apiUrl, $apiData);
+
 		// redirect
 				
 	    $logDetails = json_encode(['row_id' => $user->row_id]);
@@ -465,9 +506,42 @@ class UserController extends \BaseController {
 		//
 	}
 	
-	
+	public function returnUsers()
+	{
+		$records = User::where('row_id', '>', '0')->select('row_id', 'username', 'fk_empresa')->get();
+
+		$data = array();
+		foreach ($records as $record) {
+			$record->company_uuid = Company::where('row_id', '=', $record->fk_empresa)->first()->uuid;
+
+		}
+		return $records;
+	}
 
 
+	public function generateLoginLink($username)
+	{
+		if (! Auth::User()->isAdmin()) {
+			return ['error' => 'required admin'];
+		}
+
+		$user = Login::where('username', '=', $username)->where('active', '=', 1)->first();
+        
+        if ($user) {
+           // echo $hashPassword;
+            $token = str_random(30);
+            $user->admin_session_token = $token;
+            $user->save();
+            
+            return View::make('partials.user.generatelogin')
+            			 ->with('user', $user);
+
+        } else {
+        	return ['error' => 'user is inactive'];
+        }
+
+
+	}
 
 
 }
