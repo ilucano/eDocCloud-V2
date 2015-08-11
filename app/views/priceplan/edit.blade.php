@@ -116,6 +116,7 @@
 
         <div class="row">
             <div class="col-lg-8">
+                <label>Additional </label>
                 <div class="form-group form-inline @if ($errors->has('user_to.0')) has-error @endif">
                     <label>Up to </label>
                         {{ Form::text('user_to[]', @$pricePlan->plan_user_tiers[0]->user_to, array('class'=>'form-control', 'id' => 'user_to_0')) }}
@@ -157,6 +158,7 @@
 
         <div class="row">
             <div class="col-lg-8">
+
                 <div class="form-group form-inline @if ($errors->has('free_gb')) has-error @endif">
                 <label>Free GB on Plan:</label>
                 
@@ -169,7 +171,7 @@
 
         <div class="row">
             <div class="col-lg-8">
-
+                <label>Additional </label>
                 <div class="form-group form-inline @if ($errors->has('gb_to.0')) has-error @endif">
                     <label>Up to </label>
                     
@@ -225,7 +227,7 @@
         
         <div class="row">
             <div class="col-lg-10">
-
+                <label>Additional </label>
                 <div class="form-group form-inline @if ($errors->has('own_scan_to.0')) has-error @endif">
                     <label>Up to </label>
                     
@@ -281,6 +283,7 @@
         
         <div class="row">
             <div class="col-lg-8">
+                <label>Additional </label>
                 <div class="form-group form-inline @if ($errors->has('plan_scan_to.0')) has-error @endif">
                     <label>Up to </label>
                     

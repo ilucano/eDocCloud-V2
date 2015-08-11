@@ -26,9 +26,18 @@ class PricePlanRepository implements PricePlanRepositoryInterface
     }
 
 
-    public function getCompanyPricePlan($companyId)
+    public function getPricePlanByCompanyId($companyId)
     {
+        $pricePlan = PricePlan::where('company_id', '=', $companyId)->first();
+        
+        if ($pricePlan) {
+            $pricePlan->plan_user_tiers = $this->queryPricePlanUserTiers($pricePlan->id);
+            $pricePlan->plan_storage_tiers = $this->queryPricePlanStorageTiers($pricePlan->id);
+            $pricePlan->plan_own_scan_tiers = $this->queryPricePlanOwnScanTiers($pricePlan->id);
+            $pricePlan->plan_plan_scan_tiers = $this->queryPricePlanPlanScanTiers($pricePlan->id);
+        }
 
+        return $pricePlan;
         
     }
 

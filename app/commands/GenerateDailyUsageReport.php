@@ -141,15 +141,20 @@ class GenerateDailyUsageReport extends Command
         if ($companyId == '' || $reportDate == '') {
             return;
         }
+        
+        $pricePlan = $this->priceplanrepo->getPricePlanByCompanyId($companyId);
 
         $dailyReport = new MonthlyUsageReport;
         
         $dailyReport->company_id = $companyId;
         $dailyReport->report_date = $reportDate;
-
+        $dailyReport->plan_json = $pricePlan->toJson();
+        $dailyReport->base_price = $pricePlan->base_price;
+      
         $dailyReport->daily_new_users = $this->getDailyNewUsers($companyId, $reportDate);
-
         $dailyReport->current_number_of_users  = $this->getCurrentNumberOfUsers($companyId, $reportDate);
+
+        $dailyReport->user_charges = $this->calculateUserCharges($pricePlan, $dailyReport->current_number_of_users);
 
         print_r($dailyReport);
     }
@@ -162,7 +167,7 @@ class GenerateDailyUsageReport extends Command
                                        ->where('logins.active', '=', 1)
                                        ->whereRaw("DATE(logins.created_at) = '$reportDate'")->count();
 
-        print_r(Helpers::getLastQuery());
+        
         $this->info($userCount);
 
         return $userCount;
@@ -177,9 +182,31 @@ class GenerateDailyUsageReport extends Command
                                        ->where('logins.active', '=', 1)
                                        ->whereRaw("DATE(logins.created_at) <= '$reportDate'")->count();
 
-        print_r(Helpers::getLastQuery());
+        
         $this->info($userCount);
 
         return $userCount;
+    }
+
+    private function calculateUserCharges($plan, $numberOfUsers)
+    {
+        if ($plan->free_users >= $numberOfUsers) {
+            return 0.00;
+        }
+        $charges = 999999;
+
+        $remainder = $numberOfUsers - $plan->free_users;
+
+        foreach ($plan->plan_user_tiers as $tier) {
+            if ($remainder <= $tier->user_to) {
+                echo $tier->user_to . ' '. $tier->price_per_user;
+                $charges = $remainder * $tier->price_per_user;
+                
+                break;
+            }
+        }
+
+        return $charges;
+
     }
 }
