@@ -81,6 +81,8 @@ class GenerateDailyUsageReport extends Command
             $this->companylist = $this->getCompanyIds();
         }
 
+        print_r($this->companylist);
+
         foreach ($this->companylist as $companyId) {
             $this->info('Generate daily stats for company id ' . $companyId);
 
@@ -124,11 +126,19 @@ class GenerateDailyUsageReport extends Command
      */
     private function getCompanyIds($companyIds = array())
     {
+        $companyWithPlan = $this->priceplanrepo->getCompanyWithPlan();
+
+        $idsWithPlan = array();
+
+        foreach ($companyWithPlan as $company) {
+            $idsWithPlan[] = $company->row_id;
+        }
+
 
         if (count($companyIds) >= 1) {
-            return Company::whereIn('row_id', $companyIds)->lists('row_id');
+            return array_intersect($idWithPlan, $companyIds);
         } else {
-            return Company::lists('row_id');
+            return $idsWithPlan;
         }
 
     }

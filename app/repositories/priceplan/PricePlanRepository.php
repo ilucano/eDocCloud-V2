@@ -248,6 +248,23 @@ class PricePlanRepository implements PricePlanRepositoryInterface
         return $companies;
     }
 
+
+    public function getCompanyWithPlan()
+    {
+        $companiesHasPlan = PricePlan::whereNotNull('company_id')
+                                    ->get(['company_id'])->toArray();
+
+        $filterArray = array();
+        foreach ($companiesHasPlan as $company) {
+            $filterArray[] = $company['company_id'];
+        }
+        
+        $companies = Company::whereIn('row_id', $filterArray)
+                              ->orderBy('company_name')
+                              ->get();
+        return $companies;
+    }
+
     public function assignPlanToCompany($id, $companyId)
     {
         try {

@@ -19,4 +19,6 @@ interface PricePlanRepositoryInterface
     public function getTemplatePricePlans();
 
     public function getCompanyPricePlans();
+
+    public function getCompanyWithPlan();
 }
