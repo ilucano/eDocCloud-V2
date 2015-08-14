@@ -5,6 +5,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Repositories\File\FileRepositoryInterface;
 use Repositories\PricePlan\PricePlanRepositoryInterface;
+use Repositories\MonthlyUsageReport\MonthlyUsageReportRepositoryInterface;
 use Carbon\Carbon;
 use \Company as Company;
 use \User as User;
@@ -35,11 +36,14 @@ class GenerateDailyUsageReport extends Command
     /**
      * Create a new command instance.
      */
-    public function __construct(FileRepositoryInterface $filerepo, PricePlanRepositoryInterface $priceplanrepo)
+    public function __construct(
+        FileRepositoryInterface $filerepo,
+        PricePlanRepositoryInterface $priceplanrepo,
+        MonthlyUsageReportRepositoryInterface $monthly_usage_report_repo)
     {
         $this->filerepo = $filerepo;
         $this->priceplanrepo = $priceplanrepo;
-
+        $this->monthly_usage_report_repo = $monthly_usage_report_repo;
         parent::__construct();
     }
 
@@ -80,8 +84,6 @@ class GenerateDailyUsageReport extends Command
         } else {
             $this->companylist = $this->getCompanyIds();
         }
-
-        print_r($this->companylist);
 
         foreach ($this->companylist as $companyId) {
             $this->info('Generate daily stats for company id ' . $companyId);
