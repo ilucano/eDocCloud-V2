@@ -225,4 +225,22 @@ class MonthlyUsageReportRepository implements MonthlyUsageReportRepositoryInterf
 
         return $results;
     }
+
+    /**
+     * Get last 31 days of daily usage report for company
+     * @param  integer $companyId [description]
+     * @param  string $toDate    [description]
+     * @return array  $results Eloquent object
+     */
+    public function getDailyDetailsReport($companyId, $toDate)
+    {
+
+        $dailyReports = MonthlyUsageReport::where('company_id', '=', $companyId)
+                                           ->where('report_date', '<=', $toDate)
+                                           ->orderBy('report_date', 'desc')
+                                           ->take(31)
+                                           ->get();
+
+        return $dailyReports;
+    }
 }

@@ -13,7 +13,7 @@
                     <i class="fa fa-dashboard"></i>  Site Admin 
                 </li>
                 <li class="active">
-                    <i class="fa fa-group"></i> Current Billings
+                    <i class="fa fa-group"></i> Daily Usage Billing
                 </li>
             </ol
             
@@ -27,13 +27,12 @@
             @if (Session::has('message'))
                 <div class="alert alert-info">{{ Session::get('message') }}</div>
             @endif
-            
+            <h3> {{ $companyName }}</h3>
 
             <table cellpadding="0" cellspacing="0" border="0" class="table table-hover small-font table-striped" id="datatables">
                 <thead>
                     <tr>
                         <th> Bill Date</th>
-                        <th> Company Name</th>
                         <th> Base Price ($)</th>
                         <th> Number of Active Users</th>
                         <th> User Charges</th>
@@ -43,8 +42,7 @@
                         <th> Own Scan Charges</th>
                         <th> Plan Scan Pages</th>
                         <th> Plan Scan Charges</th>
-                        <th> Bill Amount($)</th> 
-                        <th> Daily Usage </th>  
+                        <th> To Date Amount($)</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -55,9 +53,6 @@
                         <td>
                             <strong>{{ $report->report_date }}</strong>
                         </td>            
-                        <td>
-                            {{ $report->company_name }}
-                        </td>
                         <td>
                             {{ $report->base_price }}
                         </td>
@@ -88,9 +83,6 @@
                         <td>
                             <strong>{{ $report->current_charges }}</strong>
                         </td>
-                        <td>
-                            <a class="btn btn-sm btn-info" href="{{ URL::route('billing.daily', ['companyId' => $report->company_id, 'toDate' => $report->report_date]) }}"> View Daily</a>
-                        </td>
                     </tr>
                         
                     @endforeach
@@ -110,8 +102,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
         
-            $('#datatables').DataTable(
-            
+            $('#datatables').DataTable( 
+                {
+                    "iDisplayLength": 50,
+                    "order": [[ 0, "desc" ]]
+                }
             );
          } );
 

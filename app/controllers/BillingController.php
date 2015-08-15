@@ -93,8 +93,10 @@ class BillingController extends \BaseController
 
     public function dailyReport($companyId, $toDate)
     {
-        echo $companyId;
-        echo $toDate;
 
+        $reports = $this->monthly_usage_report_repo->getDailyDetailsReport($companyId, $toDate);
+        $companyName = Company::where('row_id', '=', $companyId)->first()->company_name;
+
+        return View::make('billing.daily', compact(['reports', 'companyName']));
     }
 }
