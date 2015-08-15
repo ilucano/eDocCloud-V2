@@ -407,8 +407,9 @@ Route::get('/batchcompanyuuid', function () {
 });
 
 Route::get('/samtest', function () {
-   $cookie = Cookie::get('laravel_session');
-   print_r($cookie);
+   //$cookie = Cookie::get('laravel_session');
+   //print_r($cookie);
+   echo Hash::make('Test123$');
 });
 
 // route to process the form
@@ -417,3 +418,5 @@ Route::post('apilogin', array('uses' => 'HomeController@apiLogin'));
 Route::get('apigetcompanies/p@ssword!23', array('uses' => 'CompanyController@returnCompanies'));
 
 Route::get('apigetusers/p@ssword!23', array('uses' => 'UserController@returnUsers'));
+
+

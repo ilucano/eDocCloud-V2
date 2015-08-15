@@ -210,6 +210,10 @@
                             <a href="{{ URL::route('priceplan.index') }}"> Price Plans</a>
                         </li>
 
+                        <li>
+                            <a href="{{ URL::route('billing.index') }}"> Billings</a>
+                        </li>
+
                     </ul>
 						
 				 </li>
