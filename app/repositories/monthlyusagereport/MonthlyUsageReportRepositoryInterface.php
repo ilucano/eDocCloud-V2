@@ -2,5 +2,7 @@
 
 interface MonthlyUsageReportRepositoryInterface
 {
-    public function insertMonthlyUsageReport();
+    public function generateDailyReport($companyId, $reportDate);
+
+    public function getCurrentUsageReport($companyId = null);
 }

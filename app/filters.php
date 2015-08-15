@@ -212,3 +212,16 @@ Route::filter('check_password_expiry', function () {
        
     }
 });
+
+
+
+Route::filter('superadmin', function () {
+    if (Auth::guest()) {
+        return Redirect::guest('login');
+    }
+
+    if (! Auth::User()->isAdmin()) {
+        // Checks the current user
+        return Redirect::to('system/denied');
+    }
+});

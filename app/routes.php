@@ -44,112 +44,125 @@ Route::group(
             )
     );
 
-        /* begin super admin section */
-
-        Route::resource('pickup', 'PickupController');
-
-        Route::resource('prepare', 'PrepareController');
-
-        Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
-
-        Route::resource('scan', 'ScanController');
-
-        Route::post('scan/status', array('uses' => 'ScanController@doUpdateStatus'));
-
-        Route::resource('qa', 'QAController');
-
-        Route::post('qa/status', array('uses' => 'QAController@doUpdateStatus'));
-
-        Route::resource('ocr', 'OCRController');
-
-        Route::post('ocr/status', array('uses' => 'OCRController@doUpdateStatus'));
-
-        Route::get(
-            'reports/allboxes', array(
-                                'uses' => 'ReportsController@showAllBoxes',
-                                'as' => 'reports.allboxes',
-            )
-        );
-
-        Route::resource('passwordpolicy', 'PasswordPolicyController');
-
-        Route::get(
-            'reports/groupbystatus', array(
-                                'uses' => 'ReportsController@showGroupByStatus',
-                                'as' => 'reports.groupbystatus',
-            )
-         );
-
-        Route::get(
-            'reports/datausage', array(
-                                'uses' => 'ReportsController@showDataUsage',
-                                'as' => 'reports.datausage',
-            )
-         );
-
-        Route::get(
-            'reports/usagechart/{fk_empresa}', array(
-                                'uses' => 'ReportsController@showUsageChart',
-                                'as' => 'reports.usagechart',
-            )
-         );
-
-        Route::resource('company', 'CompanyController');
-
-        Route::resource('user', 'UserController');
-
-        Route::get(
-            'user/create/company/{fk_empresa}', array(
-                                'uses' => 'UserController@createStep2',
-                                'as' => 'user.create.step2',
-            )
-        );
-
-        Route::post(
-            'user/create/company/{fk_empresa}', array(
-                                'uses' => 'UserController@storeStep2',
-                                'as' => 'user.create.storestep2',
-            )
-        );
-
-        Route::get(
-            'user/generatelogin/{username}', array(
-                                'uses' => 'UserController@generateLoginLink',
-                                'as' => 'user.generatelogin',
-            )
-        );
-
-        Route::resource('administrator', 'AdministratorController');
-
-        Route::post('administrator/isadmin', array('uses' => 'AdministratorController@doUpdateIsAdmin'));
-
-        Route::resource('order', 'OrderController');
-
-        Route::post('order/status', array('uses' => 'OrderController@doUpdateStatus'));
-
-        Route::group(
-            array('prefix' => 'admin'),
-            function () {
-
-                Route::resource('pickup', 'AdminPickupController');
-                Route::resource('box', 'AdminBoxController');
-                Route::post('box/status', array('uses' => 'AdminBoxController@doUpdateStatus'));
-
-                Route::resource('filemark', 'AdminFilemarkController');
-
-                Route::resource('activity', 'AdminActivityController');
-
-            }
-        );
-
-        Route::post('priceplan/assignplan', ['uses' => 'PricePlanController@assignPlan', 'as' => 'priceplan.assignplan']);
-
-
-        Route::resource('priceplan', 'PricePlanController');
         
 
-        Route::resource('role', 'RoleController');
-        /* end super admin section */
+            /* begin super admin section */
+
+            Route::group(
+                array('before' => 'superadmin'),
+                function () {
+
+                    Route::resource('pickup', 'PickupController');
+
+                    Route::resource('prepare', 'PrepareController');
+
+                    Route::post('prepare/status', array('uses' => 'PrepareController@doUpdateStatus'));
+
+                    Route::resource('scan', 'ScanController');
+
+                    Route::post('scan/status', array('uses' => 'ScanController@doUpdateStatus'));
+
+                    Route::resource('qa', 'QAController');
+
+                    Route::post('qa/status', array('uses' => 'QAController@doUpdateStatus'));
+
+                    Route::resource('ocr', 'OCRController');
+
+                    Route::post('ocr/status', array('uses' => 'OCRController@doUpdateStatus'));
+
+                    Route::get(
+                        'reports/allboxes', array(
+                                            'uses' => 'ReportsController@showAllBoxes',
+                                            'as' => 'reports.allboxes',
+                        )
+                    );
+
+                    Route::resource('passwordpolicy', 'PasswordPolicyController');
+
+                    Route::get(
+                        'reports/groupbystatus', array(
+                                            'uses' => 'ReportsController@showGroupByStatus',
+                                            'as' => 'reports.groupbystatus',
+                        )
+                     );
+
+                    Route::get(
+                        'reports/datausage', array(
+                                            'uses' => 'ReportsController@showDataUsage',
+                                            'as' => 'reports.datausage',
+                        )
+                     );
+
+                    Route::get(
+                        'reports/usagechart/{fk_empresa}', array(
+                                            'uses' => 'ReportsController@showUsageChart',
+                                            'as' => 'reports.usagechart',
+                        )
+                     );
+
+                    Route::resource('company', 'CompanyController');
+
+                    Route::resource('user', 'UserController');
+
+                    Route::get(
+                        'user/create/company/{fk_empresa}', array(
+                                            'uses' => 'UserController@createStep2',
+                                            'as' => 'user.create.step2',
+                        )
+                    );
+
+                    Route::post(
+                        'user/create/company/{fk_empresa}', array(
+                                            'uses' => 'UserController@storeStep2',
+                                            'as' => 'user.create.storestep2',
+                        )
+                    );
+
+                    Route::get(
+                        'user/generatelogin/{username}', array(
+                                            'uses' => 'UserController@generateLoginLink',
+                                            'as' => 'user.generatelogin',
+                        )
+                    );
+
+                    Route::resource('administrator', 'AdministratorController');
+
+                    Route::post('administrator/isadmin', array('uses' => 'AdministratorController@doUpdateIsAdmin'));
+
+                    Route::resource('order', 'OrderController');
+
+                    Route::post('order/status', array('uses' => 'OrderController@doUpdateStatus'));
+
+                    Route::group(
+                        array('prefix' => 'admin'),
+                        function () {
+
+                            Route::resource('pickup', 'AdminPickupController');
+                            Route::resource('box', 'AdminBoxController');
+                            Route::post('box/status', array('uses' => 'AdminBoxController@doUpdateStatus'));
+
+                            Route::resource('filemark', 'AdminFilemarkController');
+
+                            Route::resource('activity', 'AdminActivityController');
+
+                        }
+                    );
+
+                    Route::post('priceplan/assignplan', ['uses' => 'PricePlanController@assignPlan', 'as' => 'priceplan.assignplan']);
+
+
+                    Route::resource('priceplan', 'PricePlanController');
+                    
+
+                    Route::resource('role', 'RoleController');
+
+                    Route::get('billing/daily/{companyId}/{toDate}', ['uses' => 'BillingController@dailyReport', 'as' => 'billing.daily']);
+                    
+                    Route::resource('billing', 'BillingController');
+                /* end super admin section */
+
+                }
+            );
 
         /* begin company admin section */
 
