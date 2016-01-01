@@ -33,7 +33,9 @@ class PermissionsTableSeeder extends Seeder
 
         foreach ($arrayPermissions as $key => $text) {
             $permission = Permission::firstOrNew(array('name' => $key,
-                                                       'display_name' => $text, )
+                                                       'display_name' => $text,
+                                                       'created_at' => date("Y-m-d H:i:s"),
+                                                       'updated_at' => date("Y-m-d H:i:s"))
                                                 );
             $permission->save();
         }
