@@ -7,6 +7,8 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
+        Eloquent::unguard();
+
         $arrayPermissions = array(
                             'system_admin_pickup' => 'Workflow > Pickup',
                             'system_admin_prepare' => 'Workflow > Preparation',
