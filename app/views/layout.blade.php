@@ -73,29 +73,29 @@
 					
 					@if(Auth::User()->isCompanyAdmin())
 				    <ul class="dropdown-menu">
-					    @if(Auth::User()->can('admin_user') || Auth::User()->isAdmin())
+					    @if(Auth::User()->can('admin_user') || Auth::User()->isOnlyCompanyAdmin() || Auth::User()->isAdmin())
                         <li>
                             <a href="{{ URL::to('companyadmin/user') }}"><i class="fa fa-fw fa-user"></i> My Users</a>
                         </li>
 						@endif
-						 @if(Auth::User()->can('admin_role') || Auth::User()->isAdmin())
+						 @if(Auth::User()->can('admin_role') || Auth::User()->isOnlyCompanyAdmin() || Auth::User()->isAdmin())
 						<li>
                             <a href="{{ URL::to('companyadmin/role') }}"><i class="fa fa-fw fa-users"></i> User Roles</a>
                         </li>
 						@endif
-						@if(Auth::User()->can('admin_filemark') || Auth::User()->isAdmin())
+						@if(Auth::User()->can('admin_filemark') || Auth::User()->isOnlyCompanyAdmin() || Auth::User()->isAdmin())
 						<li>
                             <a href="{{ URL::to('companyadmin/filemark') }}"><i class="fa fa-fw fa-tags"></i> My Filemarks</a>
                         </li>
 						@endif
 
-                        @if(Auth::User()->can('admin_metadata') || Auth::User()->isAdmin())
+                        @if(Auth::User()->can('admin_metadata') || Auth::User()->isOnlyCompanyAdmin() || Auth::User()->isAdmin())
                         <li>
                             <a href="{{ URL::to('companyadmin/metaattribute') }}"><i class="fa fa-fw fa-pencil-square-o"></i> Metadata Setup</a>
                         </li>
 						@endif
 
-                        @if(Auth::User()->can('admin_datausage') || Auth::User()->isAdmin())
+                        @if(Auth::User()->can('admin_datausage') || Auth::User()->isOnlyCompanyAdmin() || Auth::User()->isAdmin())
                         <li>
                             <a href="{{ URL::to('companyadmin/reports/usagechart') }}"><i class="fa fa-fw fa-bar-chart"></i> Data Usage</a>
                         </li>
@@ -208,6 +208,10 @@
 
                         <li>
                             <a href="{{ URL::route('priceplan.index') }}"> Price Plans</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ URL::route('billing.index') }}"> Billings</a>
                         </li>
 
                     </ul>

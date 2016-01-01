@@ -127,6 +127,7 @@ return array(
         'Services\File\FileServiceProvider',
         'Andrew13\Cabinet\CabinetServiceProvider',
         'Services\PricePlan\PricePlanServiceProvider',
+        'Services\MonthlyUsageReport\MonthlyUsageReportServiceProvider',
     ),
 
     /*

@@ -127,6 +127,21 @@ class Login extends Eloquent implements UserInterface, RemindableInterface {
 		}
 	}
 	
+
+	public function isOnlyCompanyAdmin()
+	{
+		$companyId = $this->getCompanyId();
+		$count = User::where('company_admin','=', 'X')
+				       ->where('fk_empresa', '=', $companyId)
+				       ->where('status', '=', 'X')->count();
+
+		if ($count == 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	/**
 	 *
 	 */
