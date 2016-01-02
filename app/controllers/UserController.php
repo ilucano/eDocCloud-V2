@@ -512,8 +512,11 @@ class UserController extends \BaseController {
 
 		$data = array();
 		foreach ($records as $record) {
-			$record->company_uuid = Company::where('row_id', '=', $record->fk_empresa)->first()->uuid;
-
+            try {
+			    $record->company_uuid = Company::where('row_id', '=', $record->fk_empresa)->first()->uuid;
+            } catch ($e) {
+                //
+            }
 		}
 		return $records;
 	}
