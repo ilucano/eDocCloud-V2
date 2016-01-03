@@ -4,22 +4,20 @@
         <meta charset="utf-8">
     </head>
     <body style="font-family: Arial, sans-serif;">
-        <h3>Company Name:  {{ $company->company_name }}</h3>
-        <h3>Total Data Usage: {{ Helpers::bytesToGigabytes($company->todate_data_usage) }}</h3>
-        <h4>Last 12 Months Usage:</h4>
-        <table>
-                <tr>
-                       <th>Month</th><th>Number of Files</th><th>Usage</th>
-                </tr>
-
-                 @foreach ($company->monthly_data_usage as $key => $dataUsage)
-                                    <tr>
-                                        <td>{{ $key }}</td>
-                                        <td align="center">{{ $company->monthly_number_of_files[$key] }}</td>
-                                        <td align="right">{{ Helpers::bytesToMegabytes($dataUsage) }}</td>
-                                    </tr>
-                @endforeach
-
-        </table>
+        <p>Your monthly usage reports for {{ $month_name }}are as below</p>
+        <p>
+            <b> Company Name:</b>  {{ $company->company_name }}<br/>
+            <b> Base Price ($):</b> {{ $usage->base_price }}<br/>
+            <b> User Charges:</b> {{ $usage->user_charges }}<br/>
+            <b> Storage Charges:</b> {{ $usage->storage_charges }}<br/>
+            <b> Own Scan Charges:</b>  {{ $usage->own_scan_charges }}
+            <b> Plan Scan Charges:</b>  {{ $usage->plan_scan_charges }}
+            <b> Total Amount($):</b>  {{ $usage->current_charges }}
+        </p>
+    <br/>
+    To view more details, kindly login to your eDocCloud account.
+    <br/>
+    <br/>
+    eDocCloud Team
     </body>
 </html>
