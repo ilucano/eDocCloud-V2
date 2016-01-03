@@ -207,7 +207,7 @@ Route::filter('check_password_expiry', function () {
             }
 
         } catch (Exception $e) {
-            \Logging::error('check_password_expiry filter error: No password policy found');
+            Log::error('check_password_expiry filter error: No password policy found');
         }
        
     }
