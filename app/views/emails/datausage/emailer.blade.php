@@ -4,7 +4,7 @@
         <meta charset="utf-8">
     </head>
     <body style="font-family: Arial, sans-serif;">
-        <p>Your monthly usage reports for {{ $month_name }}are as below</p>
+        <p>Your monthly usage reports for {{ $month_name }} are as below</p>
         <p>
             <b> Company Name:</b>  {{ $company->company_name }}<br/>
             <b> Base Price ($):</b> {{ $usage->base_price }}<br/>
