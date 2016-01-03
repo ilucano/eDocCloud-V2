@@ -50,14 +50,15 @@ class DataUsageEmailer extends Command
             try {
                 $company = Company::where('row_id', '=', $usage->company_id)->first();
                 $companyAdmins = User::where('company_admin', '=', 'X')
-                                       ->where('row_id', '=', $usage->company_id)->get();
+                                       ->where('fk_empresa', '=', $usage->company_id)
+                                       ->where('status', '=', 'X')->get();
 
                 $data = array(
                     'company' => $company,
                     'usage'   => $usage,
                     'month_name' => $dt->format('F Y'),
                 );
-                
+
                 foreach ($companyAdmins as $companyAdmin) {
                     echo "Emailing ". $companyAdmin->email;
                     Mail::send('emails.datausage.emailer', $data, function ($message) use ($companyAdmin) {
