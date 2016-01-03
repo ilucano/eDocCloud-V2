@@ -61,11 +61,11 @@ class DataUsageEmailer extends Command
 
                 foreach ($companyAdmins as $companyAdmin) {
                     echo "Emailing ". $companyAdmin->email;
-                    Mail::send('emails.datausage.emailer', $data, function ($message) use ($companyAdmin) {
-                       $message->from('admin@edoccloud.com', 'eDocCloud');
-                       $message->to($companyAdmin->email, $companyAdmin->first_name.' '.$companyAdmin->last_name)->subject('Your data usage report');
-                    }
-                    );
+                   // Mail::send('emails.datausage.emailer', $data, function ($message) use ($companyAdmin) {
+                   ///    $message->from('admin@edoccloud.com', 'eDocCloud');
+                   //    $message->to($companyAdmin->email, $companyAdmin->first_name.' '.$companyAdmin->last_name)->subject('Your data usage report');
+                   // }
+                   // );
                 }
             } catch (Expception $e) {
                 echo $e->getMessage();
