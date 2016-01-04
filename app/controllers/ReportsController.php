@@ -98,7 +98,8 @@ class ReportsController extends \BaseController
 
                    $result->amount = ((($object->object_sum / $object->object_count) * $result->precio) * $result->qty);
                } catch (Exception $e) {
-                   print_r($e->getMessage());
+                    $result->amount = 0;
+                   Log::error($e->getMessage());
                }
            }
        }
