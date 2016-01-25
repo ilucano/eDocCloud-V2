@@ -62,21 +62,19 @@ class UsersChartController extends \BaseController {
 	public function indexBoxOrderChart($boxId = '', $orderId = '', $chartId = '')
 	{
 		$filePermission = Auth::User()->getUserData()->file_permission;
-		
-		$files = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId() )
-							->where('parent_id', '=', $chartId)
-							->where(function($query)
-								{
-									$query->whereIn('file_mark_id', json_decode(Auth::User()->getUserData()->file_permission, true))
-									      ->orWhere('file_mark_id','=', '')
-										  ->orWhereRaw('file_mark_id is null');
-								}
-							  )
-						    ->get(array('row_id', 'filename', 'creadate', 'moddate', 'pages', 'filesize', 'file_mark_id'));
-							
-	 
-			   
-		      
+        $permissionArray = json_decode(Auth::User()->getUserData()->file_permission, true);
+        $permissionArray[] = '';
+        $files = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId() )
+                                                ->where('parent_id', '=', $chartId)
+                                                ->where(function($query) use ($permissionArray)
+                                                        {
+                                                                $query->whereIn('file_mark_id', $permissionArray)
+                                                                      ->orWhereRaw('file_mark_id is null');
+                                                         }
+
+                                                  )
+                                            ->get(array('row_id', 'filename', 'creadate', 'moddate', 'pages', 'filesize', 'file_mark_id'));
+
        	$box = Object::where('row_id', '=', $boxId)->first();
 		
 		$order = Object::where('row_id', '=', $orderId)->first();
