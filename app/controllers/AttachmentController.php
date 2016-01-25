@@ -116,15 +116,17 @@ class AttachmentController extends BaseController {
 								
 		}
         else {
+
+            $permissionArray = json_decode(Auth::User()->getUserData()->file_permission, true);
+            $permissionArray[] = '';
 			
 			try {
 				$file = FileTable::where('fk_empresa', '=', Auth::User()->getCompanyId() )
 									->where('row_id', '=', $id)
-									->where(function($query)
+									->where(function($query) use ($permissionArray)
 										{
-											$query->whereIn('file_mark_id', json_decode(Auth::User()->getUserData()->file_permission, true))
-												  ->orWhere('file_mark_id','=', '')
-												  ->orWhereRaw('file_mark_id is null');
+											$query->whereIn('file_mark_id', $permissionArray)
+                                                   ->orWhereRaw('file_mark_id is null');
 										}
 									  )
 									->first(array('path'));
