@@ -19,6 +19,7 @@
 
 
     <div class="modal-footer">
+        {{ Form::hidden('back', $back) }}
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         {{ Form::submit('Save Changes', array('class' => 'btn btn-primary')) }}
     </div>
